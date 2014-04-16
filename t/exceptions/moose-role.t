@@ -180,8 +180,8 @@ use Moose();
 
 {
     {
-	package Foo3;
-	use Moose;
+        package Foo3;
+        use Moose;
     }
 
     my $exception = exception {
@@ -207,8 +207,8 @@ use Moose();
 
 {
     {
-	package Foo3;
-	use Moose;
+        package Foo3;
+        use Moose;
     }
 
     my $exception = exception {
@@ -285,10 +285,10 @@ use Moose();
 
 {
     my $exception = exception {
-	package Foo;
-	use Moose::Role;
+        package Foo;
+        use Moose::Role;
 
-	before qr/foo/;
+        before qr/foo/;
     };
 
     like(

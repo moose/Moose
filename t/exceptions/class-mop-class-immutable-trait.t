@@ -9,10 +9,10 @@ use Moose();
 
 {
     my $exception = exception {
-	package Foo;
-	use Moose;
-	__PACKAGE__->meta->make_immutable;
-	__PACKAGE__->meta->superclasses("Bar");
+        package Foo;
+        use Moose;
+        __PACKAGE__->meta->make_immutable;
+        __PACKAGE__->meta->superclasses("Bar");
     };
 
     like(
@@ -33,26 +33,26 @@ use Moose();
 
 {
     my $exception = exception {
-	package Foo;
-	use Moose;
-	__PACKAGE__->meta->make_immutable;
-	__PACKAGE__->meta->add_method( foo => sub { "foo" } );
+        package Foo;
+        use Moose;
+        __PACKAGE__->meta->make_immutable;
+        __PACKAGE__->meta->add_method( foo => sub { "foo" } );
     };
 
     like(
         $exception,
         qr/The 'add_method' method cannot be called on an immutable instance/,
-	"calling 'add_method' on an immutable instance");
+        "calling 'add_method' on an immutable instance");
 
     isa_ok(
         $exception,
         "Moose::Exception::CallingMethodOnAnImmutableInstance",
-	"calling 'add_method' on an immutable instance");
+        "calling 'add_method' on an immutable instance");
 
     is(
         $exception->method_name,
         "add_method",
-	"calling 'add_method' on an immutable instance");
+        "calling 'add_method' on an immutable instance");
 }
 
 done_testing;

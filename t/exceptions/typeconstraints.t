@@ -26,81 +26,81 @@ use Moose::Util::TypeConstraints;
 
 {
     my $exception = exception {
-	Moose::Util::TypeConstraints::create_type_constraint_union();
+        Moose::Util::TypeConstraints::create_type_constraint_union();
     };
 
     like(
         $exception,
         qr/You must pass in at least 2 type names to make a union/,
-	"Moose::Util::TypeConstraints::create_type_constraint_union takes atleast two arguments");
+        "Moose::Util::TypeConstraints::create_type_constraint_union takes atleast two arguments");
 
     isa_ok(
         $exception,
         "Moose::Exception::UnionTakesAtleastTwoTypeNames",
-	"Moose::Util::TypeConstraints::create_type_constraint_union takes atleast two arguments");
+        "Moose::Util::TypeConstraints::create_type_constraint_union takes atleast two arguments");
 }
 
 {
     my $exception = exception {
-	Moose::Util::TypeConstraints::create_type_constraint_union('foo','bar');
+        Moose::Util::TypeConstraints::create_type_constraint_union('foo','bar');
     };
 
     like(
         $exception,
         qr/\QCould not locate type constraint (foo) for the union/,
-	"invalid typeconstraint given to Moose::Util::TypeConstraints::create_type_constraint_union");
+        "invalid typeconstraint given to Moose::Util::TypeConstraints::create_type_constraint_union");
 
     isa_ok(
         $exception,
         "Moose::Exception::CouldNotLocateTypeConstraintForUnion",
-	"invalid typeconstraint given to Moose::Util::TypeConstraints::create_type_constraint_union");
+        "invalid typeconstraint given to Moose::Util::TypeConstraints::create_type_constraint_union");
 
     is(
-	$exception->type_name,
-	'foo',
-	"invalid typeconstraint given to Moose::Util::TypeConstraints::create_type_constraint_union");
+        $exception->type_name,
+        'foo',
+        "invalid typeconstraint given to Moose::Util::TypeConstraints::create_type_constraint_union");
 }
 
 {
     my $exception = exception {
-	Moose::Util::TypeConstraints::create_parameterized_type_constraint("Foo");
+        Moose::Util::TypeConstraints::create_parameterized_type_constraint("Foo");
     };
 
     like(
         $exception,
         qr/\QCould not parse type name (Foo) correctly/,
-	"'Foo' is not a valid type constraint name");
+        "'Foo' is not a valid type constraint name");
 
     isa_ok(
         $exception,
         "Moose::Exception::InvalidTypeGivenToCreateParameterizedTypeConstraint",
-	"'Foo' is not a valid type constraint name");
+        "'Foo' is not a valid type constraint name");
 }
 
 {
     my $exception = exception {
-	Moose::Util::TypeConstraints::create_parameterized_type_constraint("Foo[Int]");
+        Moose::Util::TypeConstraints::create_parameterized_type_constraint("Foo[Int]");
     };
 
     like(
         $exception,
         qr/\QCould not locate the base type (Foo)/,
-	"'Foo' is not a valid base type constraint name");
+        "'Foo' is not a valid base type constraint name");
 
     isa_ok(
         $exception,
         "Moose::Exception::InvalidBaseTypeGivenToCreateParameterizedTypeConstraint",
-	"'Foo' is not a valid base type constraint name");
+        "'Foo' is not a valid base type constraint name");
 }
 
 {
     {
-	package Foo1;
-	use Moose::Role;
+        package Foo1;
+        use Moose::Role;
     }
 
     my $exception = exception {
-	Moose::Util::TypeConstraints::class_type("Foo1");
+        Moose::Util::TypeConstraints::class_type("Foo1");
     };
 
     like(
@@ -114,29 +114,29 @@ use Moose::Util::TypeConstraints;
         "there is an already defined role of name 'Foo1'");
 
     is(
-	$exception->type->name,
-	'Foo1',
+        $exception->type->name,
+        'Foo1',
         "there is an already defined role of name 'Foo1'");
 
     is(
-	$exception->type->_package_defined_in,
-	'Moose::Role',
+        $exception->type->_package_defined_in,
+        'Moose::Role',
         "there is an already defined role of name 'Foo1'");
 
     is(
-	$exception->package_defined_in,
-	'main',
+        $exception->package_defined_in,
+        'main',
         "there is an already defined role of name 'Foo1'");
 }
 
 {
     {
-	package Foo2;
-	use Moose;
+        package Foo2;
+        use Moose;
     }
 
     my $exception = exception {
-	Moose::Util::TypeConstraints::role_type("Foo2");
+        Moose::Util::TypeConstraints::role_type("Foo2");
     };
 
     like(
@@ -150,24 +150,24 @@ use Moose::Util::TypeConstraints;
         "there is an already defined class of name 'Foo2'");
 
     is(
-	$exception->type->name,
-	'Foo2',
+        $exception->type->name,
+        'Foo2',
         "there is an already defined class of name 'Foo2'");
 
     is(
-	$exception->type->_package_defined_in,
-	'Moose',
+        $exception->type->_package_defined_in,
+        'Moose',
         "there is an already defined class of name 'Foo2'");
 
     is(
-	$exception->package_defined_in,
-	'main',
+        $exception->package_defined_in,
+        'main',
         "there is an already defined class of name 'Foo2'");
 }
 
 {
     my $exception = exception {
-	subtype 'Foo';
+        subtype 'Foo';
     };
 
     like(
@@ -181,14 +181,14 @@ use Moose::Util::TypeConstraints;
         "no parent given to subtype");
 
     is(
-	$exception->name,
-	'Foo',
+        $exception->name,
+        'Foo',
         "no parent given to subtype");
 }
 
 {
     my $exception = exception {
-	enum [1,2,3], "foo";
+        enum [1,2,3], "foo";
     };
 
     like(
@@ -204,7 +204,7 @@ use Moose::Util::TypeConstraints;
 
 {
     my $exception = exception {
-	union [1,2,3], "foo";
+        union [1,2,3], "foo";
     };
 
     like(
@@ -220,12 +220,12 @@ use Moose::Util::TypeConstraints;
 
 {
     {
-	package Foo3;
-	use Moose;
+        package Foo3;
+        use Moose;
     }
 
     my $exception = exception {
-	Moose::Util::TypeConstraints::type("Foo3");
+        Moose::Util::TypeConstraints::type("Foo3");
     };
 
     like(
@@ -239,24 +239,24 @@ use Moose::Util::TypeConstraints;
         "there is an already defined class of name 'Foo3'");
 
     is(
-	$exception->type->name,
-	'Foo3',
+        $exception->type->name,
+        'Foo3',
         "there is an already defined class of name 'Foo3'");
 
     is(
-	$exception->type->_package_defined_in,
-	'Moose',
+        $exception->type->_package_defined_in,
+        'Moose',
         "there is an already defined class of name 'Foo3'");
 
     is(
-	$exception->package_defined_in,
-	'main',
+        $exception->package_defined_in,
+        'main',
         "there is an already defined class of name 'Foo3'");
 }
 
 {
     my $exception = exception {
-	Moose::Util::TypeConstraints::coerce "Foo";
+        Moose::Util::TypeConstraints::coerce "Foo";
     };
 
     like(
@@ -272,7 +272,7 @@ use Moose::Util::TypeConstraints;
 
 {
     my $exception = exception {
-	Moose::Util::TypeConstraints::add_parameterizable_type "Foo";
+        Moose::Util::TypeConstraints::add_parameterizable_type "Foo";
     };
 
     like(

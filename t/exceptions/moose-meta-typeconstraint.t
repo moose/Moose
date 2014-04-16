@@ -41,12 +41,12 @@ use Moose();
     like(
         $exception,
         qr/The 'message' parameter must be a coderef/,
-	"'foo' is not a CODE ref");
+        "'foo' is not a CODE ref");
 
     isa_ok(
         $exception,
         "Moose::Exception::MessageParameterMustBeCodeRef",
-	"'foo' is not a CODE ref");
+        "'foo' is not a CODE ref");
 }
 
 {

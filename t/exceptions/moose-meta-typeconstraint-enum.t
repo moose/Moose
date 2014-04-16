@@ -48,18 +48,18 @@ use Moose();
     like(
         $exception,
         qr/\QEnum values must be strings, not '$arrayRef'/,
-	"an array ref is given instead of a string");
+        "an array ref is given instead of a string");
         #Enum values must be strings, not 'ARRAY(0x191d1b8)'
 
     isa_ok(
         $exception,
         "Moose::Exception::EnumValuesMustBeString",
-	"an array ref is given instead of a string");
+        "an array ref is given instead of a string");
 
     is(
-	$exception->value,
-	$arrayRef,
-	"an array ref is given instead of a string");
+        $exception->value,
+        $arrayRef,
+        "an array ref is given instead of a string");
 }
 
 done_testing;

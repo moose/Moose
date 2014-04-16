@@ -30,7 +30,7 @@ use Moose::Util 'throw_exception';
     like(
         $exception,
         qr/\Qattribute_name (foo) does not match attribute->name (bar)/,
-	"you have given attribute_name as 'foo' and attribute->name as 'bar'");
+        "you have given attribute_name as 'foo' and attribute->name as 'bar'");
 
     isa_ok(
         $exception,

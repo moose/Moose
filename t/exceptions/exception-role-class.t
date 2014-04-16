@@ -7,20 +7,20 @@ use Test::Fatal;
 
 {
     {
-	package DoesClassRole;
-	use Moose;
-	extends 'Moose::Exception';
-	with 'Moose::Exception::Role::Class';
+        package DoesClassRole;
+        use Moose;
+        extends 'Moose::Exception';
+        with 'Moose::Exception::Role::Class';
     }
 
     my $exception = exception {
-	my $doesClassRole = DoesClassRole->new;
+        my $doesClassRole = DoesClassRole->new;
     };
 
     like(
         $exception,
         qr/\QYou need to give class or class_name or both/,
-	"please give either class or class_name");
+        "please give either class or class_name");
 
     isa_ok(
         $exception,
@@ -28,8 +28,8 @@ use Test::Fatal;
         "please give either class or class_name");
 
     {
-	package JustATestClass;
-	use Moose;
+        package JustATestClass;
+        use Moose;
     }
 
     $exception = DoesClassRole->new( class => JustATestClass->meta );
@@ -37,53 +37,53 @@ use Test::Fatal;
     ok( !$exception->is_class_name_set, "class_name is not set");
 
     is(
-	$exception->class->name,
-	"JustATestClass",
-	"you have given class");
+        $exception->class->name,
+        "JustATestClass",
+        "you have given class");
 
     is(
-	$exception->class_name,
-	"JustATestClass",
-	"you have given class");
+        $exception->class_name,
+        "JustATestClass",
+        "you have given class");
 
     $exception = DoesClassRole->new( class_name => "JustATestClass" );
 
     ok( !$exception->is_class_set, "class is not set");
 
     is(
-	$exception->class_name,
-	"JustATestClass",
-	"you have given class");
+        $exception->class_name,
+        "JustATestClass",
+        "you have given class");
 
     is(
-	$exception->class->name,
-	"JustATestClass",
-	"you have given class");
+        $exception->class->name,
+        "JustATestClass",
+        "you have given class");
 
     $exception = DoesClassRole->new( class_name => "DoesClassRole",
-				     class      => DoesClassRole->meta
-                                   );
+         class => DoesClassRole->meta
+    );
 
     is(
-	$exception->class_name,
-	"DoesClassRole",
-	"you have given both, class & class_name");
+        $exception->class_name,
+        "DoesClassRole",
+        "you have given both, class & class_name");
 
     is(
-	$exception->class->name,
-	"DoesClassRole",
-	"you have given both, class & class_name");
+        $exception->class->name,
+        "DoesClassRole",
+        "you have given both, class & class_name");
 
     $exception = exception {
         DoesClassRole->new( class_name => "Foo",
-                            class      => DoesClassRole->meta,
-                          );
+            class => DoesClassRole->meta,
+    );
     };
 
     like(
         $exception,
         qr/\Qclass_name (Foo) does not match class->name (DoesClassRole)/,
-	"you have given class_name as 'Foo' and class->name as 'DoesClassRole'");
+        "you have given class_name as 'Foo' and class->name as 'DoesClassRole'");
 
     isa_ok(
         $exception,
@@ -91,14 +91,14 @@ use Test::Fatal;
         "you have given class_name as 'Foo' and class->name as 'DoesClassRole'");
 
     is(
-	$exception->class_name,
-	"Foo",
-	"you have given class_name as 'Foo' and class->name as 'DoesClassRole'");
+        $exception->class_name,
+        "Foo",
+        "you have given class_name as 'Foo' and class->name as 'DoesClassRole'");
 
     is(
-	$exception->class->name,
-	"DoesClassRole",
-	"you have given class_name as 'Foo' and class->name as 'DoesClassRole'");
+        $exception->class->name,
+        "DoesClassRole",
+        "you have given class_name as 'Foo' and class->name as 'DoesClassRole'");
 }
 
 done_testing;

@@ -12,11 +12,11 @@ use Moose();
     use Moose;
 
     has 'foo' => (
-	is       => 'ro',
-	isa      => 'ArrayRef',
-	traits   => ['Array'],
-	handles  => {
-	    get           => 'get',
+        is       => 'ro',
+        isa      => 'ArrayRef',
+        traits   => ['Array'],
+        handles  => {
+            get           => 'get',
             first         => 'first',
             first_index   => 'first_index',
             grep          => 'grep',
@@ -27,9 +27,9 @@ use Moose();
             sort          => 'sort',
             sort_in_place => 'sort_in_place',
             splice        => 'splice'
-	},
-	required => 1
-	);
+        },
+        required => 1
+    );
 }
 
 my $foo_obj;
@@ -58,7 +58,7 @@ my $foo_obj;
 
     is(
         $exception->method_name,
-	"get",
+        "get",
         "get takes integer argument");
 }
 

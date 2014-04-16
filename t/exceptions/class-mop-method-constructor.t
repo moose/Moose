@@ -31,12 +31,12 @@ use Moose();
     like(
         $exception,
         qr/\QYou must supply the package_name and name parameters/,
-	"no package_name and name is given");
+        "no package_name and name is given");
 
     isa_ok(
         $exception,
         "Moose::Exception::MustSupplyPackageNameAndName",
-	"no package_name and name is given");
+        "no package_name and name is given");
 }
 
 {

@@ -40,7 +40,7 @@ use Test::Fatal;
             Moose::Exporter->setup_import_methods(
                 also => [ 'Moose', 'MooseX::CircularAlso' ],
             );
-	}
+        }
     };
 
     like(

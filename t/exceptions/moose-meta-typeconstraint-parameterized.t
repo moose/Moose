@@ -57,7 +57,7 @@ use Test::Fatal;
         has 'foo' => (
             is  => 'ro',
             isa => 'Int[Xyz]',
-	);
+        );
     };
 
     like(

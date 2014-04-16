@@ -15,12 +15,12 @@ use Moose();
     like(
         $exception,
         qr/You must pass a hash of options/,
-	"options is not a HASH ref");
+        "options is not a HASH ref");
 
     isa_ok(
         $exception,
         "Moose::Exception::MustPassAHashOfOptions",
-	"options is not a HASH ref");
+        "options is not a HASH ref");
 }
 
 {
@@ -31,12 +31,12 @@ use Moose();
     like(
         $exception,
         qr/You must supply the package_name and name parameters/,
-	"package_name and name are not given");
+        "package_name and name are not given");
 
     isa_ok(
         $exception,
         "Moose::Exception::MustSupplyPackageNameAndName",
-	"package_name and name are not given");
+        "package_name and name are not given");
 }
 
 done_testing;

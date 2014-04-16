@@ -12,11 +12,11 @@ use Moose();
     use Moose;
 
     has 'foo' => (
-	is      => 'rw',
-	isa     => 'ArrayRef[Int]',
-	traits  => ['Array'],
-	handles => { push => 'push'}
-	);
+        is      => 'rw',
+        isa     => 'ArrayRef[Int]',
+        traits  => ['Array'],
+        handles => { push => 'push'}
+        );
 }
 
 my $bar_obj = Bar->new;

@@ -9,7 +9,7 @@ use Moose();
 
 {
     my $exception =  exception {
-	my $class = Class::MOP::Attribute->new;
+        my $class = Class::MOP::Attribute->new;
     };
 
     like(
@@ -57,39 +57,39 @@ use Moose();
 
 {
     my $exception =  exception {
-	Class::MOP::Attribute->new( "foo", ( default => [1] ) );
+        Class::MOP::Attribute->new( "foo", ( default => [1] ) );
     };
 
     like(
         $exception,
         qr/\QReferences are not allowed as default values, you must wrap the default of 'foo' in a CODE reference (ex: sub { [] } and not [])/,
-	"default value can't take references");
+        "default value can't take references");
 
     isa_ok(
         $exception,
         "Moose::Exception::ReferencesAreNotAllowedAsDefault",
-	"default value can't take references");
+        "default value can't take references");
 
     is(
         $exception->attribute_name,
         "foo",
-	"default value can't take references");
+        "default value can't take references");
 }
 
 {
     my $exception =  exception {
-	Class::MOP::Attribute->new( "foo", ( required => 1, init_arg => undef ) );
+        Class::MOP::Attribute->new( "foo", ( required => 1, init_arg => undef ) );
     };
 
     like(
         $exception,
         qr/A required attribute must have either 'init_arg', 'builder', or 'default'/,
-	"no 'init_arg', 'builder' or 'default' is given");
+        "no 'init_arg', 'builder' or 'default' is given");
 
     isa_ok(
         $exception,
         "Moose::Exception::RequiredAttributeLacksInitialization",
-	"no 'init_arg', 'builder' or 'default' is given");
+        "no 'init_arg', 'builder' or 'default' is given");
 }
 
 {

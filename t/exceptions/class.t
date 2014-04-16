@@ -162,15 +162,15 @@ use Test::Fatal;
         use Moose;
 
         has 'baz' => (
-	    is       => 'ro',
-	    isa      => 'Int',
-	    required => 1,
+            is       => 'ro',
+            isa      => 'Int',
+            required => 1,
         );
         __PACKAGE__->meta->make_immutable;
     }
 
     my $exception = exception {
-	my $test1 = Foo2->new;
+        my $test1 = Foo2->new;
     };
 
     like(
@@ -217,17 +217,17 @@ use Test::Fatal;
         "Class cannot extend a role");
 
     is(
-	$exception->role->name,
-	'Bar',
-	"Class cannot extend a role");
+        $exception->role->name,
+        'Bar',
+        "Class cannot extend a role");
 }
 
 {
     my $exception = exception {
-	package Foo;
-	use Moose;
-	sub foo2 {}
-	override foo2 => sub {};
+        package Foo;
+        use Moose;
+        sub foo2 {}
+        override foo2 => sub {};
     };
 
     like(
@@ -241,22 +241,22 @@ use Test::Fatal;
         "there is already a method named foo2 defined in the class, so you can't override it");
 
     is(
-	$exception->class->name,
-	'Foo',
+        $exception->class->name,
+        'Foo',
         "there is already a method named foo2 defined in the class, so you can't override it");
 
     is(
-	$exception->method->name,
-	'foo2',
+        $exception->method->name,
+        'foo2',
         "there is already a method named foo2 defined in the class, so you can't override it");
 }
 
 {
     my $exception = exception {
-	package Foo;
-	use Moose;
-	sub foo {}
-	augment foo => sub {};
+        package Foo;
+        use Moose;
+        sub foo {}
+        augment foo => sub {};
     };
 
     like(
@@ -270,38 +270,38 @@ use Test::Fatal;
         "there is already a method named foo defined in the class");
 
     is(
-	$exception->class->name,
-	'Foo',
+        $exception->class->name,
+        'Foo',
         "there is already a method named foo defined in the class");
 
     is(
-	$exception->method->name,
-	'foo',
+        $exception->method->name,
+        'foo',
         "there is already a method named foo defined in the class");
 }
 
 {
     {
-	package Test;
-	use Moose;
+        package Test;
+        use Moose;
     }
 
     my $exception = exception {
-	package Test2;
-	use Moose;
-	extends 'Test';
-	has '+bar' => ( default => 100 );
+        package Test2;
+        use Moose;
+        extends 'Test';
+        has '+bar' => ( default => 100 );
     };
 
     like(
-	$exception,
-	qr/Could not find an attribute by the name of 'bar' to inherit from in Test2/,
-	"attribute 'bar' is not defined in the super class");
+        $exception,
+        qr/Could not find an attribute by the name of 'bar' to inherit from in Test2/,
+        "attribute 'bar' is not defined in the super class");
 
     isa_ok(
-	$exception,
-	"Moose::Exception::NoAttributeFoundInSuperClass",
-	"attribute 'bar' is not defined in the super class");
+        $exception,
+        "Moose::Exception::NoAttributeFoundInSuperClass",
+        "attribute 'bar' is not defined in the super class");
 }
 
 done_testing;

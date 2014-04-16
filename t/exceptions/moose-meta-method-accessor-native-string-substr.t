@@ -12,14 +12,14 @@ use Moose();
     use Moose;
 
     has 'foo' => (
-	is      => 'ro',
-	isa     => 'Str',
-	traits  => ['String'],
-	handles => {
+        is      => 'ro',
+        isa     => 'Str',
+        traits  => ['String'],
+        handles => {
             substr => 'substr'
         },
-	required => 1
-	);
+        required => 1
+        );
 }
 
 my $foo_obj = Foo->new( foo => 'hello' );
@@ -56,7 +56,7 @@ my $foo_obj = Foo->new( foo => 'hello' );
 
     is(
         $exception->method_name,
-	"substr",
+        "substr",
         "substr takes integer as its first argument");
 
     is(
@@ -97,7 +97,7 @@ my $foo_obj = Foo->new( foo => 'hello' );
 
     is(
         $exception->method_name,
-	"substr",
+        "substr",
         "substr takes integer as its second argument");
 
     is(
@@ -139,7 +139,7 @@ my $foo_obj = Foo->new( foo => 'hello' );
 
     is(
         $exception->method_name,
-	"substr",
+        "substr",
         "substr takes string as its third argument");
 
     is(

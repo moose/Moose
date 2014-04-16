@@ -12,14 +12,14 @@ use Moose();
     use Moose;
 
     has 'foo' => (
-	is      => 'ro',
-	isa     => 'Str',
-	traits  => ['String'],
-	handles => {
+        is      => 'ro',
+        isa     => 'Str',
+        traits  => ['String'],
+        handles => {
             replace => 'replace'
         },
-	required => 1
-	);
+        required => 1
+        );
 }
 
 my $foo_obj = Foo->new( foo => 'hello' );
@@ -57,7 +57,7 @@ my $foo_obj = Foo->new( foo => 'hello' );
 
     is(
         $exception->method_name,
-	"replace",
+        "replace",
         "an Array ref passed to replace");
 
     is(
@@ -99,7 +99,7 @@ my $foo_obj = Foo->new( foo => 'hello' );
 
     is(
         $exception->method_name,
-	"replace",
+        "replace",
         "an Array ref passed to replace");
 
     is(

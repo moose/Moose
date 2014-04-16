@@ -12,8 +12,8 @@ use Moose();
         package Foo;
         use Moose;
 
-	__PACKAGE__->meta->make_immutable;
-	Foo->meta->does_role;
+        __PACKAGE__->meta->make_immutable;
+        Foo->meta->does_role;
     };
 
     like(

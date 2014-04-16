@@ -9,7 +9,7 @@ use Moose();
 
 {
     my $exception =  exception {
-	my $class = Class::MOP::Class::initialize;
+        my $class = Class::MOP::Class::initialize;
     };
 
     like(
@@ -25,7 +25,7 @@ use Moose();
 
 {
     my $exception =  exception {
-	my $class = Class::MOP::Class::create("Foo" => ( superclasses => ('foo') ));
+        my $class = Class::MOP::Class::create("Foo" => ( superclasses => ('foo') ));
     };
 
     like(
@@ -39,15 +39,15 @@ use Moose();
         "an Array is of superclasses is passed");
 
     is(
-	$exception->class,
-	'Foo',
+        $exception->class,
+        'Foo',
         "an Array is of superclasses is passed");
 }
 
 
 {
     my $exception =  exception {
-	my $class = Class::MOP::Class::create("Foo" => ( attributes => ('foo') ));
+        my $class = Class::MOP::Class::create("Foo" => ( attributes => ('foo') ));
     };
 
     like(
@@ -61,14 +61,14 @@ use Moose();
         "an Array is of attributes is passed");
 
     is(
-	$exception->class,
-	'Foo',
+        $exception->class,
+        'Foo',
         "an Array is of attributes is passed");
 }
 
 {
     my $exception =  exception {
-	my $class = Class::MOP::Class::create("Foo" => ( methods => ('foo') ) );
+        my $class = Class::MOP::Class::create("Foo" => ( methods => ('foo') ) );
     };
 
     like(
@@ -82,8 +82,8 @@ use Moose();
         "a Hash is of methods is passed");
 
     is(
-	$exception->class,
-	'Foo',
+        $exception->class,
+        'Foo',
         "a Hash is of methods is passed");
 }
 
@@ -104,8 +104,8 @@ use Moose();
         "no method name given to find_method_by_name");
 
     is(
-	$exception->class->name,
-	'Foo',
+        $exception->class->name,
+        'Foo',
         "no method name given to find_method_by_name");
 }
 
@@ -126,8 +126,8 @@ use Moose();
         "no method name given to find_all_methods_by_name");
 
     is(
-	$exception->class->name,
-	'Foo',
+        $exception->class->name,
+        'Foo',
         "no method name given to find_all_methods_by_name");
 }
 
@@ -148,8 +148,8 @@ use Moose();
         "no method name given to find_next_method_by_name");
 
     is(
-	$exception->class->name,
-	'Foo',
+        $exception->class->name,
+        'Foo',
         "no method name given to find_next_method_by_name");
 }
 
@@ -157,178 +157,178 @@ use Moose();
     my $class = Class::MOP::Class->create("Foo");
     my $foo = "foo";
     my $exception =  exception {
-	$class->clone_object( $foo );
+        $class->clone_object( $foo );
     };
 
     like(
         $exception,
         qr/\QYou must pass an instance of the metaclass (Foo), not (foo)/,
-	"clone_object expects an instance of the metaclass");
+        "clone_object expects an instance of the metaclass");
 
     isa_ok(
         $exception,
         "Moose::Exception::CloneObjectExpectsAnInstanceOfMetaclass",
-	"clone_object expects an instance of the metaclass");
+        "clone_object expects an instance of the metaclass");
 
     is(
-	$exception->class->name,
-	'Foo',
-	"clone_object expects an instance of the metaclass");
+        $exception->class->name,
+        'Foo',
+        "clone_object expects an instance of the metaclass");
 
    is(
-	$exception->instance,
-	'foo',
-	"clone_object expects an instance of the metaclass");
+        $exception->instance,
+        'foo',
+        "clone_object expects an instance of the metaclass");
 }
 
 {
     {
-	package Foo;
-	use Moose;
+        package Foo;
+        use Moose;
     }
     {
-	package Foo2;
-	use Moose;
+        package Foo2;
+        use Moose;
     }
     my $foo2 = Foo2->new;
     my $exception =  exception {
-	Foo->meta->rebless_instance( $foo2 );
+        Foo->meta->rebless_instance( $foo2 );
     };
 
     like(
         $exception,
         qr/\QYou may rebless only into a subclass of (Foo2), of which (Foo) isn't./,
-	"you can rebless only into subclass");
+        "you can rebless only into subclass");
 
     isa_ok(
         $exception,
         "Moose::Exception::CanReblessOnlyIntoASubclass",
-	"you can rebless only into subclass");
+        "you can rebless only into subclass");
 
     is(
-	$exception->class->name,
-	'Foo',
-	"you can rebless only into subclass");
+        $exception->class->name,
+        'Foo',
+        "you can rebless only into subclass");
 
    is(
-	$exception->instance,
-	$foo2,
-	"you can rebless only into subclass");
+        $exception->instance,
+        $foo2,
+        "you can rebless only into subclass");
 }
 
 {
     {
-	package Foo;
-	use Moose;
+        package Foo;
+        use Moose;
     }
     {
-	package Foo2;
-	use Moose;
+        package Foo2;
+        use Moose;
     }
     my $foo = Foo->new;
     my $exception =  exception {
-	Foo2->meta->rebless_instance_back( $foo );
+        Foo2->meta->rebless_instance_back( $foo );
     };
 
     like(
         $exception,
         qr/\QYou may rebless only into a superclass of (Foo), of which (Foo2) isn't./,
-	"you can rebless only into superclass");
+        "you can rebless only into superclass");
 
     isa_ok(
         $exception,
         "Moose::Exception::CanReblessOnlyIntoASuperclass",
-	"you can rebless only into superclass");
+        "you can rebless only into superclass");
 
     is(
-	$exception->instance,
-	$foo,
-	"you can rebless only into superclass");
+        $exception->instance,
+        $foo,
+        "you can rebless only into superclass");
 
    is(
-	$exception->class->name,
-	"Foo2",
-	"you can rebless only into superclass");
+        $exception->class->name,
+        "Foo2",
+        "you can rebless only into superclass");
 }
 
 {
     {
-	package Foo;
-	use Moose;
+        package Foo;
+        use Moose;
     }
     my $exception =  exception {
-	Foo->meta->add_before_method_modifier;
+        Foo->meta->add_before_method_modifier;
     };
 
     like(
         $exception,
         qr/You must pass in a method name/,
-	"no method name passed to method modifier");
+        "no method name passed to method modifier");
 
     isa_ok(
         $exception,
         "Moose::Exception::MethodModifierNeedsMethodName",
-	"no method name passed to method modifier");
+        "no method name passed to method modifier");
 
     is(
-	$exception->class->name,
-	"Foo",
-	"no method name passed to method modifier");
+        $exception->class->name,
+        "Foo",
+        "no method name passed to method modifier");
 }
 
 {
     {
-	package Foo;
-	use Moose;
+        package Foo;
+        use Moose;
     }
     my $exception =  exception {
-	Foo->meta->add_after_method_modifier;
+        Foo->meta->add_after_method_modifier;
     };
 
     like(
         $exception,
         qr/You must pass in a method name/,
-	"no method name passed to method modifier");
+        "no method name passed to method modifier");
 
     isa_ok(
         $exception,
         "Moose::Exception::MethodModifierNeedsMethodName",
-	"no method name passed to method modifier");
+        "no method name passed to method modifier");
 
     is(
-	$exception->class->name,
-	"Foo",
-	"no method name passed to method modifier");
+        $exception->class->name,
+        "Foo",
+        "no method name passed to method modifier");
 }
 
 {
     {
-	package Foo;
-	use Moose;
+        package Foo;
+        use Moose;
     }
     my $exception =  exception {
-	Foo->meta->add_around_method_modifier;
+        Foo->meta->add_around_method_modifier;
     };
 
     like(
         $exception,
         qr/You must pass in a method name/,
-	"no method name passed to method modifier");
+        "no method name passed to method modifier");
 
     isa_ok(
         $exception,
         "Moose::Exception::MethodModifierNeedsMethodName",
-	"no method name passed to method modifier");
+        "no method name passed to method modifier");
 
     is(
-	$exception->class->name,
-	"Foo",
-	"no method name passed to method modifier");
+        $exception->class->name,
+        "Foo",
+        "no method name passed to method modifier");
 }
 
 {
     my $exception =  exception {
-	my $class = Class::MOP::Class->_construct_class_instance;
+        my $class = Class::MOP::Class->_construct_class_instance;
     };
 
     like(
@@ -345,119 +345,119 @@ use Moose();
 {
     my $class = Class::MOP::Class->create("Foo");
     my $exception =  exception {
-	$class->add_before_method_modifier("foo");
+        $class->add_before_method_modifier("foo");
     };
 
     like(
         $exception,
         qr/The method 'foo' was not found in the inheritance hierarchy for Foo/,
-	'method "foo" is not defined in class "Foo"');
+        'method "foo" is not defined in class "Foo"');
 
     isa_ok(
         $exception,
         "Moose::Exception::MethodNameNotFoundInInheritanceHierarchy",
-	'method "foo" is not defined in class "Foo"');
+        'method "foo" is not defined in class "Foo"');
 
     is(
-	$exception->class->name,
-	'Foo',
-	'method "foo" is not defined in class "Foo"');
+        $exception->class->name,
+        'Foo',
+        'method "foo" is not defined in class "Foo"');
 
    is(
-	$exception->method_name,
-	'foo',
-	'method "foo" is not defined in class "Foo"');
+        $exception->method_name,
+        'foo',
+        'method "foo" is not defined in class "Foo"');
 }
 
 {
     {
-	package Bar;
-	use Moose;
+        package Bar;
+        use Moose;
     }
     my $bar = Bar->new;
     my $class = Class::MOP::Class->create("Foo");
     my $exception =  exception {
-	$class->new_object( ( __INSTANCE__ => $bar ) );
+        $class->new_object( ( __INSTANCE__ => $bar ) );
     };
 
     like(
         $exception,
         qr/\QObjects passed as the __INSTANCE__ parameter must already be blessed into the correct class, but $bar is not a Foo/,
-	"__INSTANCE__ is not blessed correctly");
+        "__INSTANCE__ is not blessed correctly");
         #Objects passed as the __INSTANCE__ parameter must already be blessed into the correct class, but Bar=HASH(0x2d77528) is not a Foo
 
     isa_ok(
         $exception,
         "Moose::Exception::InstanceBlessedIntoWrongClass",
-	"__INSTANCE__ is not blessed correctly");
+        "__INSTANCE__ is not blessed correctly");
 
     is(
-	$exception->class->name,
-	'Foo',
-	"__INSTANCE__ is not blessed correctly");
+        $exception->class->name,
+        'Foo',
+        "__INSTANCE__ is not blessed correctly");
 
    is(
-	$exception->instance,
-	$bar,
-	"__INSTANCE__ is not blessed correctly");
+        $exception->instance,
+        $bar,
+        "__INSTANCE__ is not blessed correctly");
 }
 
 {
     my $class = Class::MOP::Class->create("Foo");
     my $array = [1,2,3];
     my $exception =  exception {
-	$class->new_object( ( __INSTANCE__ => $array ) );
+        $class->new_object( ( __INSTANCE__ => $array ) );
     };
 
     like(
         $exception,
         qr/\QThe __INSTANCE__ parameter must be a blessed reference, not $array/,
-	"__INSTANCE__ is not a blessed reference");
+        "__INSTANCE__ is not a blessed reference");
         #The __INSTANCE__ parameter must be a blessed reference, not ARRAY(0x1d75d40)
 
     isa_ok(
         $exception,
         "Moose::Exception::InstanceMustBeABlessedReference",
-	"__INSTANCE__ is not a blessed reference");
+        "__INSTANCE__ is not a blessed reference");
 
     is(
-	$exception->class->name,
-	'Foo',
-	"__INSTANCE__ is not a blessed reference");
+        $exception->class->name,
+        'Foo',
+        "__INSTANCE__ is not a blessed reference");
 
    is(
-	$exception->instance,
-	$array,
-	"__INSTANCE__ is not a blessed reference");
+        $exception->instance,
+        $array,
+        "__INSTANCE__ is not a blessed reference");
 }
 
 {
     my $array = [1, 2, 3];
     my $class = Class::MOP::Class->create("Foo");
     my $exception =  exception {
-	$class->_clone_instance($array);
+        $class->_clone_instance($array);
     };
 
     like(
         $exception,
         qr/\QYou can only clone instances, ($array) is not a blessed instance/,
-	"array reference was passed to _clone_instance instead of a blessed instance");
+        "array reference was passed to _clone_instance instead of a blessed instance");
         #You can only clone instances, (ARRAY(0x2162350)) is not a blessed instance
 
     isa_ok(
         $exception,
         "Moose::Exception::OnlyInstancesCanBeCloned",
-	"array reference was passed to _clone_instance instead of a blessed instance");
+        "array reference was passed to _clone_instance instead of a blessed instance");
 
     is(
-	$exception->class->name,
-	"Foo",
-	"array reference was passed to _clone_instance instead of a blessed instance");
+        $exception->class->name,
+        "Foo",
+        "array reference was passed to _clone_instance instead of a blessed instance");
 
     is(
-	$exception->instance,
-	$array,
-	"array reference was passed to _clone_instance instead of a blessed instance");
+        $exception->instance,
+        $array,
+        "array reference was passed to _clone_instance instead of a blessed instance");
 }
 
 {
@@ -577,7 +577,7 @@ use Moose();
             push(@superclasses, 'Foo9::SuperClass::After::Attribute');
 
             extends @superclasses;
-	}
+        }
     };
 
     like(
@@ -654,7 +654,7 @@ use Moose();
                 attribute_metaclass => "Foo::Meta::Attribute",
                 attribute_metaclass => "Bar::Meta::Attribute",
             )
-	};
+        };
 
         like(
             $exception,

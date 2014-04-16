@@ -15,12 +15,12 @@ use Moose();
     like(
         $exception,
         qr/You must pass a hash of options/,
-	"options is not a HASH ref");
+        "options is not a HASH ref");
 
     isa_ok(
         $exception,
         "Moose::Exception::MustPassAHashOfOptions",
-	"options is not a HASH ref");
+        "options is not a HASH ref");
 }
 
 {
@@ -31,12 +31,12 @@ use Moose();
     like(
         $exception,
         qr/You must supply the package_name and name parameters/,
-	"package_name and name are not given");
+        "package_name and name are not given");
 
     isa_ok(
         $exception,
         "Moose::Exception::MustSupplyPackageNameAndName",
-	"package_name and name are not given");
+        "package_name and name are not given");
 }
 
 {
@@ -47,17 +47,17 @@ use Moose();
     like(
         $exception,
         qr/The is_needed method expected a metaclass object as its arugment/,
-	"'foo' is not a metaclass");
+        "'foo' is not a metaclass");
 
     isa_ok(
         $exception,
         "Moose::Exception::MethodExpectedAMetaclassObject",
-	"'foo' is not a metaclass");
+        "'foo' is not a metaclass");
 
     is(
-	$exception->metaclass,
-	'foo',
-	"'foo' is not a metaclass");
+        $exception->metaclass,
+        'foo',
+        "'foo' is not a metaclass");
 }
 
 {

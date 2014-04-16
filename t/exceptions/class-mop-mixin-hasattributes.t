@@ -22,78 +22,78 @@ use Moose();
     isa_ok(
         $exception,
         "Moose::Exception::AttributeMustBeAnClassMOPMixinAttributeCoreOrSubclass",
-	"an Array ref blessed into Bar is given to create");
+        "an Array ref blessed into Bar is given to create");
 
     is(
-	$exception->attribute,
-	$xyz,
-	"an Array ref blessed into Bar is given to create");
+        $exception->attribute,
+        $xyz,
+        "an Array ref blessed into Bar is given to create");
 }
 
 {
     my $class = Class::MOP::Class->create("Foo");
     my $exception = exception {
-	$class->has_attribute;
+        $class->has_attribute;
     };
 
     like(
         $exception,
         qr/You must define an attribute name/,
-	"attribute name is not given");
+        "attribute name is not given");
 
     isa_ok(
         $exception,
         "Moose::Exception::MustDefineAnAttributeName",
-	"attribute name is not given");
+        "attribute name is not given");
 
     is(
-	$exception->class,
-	$class,
-	"attribute name is not given");
+        $exception->class,
+        $class,
+        "attribute name is not given");
 }
 
 {
     my $class = Class::MOP::Class->create("Foo");
     my $exception = exception {
-	$class->get_attribute;
+        $class->get_attribute;
     };
 
     like(
         $exception,
         qr/You must define an attribute name/,
-	"attribute name is not given");
+        "attribute name is not given");
 
     isa_ok(
         $exception,
         "Moose::Exception::MustDefineAnAttributeName",
-	"attribute name is not given");
+        "attribute name is not given");
 
     is(
-	$exception->class,
-	$class,
-	"attribute name is not given");
+        $exception->class,
+        $class,
+        "attribute name is not given");
 }
 
 {
     my $class = Class::MOP::Class->create("Foo");
     my $exception = exception {
-	$class->remove_attribute;
+        $class->remove_attribute;
     };
 
     like(
         $exception,
         qr/You must define an attribute name/,
-	"attribute name is not given");
+        "attribute name is not given");
 
     isa_ok(
         $exception,
         "Moose::Exception::MustDefineAnAttributeName",
-	"attribute name is not given");
+        "attribute name is not given");
 
     is(
-	$exception->class,
-	$class,
-	"attribute name is not given");
+        $exception->class,
+        $class,
+        "attribute name is not given");
 }
 
 done_testing;

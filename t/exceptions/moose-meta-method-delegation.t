@@ -77,10 +77,10 @@ use Moose();
     my $attr = Moose::Meta::Attribute->new("foo");
     my $exception = exception {
         Moose::Meta::Method::Delegation->new( attribute => $attr,
-					      package_name => "Foo",
-					      name => "Foo",
-					      delegate_to_method => sub {},
-					      curried_arguments => {} );
+                                              package_name => "Foo",
+                                              name => "Foo",
+                                              delegate_to_method => sub {},
+                                              curried_arguments => {} );
     };
 
     like(

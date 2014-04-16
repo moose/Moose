@@ -15,12 +15,12 @@ use Moose();
     like(
         $exception,
         qr/You must provide a name for the attribute/,
-	"no name is given");
+        "no name is given");
 
     isa_ok(
         $exception,
         "Moose::Exception::MustProvideANameForTheAttribute",
-	"no name is given");
+        "no name is given");
 }
 
 {

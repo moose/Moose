@@ -8,7 +8,7 @@ use Test::Fatal;
 {
     my $exception =  exception {
         package Foo;
-	use Moose;
+        use Moose;
 
         override foo => sub {}
     };
@@ -24,13 +24,13 @@ use Test::Fatal;
         "Foo class is not extending any class");
 
     is(
-	$exception->class,
-	"Moose::Meta::Method::Overridden",
+        $exception->class,
+        "Moose::Meta::Method::Overridden",
         "Foo class is not extending any class");
 
     is(
-	$exception->method_name,
-	"foo",
+        $exception->method_name,
+        "foo",
         "Foo class is not extending any class");
 }
 

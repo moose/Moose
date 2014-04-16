@@ -9,7 +9,7 @@ use Moose::Meta::Role::Application;
 
 {
     my $exception =  exception {
-	Moose::Meta::Role::Application->check_role_exclusions;
+        Moose::Meta::Role::Application->check_role_exclusions;
     };
 
     like(
@@ -25,7 +25,7 @@ use Moose::Meta::Role::Application;
 
 {
     my $exception =  exception {
-	Moose::Meta::Role::Application->check_required_methods;
+        Moose::Meta::Role::Application->check_required_methods;
     };
 
     like(
@@ -41,7 +41,7 @@ use Moose::Meta::Role::Application;
 
 {
     my $exception =  exception {
-	Moose::Meta::Role::Application->check_required_attributes;
+        Moose::Meta::Role::Application->check_required_attributes;
     };
 
     like(
@@ -57,7 +57,7 @@ use Moose::Meta::Role::Application;
 
 {
     my $exception =  exception {
-	Moose::Meta::Role::Application->apply_attributes;
+        Moose::Meta::Role::Application->apply_attributes;
     };
 
     like(
@@ -73,7 +73,7 @@ use Moose::Meta::Role::Application;
 
 {
     my $exception =  exception {
-	Moose::Meta::Role::Application->apply_methods;
+        Moose::Meta::Role::Application->apply_methods;
     };
 
     like(
@@ -89,7 +89,7 @@ use Moose::Meta::Role::Application;
 
 {
     my $exception =  exception {
-	Moose::Meta::Role::Application->apply_override_method_modifiers;
+        Moose::Meta::Role::Application->apply_override_method_modifiers;
     };
 
     like(
@@ -105,7 +105,7 @@ use Moose::Meta::Role::Application;
 
 {
     my $exception =  exception {
-	Moose::Meta::Role::Application->apply_method_modifiers;
+        Moose::Meta::Role::Application->apply_method_modifiers;
     };
 
     like(

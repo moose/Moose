@@ -217,7 +217,7 @@ use Test::Fatal;
     }
 
     my $exception = exception {
-	Foo->new;
+        Foo->new;
     };
 
     like(
@@ -232,12 +232,12 @@ use Test::Fatal;
 
     isa_ok(
         $exception->instance,
-	'Foo',
+        'Foo',
         "Correct error when a builder method is not present");
 
     is(
-	$exception->attribute->name,
-	'baz',
+        $exception->attribute->name,
+        'baz',
         "Correct error when a builder method is not present");
 
     is(
@@ -249,12 +249,12 @@ use Test::Fatal;
 # tests for CannotDelegateWithoutIsa
 {
     my $exception = exception {
-	package Foo;
-	use Moose;
-	has 'bar' => (
-	    is      => 'ro',
-	    handles => qr/baz/,
-	);
+        package Foo;
+        use Moose;
+        has 'bar' => (
+            is      => 'ro',
+            handles => qr/baz/,
+        );
     };
 
     like(
@@ -270,11 +270,11 @@ use Test::Fatal;
 
 {
     my $exception = exception {
-	package Foo;
-	use Moose;
-	has bar => (
-	    is         => 'ro',
-	    auto_deref => 1,
+        package Foo;
+        use Moose;
+        has bar => (
+            is         => 'ro',
+            auto_deref => 1,
         );
     };
 
@@ -289,20 +289,20 @@ use Test::Fatal;
         "You cannot auto-dereference without specifying a type constraint on attribute");
 
     is(
-	$exception->attribute_name,
-	'bar',
+        $exception->attribute_name,
+        'bar',
         "You cannot auto-dereference without specifying a type constraint on attribute");
 }
 
 {
     my $exception = exception {
-	package Foo;
-	use Moose;
-	has 'bar' => (
-	    is       => 'ro',
-	    required => 1,
-	    init_arg => undef,
-	);
+        package Foo;
+        use Moose;
+        has 'bar' => (
+            is       => 'ro',
+            required => 1,
+            init_arg => undef,
+        );
     };
 
     like(
@@ -318,12 +318,12 @@ use Test::Fatal;
 
 {
     my $exception = exception {
-	package Foo;
-	use Moose;
-	has 'bar' => (
-	    is   => 'ro',
-	    lazy => 1,
-	);
+        package Foo;
+        use Moose;
+        has 'bar' => (
+            is   => 'ro',
+            lazy => 1,
+        );
     };
 
     like(
@@ -339,13 +339,13 @@ use Test::Fatal;
 
 {
     my $exception = exception {
-	package Foo;
-	use Moose;
-	has 'bar' => (
-	    is         => 'ro',
-	    isa        => 'Int',
-	    auto_deref => 1,
-	);
+        package Foo;
+        use Moose;
+        has 'bar' => (
+            is         => 'ro',
+            isa        => 'Int',
+            auto_deref => 1,
+        );
     };
 
     like(
@@ -361,13 +361,13 @@ use Test::Fatal;
 
 {
     my $exception = exception {
-	package Foo;
-	use Moose;
-	has 'bar' => (
-	    is         => 'ro',
-	    lazy_build => 1,
-	    default    => 1,
-	);
+        package Foo;
+        use Moose;
+        has 'bar' => (
+            is         => 'ro',
+            lazy_build => 1,
+            default    => 1,
+        );
     };
 
     like(
@@ -383,15 +383,15 @@ use Test::Fatal;
 
 {
     my $exception = exception {
-	package Delegator;
-	use Moose;
+        package Delegator;
+        use Moose;
 
-	sub full { 1 }
-	sub stub;
+        sub full { 1 }
+        sub stub;
 
-	has d1 => (
-	    isa     => 'X',
-	    handles => ['full'],
+        has d1 => (
+            isa     => 'X',
+            handles => ['full'],
         );
     };
 
@@ -406,26 +406,26 @@ use Test::Fatal;
         "got an error when trying to declare a delegation method that overwrites a local method");
 
     $exception = exception {
-	package Delegator;
-	use Moose;
+        package Delegator;
+        use Moose;
 
-	has d2 => (
-	    isa     => 'X',
-	    handles => ['stub'],
+        has d2 => (
+            isa     => 'X',
+            handles => ['stub'],
         );
     };
 
     is(
-	$exception,
+        $exception,
         undef,
         'no error when trying to declare a delegation method that overwrites a stub method');
 }
 
 {
     {
-	package Test;
-	use Moose;
-	has 'foo' => (
+        package Test;
+        use Moose;
+        has 'foo' => (
             is        => 'rw',
             clearer   => 'clear_foo',
             predicate => 'foo',
@@ -434,29 +434,29 @@ use Test::Fatal;
     }
 
     my $exception = exception {
-	package Test2;
-	use Moose;
-	extends 'Test';
-	has '+foo' => (
-	    clearer   => 'clear_foo1',
-	);
+        package Test2;
+        use Moose;
+        extends 'Test';
+        has '+foo' => (
+            clearer   => 'clear_foo1',
+        );
     };
 
     like(
-	$exception,
-	qr/\QIllegal inherited options => (clearer)/,
-	"Illegal inherited option is given");
+        $exception,
+        qr/\QIllegal inherited options => (clearer)/,
+        "Illegal inherited option is given");
 
     isa_ok(
-	$exception,
-	"Moose::Exception::IllegalInheritedOptions",
-	"Illegal inherited option is given");
+        $exception,
+        "Moose::Exception::IllegalInheritedOptions",
+        "Illegal inherited option is given");
 
     $exception = exception {
-	package Test3;
-	use Moose;
-	extends 'Test';
-	has '+foo' => (
+        package Test3;
+        use Moose;
+        extends 'Test';
+        has '+foo' => (
             clearer   => 'clear_foo1',
             predicate => 'xyz',
             accessor  => 'bar2',
@@ -464,27 +464,27 @@ use Test::Fatal;
     };
 
     like(
-	$exception,
-	qr/\QIllegal inherited options => (accessor, clearer, predicate)/,
-	"Illegal inherited option is given");
+        $exception,
+        qr/\QIllegal inherited options => (accessor, clearer, predicate)/,
+        "Illegal inherited option is given");
 }
 
 # tests for exception thrown is Moose::Meta::Attribute::set_value
 {
     my $exception = exception {
-	{
-	    package Foo1;
-	    use Moose;
-	    has 'bar' => (
-		is       => 'ro',
-		required => 1,
-	    );
-	}
+        {
+            package Foo1;
+            use Moose;
+            has 'bar' => (
+                is       => 'ro',
+                required => 1,
+            );
+        }
 
-	my $instance = Foo1->new(bar => "test");
-	my $bar_attr = Foo1->meta->get_attribute('bar');
-	my $bar_writer = $bar_attr->get_write_method_ref;
-	$bar_writer->($instance);
+        my $instance = Foo1->new(bar => "test");
+        my $bar_attr = Foo1->meta->get_attribute('bar');
+        my $bar_writer = $bar_attr->get_write_method_ref;
+        $bar_writer->($instance);
     };
 
     like(
@@ -510,123 +510,123 @@ use Test::Fatal;
 
 {
     my $exception = exception {
-	{
-	    package Foo1;
-	    use Moose;
-	    has 'bar' => (
+        {
+            package Foo1;
+            use Moose;
+            has 'bar' => (
                 is       => 'ro',
                 handles  => \*STDIN,
-	    );
-	}
+            );
+        }
     };
 
     my $handle = \*STDIN;
 
     like(
-	$exception,
-	qr/\QUnable to canonicalize the 'handles' option with $handle/,
-	"handles doesn't take file handle");
+        $exception,
+        qr/\QUnable to canonicalize the 'handles' option with $handle/,
+        "handles doesn't take file handle");
         #Unable to canonicalize the 'handles' option with GLOB(0x109d0b0)
 
     isa_ok(
-	$exception,
-	"Moose::Exception::UnableToCanonicalizeHandles",
-	"handles doesn't take file handle");
+        $exception,
+        "Moose::Exception::UnableToCanonicalizeHandles",
+        "handles doesn't take file handle");
 
 }
 
 {
     my $exception = exception {
-	{
-	    package Foo1;
-	    use Moose;
-	    has 'bar' => (
+        {
+            package Foo1;
+            use Moose;
+            has 'bar' => (
                 is       => 'ro',
                 handles  => 'Foo1',
-	    );
-	}
+            );
+        }
     };
 
     like(
-	$exception,
-	qr/\QUnable to canonicalize the 'handles' option with Foo1 because its metaclass is not a Moose::Meta::Role/,
-	"'Str' given to handles should be a metaclass of Moose::Meta::Role");
+        $exception,
+        qr/\QUnable to canonicalize the 'handles' option with Foo1 because its metaclass is not a Moose::Meta::Role/,
+        "'Str' given to handles should be a metaclass of Moose::Meta::Role");
 
     isa_ok(
-	$exception,
-	"Moose::Exception::UnableToCanonicalizeNonRolePackage",
-	"'Str' given to handles should be a metaclass of Moose::Meta::Role");
+        $exception,
+        "Moose::Exception::UnableToCanonicalizeNonRolePackage",
+        "'Str' given to handles should be a metaclass of Moose::Meta::Role");
 }
 
 {
     my $exception = exception {
-	{
-	    package Foo1;
-	    use Moose;
-	    has 'bar' => (
+        {
+            package Foo1;
+            use Moose;
+            has 'bar' => (
                 is      => 'ro',
                 isa     => 'Not::Loaded',
                 handles => qr/xyz/,
             );
-	}
+        }
     };
 
     like(
-	$exception,
-	qr/\QThe bar attribute is trying to delegate to a class which has not been loaded - Not::Loaded/,
-	"You cannot delegate to a class which has not yet loaded");
+        $exception,
+        qr/\QThe bar attribute is trying to delegate to a class which has not been loaded - Not::Loaded/,
+        "You cannot delegate to a class which has not yet loaded");
 
     isa_ok(
-	$exception,
-	"Moose::Exception::DelegationToAClassWhichIsNotLoaded",
-	"You cannot delegate to a class which has not yet loaded");
+        $exception,
+        "Moose::Exception::DelegationToAClassWhichIsNotLoaded",
+        "You cannot delegate to a class which has not yet loaded");
 
     is(
         $exception->attribute->name,
-	'bar',
-	"You cannot delegate to a class which has not yet loaded"
+        'bar',
+        "You cannot delegate to a class which has not yet loaded"
     );
 
     is(
         $exception->class_name,
-	'Not::Loaded',
-	"You cannot delegate to a class which has not yet loaded"
+        'Not::Loaded',
+        "You cannot delegate to a class which has not yet loaded"
     );
 }
 
 {
     my $exception = exception {
-	{
-	    package Foo1;
-	    use Moose;
-	    has bar => (
+        {
+            package Foo1;
+            use Moose;
+            has bar => (
                 is      => 'ro',
                 does    => 'Role',
                 handles => qr/Role/,
             );
-	}
+        }
     };
 
     like(
-	$exception,
-	qr/\QThe bar attribute is trying to delegate to a role which has not been loaded - Role/,
-	"You cannot delegate to a role which has not yet loaded");
+        $exception,
+        qr/\QThe bar attribute is trying to delegate to a role which has not been loaded - Role/,
+        "You cannot delegate to a role which has not yet loaded");
 
     isa_ok(
-	$exception,
-	"Moose::Exception::DelegationToARoleWhichIsNotLoaded",
-	"You cannot delegate to a role which has not yet loaded");
+        $exception,
+        "Moose::Exception::DelegationToARoleWhichIsNotLoaded",
+        "You cannot delegate to a role which has not yet loaded");
 
     is(
         $exception->attribute->name,
-	'bar',
-	"You cannot delegate to a role which has not yet loaded"
+        'bar',
+        "You cannot delegate to a role which has not yet loaded"
     );
 
     is(
         $exception->role_name,
-	'Role',
-	"You cannot delegate to a role which has not yet loaded"
+        'Role',
+        "You cannot delegate to a role which has not yet loaded"
     );
 }
 
@@ -641,7 +641,7 @@ use Test::Fatal;
                 isa     => 'Int',
                 handles => qr/xyz/,
             );
-	}
+        }
     };
 
     like(
@@ -756,36 +756,36 @@ use Test::Fatal;
 
 {
     {
-	package Parent;
-	use Moose;
+        package Parent;
+        use Moose;
 
-	has foo => (
-	    is      => 'rw',
-	    isa     => 'Num',
-	    default => 5.5,
+        has foo => (
+            is      => 'rw',
+            isa     => 'Num',
+            default => 5.5,
         );
     }
 
     {
-	package Child;
-	use Moose;
-	extends 'Parent';
+        package Child;
+        use Moose;
+        extends 'Parent';
 
-	has '+foo' => (
-	    isa     => 'Int',
-	    default => 100,
+        has '+foo' => (
+            isa     => 'Int',
+            default => 100,
        );
     }
 
     my $foo = Child->new;
     my $exception = exception {
-	$foo->foo(10.5);
+        $foo->foo(10.5);
     };
 
     like(
-	$exception,
-	qr/\QAttribute (foo) does not pass the type constraint because: Validation failed for 'Int' with value 10.5/,
-	"10.5 is not an Int");
+        $exception,
+        qr/\QAttribute (foo) does not pass the type constraint because: Validation failed for 'Int' with value 10.5/,
+        "10.5 is not an Int");
 
     isa_ok(
         $exception,
@@ -793,15 +793,15 @@ use Test::Fatal;
         "10.5 is not an Int");
 
     is(
-	$exception->class_name,
-	"Child",
-	"10.5 is not an Int");
+        $exception->class_name,
+        "Child",
+        "10.5 is not an Int");
 }
 
 {
     {
-	package Foo2;
-	use Moose;
+        package Foo2;
+        use Moose;
 
         has a4 => (
             traits  => ['Array'],
@@ -950,12 +950,12 @@ use Test::Fatal;
         my $int = find_type_constraint('Int');
         my $from_parameterizable = $parameterizable->parameterize($int);
 
-	{
+        {
             package Parameterizable;
             use Moose;
 
             has from_parameterizable => ( is => 'rw', isa => $from_parameterizable );
-	}
+        }
     }
 
     my $params = Parameterizable->new();
@@ -964,8 +964,8 @@ use Test::Fatal;
     };
 
     like(
-	$exception,
-	qr/\QAttribute (from_parameterizable) does not pass the type constraint because: Validation failed for 'ParameterizableArrayRef[Int]'\E with value "?Hello"?/,
+        $exception,
+        qr/\QAttribute (from_parameterizable) does not pass the type constraint because: Validation failed for 'ParameterizableArrayRef[Int]'\E with value "?Hello"?/,
         "'Hello' is a Str");
 
     isa_ok(
@@ -974,8 +974,8 @@ use Test::Fatal;
         "'Hello' is a Str");
 
     is(
-	$exception->class_name,
-	"Parameterizable",
+        $exception->class_name,
+        "Parameterizable",
         "'Hello' is a Str");
 
     is(
@@ -1167,29 +1167,29 @@ use Test::Fatal;
 
 {
     my $exception = exception {
-	{
-	    package Foo1;
-	    use Moose;
-	    has bar => (
+        {
+            package Foo1;
+            use Moose;
+            has bar => (
                 is       => 'ro',
                 required => 1,
                 isa      => 'Int',
-	    );
-	}
+            );
+        }
 
-	Foo1->new(bar => "test");
+        Foo1->new(bar => "test");
     };
 
     like(
-	$exception,
-	qr/^Attribute \(bar\) does not pass the type constraint because: Validation failed for 'Int' with value "?test"?/,
-	"bar is an 'Int' and 'Str' is given");
+        $exception,
+        qr/^Attribute \(bar\) does not pass the type constraint because: Validation failed for 'Int' with value "?test"?/,
+        "bar is an 'Int' and 'Str' is given");
         #Attribute (bar) does not pass the type constraint because: Validation failed for 'Int' with value "test"
 
     isa_ok(
-	$exception,
-	"Moose::Exception::ValidationFailedForTypeConstraint",
-	"bar is an 'Int' and 'Str' is given");
+        $exception,
+        "Moose::Exception::ValidationFailedForTypeConstraint",
+        "bar is an 'Int' and 'Str' is given");
 }
 
 done_testing;

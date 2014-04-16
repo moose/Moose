@@ -58,15 +58,15 @@ use Test::Fatal;
         "Foo2 is not loaded");
 
     is(
-	$exception->class_name,
-	"Foo2",
-	"Foo2 is not loaded");
+        $exception->class_name,
+        "Foo2",
+        "Foo2 is not loaded");
 }
 
 {
     {
-	package Foo3;
-	use Moose::Role;
+        package Foo3;
+        use Moose::Role;
     }
 
     my $exception = exception {
@@ -92,8 +92,8 @@ use Test::Fatal;
 
 {
     {
-	package Foo3;
-	use Moose::Role;
+        package Foo3;
+        use Moose::Role;
     }
 
     my $exception = exception {
@@ -133,8 +133,8 @@ use Test::Fatal;
 {
     my $foo;
     {
-	use Moose;
-	$foo = Class::MOP::Class->create("Foo4");
+        use Moose;
+        $foo = Class::MOP::Class->create("Foo4");
     }
 
     my $exception = exception {

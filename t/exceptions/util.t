@@ -116,12 +116,12 @@ use Moose::Util qw/apply_all_roles add_method_modifier/;
 
 {
     {
-	package Foo;
-	use Moose;
+        package Foo;
+        use Moose;
     }
 
     my $exception = exception {
-	add_method_modifier(Foo->meta, "before", [{}, sub {"before";}]);
+        add_method_modifier(Foo->meta, "before", [{}, sub {"before";}]);
     };
 
     like(
@@ -135,18 +135,18 @@ use Moose::Util qw/apply_all_roles add_method_modifier/;
         "we gave a HashRef to before");
 
     is(
-	ref( $exception->params->[0] ),
-	"HASH",
+        ref( $exception->params->[0] ),
+        "HASH",
         "we gave a HashRef to before");
 
     is(
-	$exception->modifier_name,
-	'before',
+        $exception->modifier_name,
+        'before',
         "we gave a HashRef to before");
 
     is(
-	$exception->class_or_object->name,
-	"Foo",
+        $exception->class_or_object->name,
+        "Foo",
         "we gave a HashRef to before");
 }
 
@@ -171,18 +171,18 @@ use Moose::Util qw/apply_all_roles add_method_modifier/;
         "Cannot locate 'Xyz'");
 
     is(
-	$exception->type,
-	"Attribute",
+        $exception->type,
+        "Attribute",
         "Cannot locate 'Xyz'");
 
     is(
-	$exception->possible_packages,
-	'Moose::Meta::Attribute::Custom::Trait::Xyz or Xyz',
+        $exception->possible_packages,
+        'Moose::Meta::Attribute::Custom::Trait::Xyz or Xyz',
         "Cannot locate 'Xyz'");
 
     is(
-	$exception->metaclass_name,
-	"Xyz",
+        $exception->metaclass_name,
+        "Xyz",
         "Cannot locate 'Xyz'");
 }
 

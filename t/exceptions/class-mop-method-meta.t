@@ -15,12 +15,12 @@ use Moose();
     like(
         $exception,
         qr/\QOverriding the body of meta methods is not allowed/,
-	"body is given to Class::MOP::Method::Meta->wrap");
+        "body is given to Class::MOP::Method::Meta->wrap");
 
     isa_ok(
         $exception,
         "Moose::Exception::CannotOverrideBodyOfMetaMethods",
-	"body is given to Class::MOP::Method::Meta->wrap");
+        "body is given to Class::MOP::Method::Meta->wrap");
 }
 
 done_testing;

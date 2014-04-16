@@ -125,7 +125,7 @@ use Moose();
         has 'foo' => (
             is  => 'ro',
             isa => 'Int'
-	);
+        );
     }
 
     {
@@ -135,7 +135,7 @@ use Moose();
         has 'foo' => (
             is  => 'ro',
             isa => 'Int'
-	);
+        );
     }
 
     my $exception = exception {
@@ -145,37 +145,37 @@ use Moose();
     like(
         $exception,
         qr/\QRole 'Foo4' has encountered an attribute conflict while being composed into 'Bar4'. This is a fatal error and cannot be disambiguated. The conflicting attribute is named 'foo'./,
-	'Role Foo4 & Role Bar4 has one common attribute named "foo"');
+        'Role Foo4 & Role Bar4 has one common attribute named "foo"');
 
     isa_ok(
         $exception,
         "Moose::Exception::AttributeConflictInRoles",
-	'Role Foo4 & Role Bar4 has one common attribute named "foo"');
+        'Role Foo4 & Role Bar4 has one common attribute named "foo"');
 
     is(
         $exception->role_name,
         "Foo4",
-	'Role Foo4 & Role Bar4 has one common attribute named "foo"');
+        'Role Foo4 & Role Bar4 has one common attribute named "foo"');
 
     is(
         $exception->role,
         Foo4->meta,
-	'Role Foo4 & Role Bar4 has one common attribute named "foo"');
+        'Role Foo4 & Role Bar4 has one common attribute named "foo"');
 
     is(
         $exception->second_role->name,
         "Bar4",
-	'Role Foo4 & Role Bar4 has one common attribute named "foo"');
+        'Role Foo4 & Role Bar4 has one common attribute named "foo"');
 
     is(
         $exception->second_role,
         Bar4->meta,
-	'Role Foo4 & Role Bar4 has one common attribute named "foo"');
+        'Role Foo4 & Role Bar4 has one common attribute named "foo"');
 
     is(
         $exception->attribute_name,
         'foo',
-	'Role Foo4 & Role Bar4 has one common attribute named "foo"');
+        'Role Foo4 & Role Bar4 has one common attribute named "foo"');
 }
 
 {

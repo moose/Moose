@@ -58,18 +58,18 @@ use Moose();
 {
     my $attr = Class::MOP::Attribute->new("Foo", ( is => 'ro'));
     my $exception = exception {
-	Class::MOP::Method::Accessor->new( accessor_type => "reader", attribute => $attr);
+        Class::MOP::Method::Accessor->new( accessor_type => "reader", attribute => $attr);
     };
 
     like(
         $exception,
         qr/\QYou must supply the package_name and name parameters/,
-	"no package_name and name is given");
+        "no package_name and name is given");
 
     isa_ok(
         $exception,
         "Moose::Exception::MustSupplyPackageNameAndName",
-	"no package_name and name is given");
+        "no package_name and name is given");
 }
 
 {
@@ -82,17 +82,17 @@ use Moose();
     like(
         $exception,
         qr/\QCould not generate inline accessor because : Can't call method "get_meta_instance" on an undefined value/,
-	"can't call get_meta_instance on an undefined value");
+        "can't call get_meta_instance on an undefined value");
 
     isa_ok(
         $exception,
         "Moose::Exception::CouldNotGenerateInlineAttributeMethod",
-	"can't call get_meta_instance on an undefined value");
+        "can't call get_meta_instance on an undefined value");
 
     is(
         $exception->option,
         "accessor",
-	"can't call get_meta_instance on an undefined value");
+        "can't call get_meta_instance on an undefined value");
 }
 
 {
@@ -105,17 +105,17 @@ use Moose();
     like(
         $exception,
         qr/\QCould not generate inline reader because : Can't call method "get_meta_instance" on an undefined value/,
-	"can't call get_meta_instance on an undefined value");
+        "can't call get_meta_instance on an undefined value");
 
     isa_ok(
         $exception,
         "Moose::Exception::CouldNotGenerateInlineAttributeMethod",
-	"can't call get_meta_instance on an undefined value");
+        "can't call get_meta_instance on an undefined value");
 
     is(
         $exception->option,
         "reader",
-	"can't call get_meta_instance on an undefined value");
+        "can't call get_meta_instance on an undefined value");
 }
 
 {
@@ -128,17 +128,17 @@ use Moose();
     like(
         $exception,
         qr/\QCould not generate inline writer because : Can't call method "get_meta_instance" on an undefined value/,
-	"can't call get_meta_instance on an undefined value");
+        "can't call get_meta_instance on an undefined value");
 
     isa_ok(
         $exception,
         "Moose::Exception::CouldNotGenerateInlineAttributeMethod",
-	"can't call get_meta_instance on an undefined value");
+        "can't call get_meta_instance on an undefined value");
 
     is(
         $exception->option,
         "writer",
-	"can't call get_meta_instance on an undefined value");
+        "can't call get_meta_instance on an undefined value");
 }
 
 {
@@ -151,17 +151,17 @@ use Moose();
     like(
         $exception,
         qr/\QCould not generate inline predicate because : Can't call method "get_meta_instance" on an undefined value/,
-	"can't call get_meta_instance on an undefined value");
+        "can't call get_meta_instance on an undefined value");
 
     isa_ok(
         $exception,
         "Moose::Exception::CouldNotGenerateInlineAttributeMethod",
-	"can't call get_meta_instance on an undefined value");
+        "can't call get_meta_instance on an undefined value");
 
     is(
         $exception->option,
         "predicate",
-	"can't call get_meta_instance on an undefined value");
+        "can't call get_meta_instance on an undefined value");
 }
 
 {
@@ -174,17 +174,17 @@ use Moose();
     like(
         $exception,
         qr/\QCould not generate inline clearer because : Can't call method "get_meta_instance" on an undefined value/,
-	"can't call get_meta_instance on an undefined value");
+        "can't call get_meta_instance on an undefined value");
 
     isa_ok(
         $exception,
         "Moose::Exception::CouldNotGenerateInlineAttributeMethod",
-	"can't call get_meta_instance on an undefined value");
+        "can't call get_meta_instance on an undefined value");
 
     is(
         $exception->option,
         "clearer",
-	"can't call get_meta_instance on an undefined value");
+        "can't call get_meta_instance on an undefined value");
 }
 
 {
@@ -195,7 +195,7 @@ use Moose();
         has 'foo' => (
             is       => 'ro',
             isa      => 'Int',
-	);
+        );
     }
 
     my $foo = Foo::ReadOnlyAccessor->new;

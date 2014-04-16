@@ -15,17 +15,17 @@ use Moose();
     like(
         $exception,
         qr/\QThe list of roles must be instances of Moose::Meta::Role, not foo/,
-	"'foo' is not an instance of Moose::Meta::Role");
+        "'foo' is not an instance of Moose::Meta::Role");
 
     isa_ok(
         $exception,
         "Moose::Exception::RolesListMustBeInstancesOfMooseMetaRole",
-	"'foo' is not an instance of Moose::Meta::Role");
+        "'foo' is not an instance of Moose::Meta::Role");
 
     is(
         $exception->role,
         "foo",
-	"'foo' is not an instance of Moose::Meta::Role");
+        "'foo' is not an instance of Moose::Meta::Role");
 }
 
 {
