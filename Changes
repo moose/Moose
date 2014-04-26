@@ -41,6 +41,11 @@ for, noteworthy changes.
   - bump prereq on Module::Runtime to properly detect when a module fails to
     load, and fix how we call these subs (Zefram, RT#92770, RT#86394, RT#92791)
 
+  [ENHANCEMENTS]
+
+ - line numbers in shipped code are now almost the same (within 3) as the
+   repository source, for easier debugging
+
 2.1202   2014-01-19
 
   [BUG FIXES]
