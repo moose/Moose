@@ -115,7 +115,7 @@ This method does not accept any arguments.
 
 =item B<count>
 
-Returns the number of elements in the hash. Also useful for not empty:
+Returns the number of elements in the hash. Also useful to check for a nonempty hash, because C<count> returns a true (nonzero) value if there is something in the hash:
 C<< has_options => 'count' >>.
 
 This method does not accept any arguments.
