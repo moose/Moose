@@ -8,7 +8,7 @@ use autodie;
 use Parse::BACKPAN::Packages;
 use LWP::Simple;
 use Archive::Tar;
-use File::Slurp 'slurp';
+use Path::Tiny;
 
 my $backpan = Parse::BACKPAN::Packages->new;
 my @cmops   = $backpan->distributions('Class-MOP');
@@ -28,7 +28,7 @@ for my $moose (@mooses) {
     my $moose_dir = build($moose);
 
     # Find the CMOP dependency
-    my $makefile = slurp("$moose_dir/Makefile.PL");
+    my $makefile = path("$moose_dir/Makefile.PL")->slurp_utf8;
     my ($cmop_dep) = $makefile =~ /Class::MOP.*?([0-9._]+)/
         or die "Unable to find Class::MOP version dependency in $moose_dir/Makefile.PL";
 

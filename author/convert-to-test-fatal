@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use File::Slurp qw( write_file );
+use Path::Tiny;
 use PPI;
 
 rewrite_doc($_) for grep { -w } @ARGV;
@@ -35,7 +35,7 @@ sub rewrite_doc {
     my $content = $doc->content();
     $content =~ s/Test::Exception/Test::Fatal/g;
 
-    write_file( $file, $content );
+    path( $file )->spew( $content );
 }
 
 sub transform_statement {
