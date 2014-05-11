@@ -27,9 +27,13 @@ system( $^X, 'author/extract-inline-tests', '--quiet' );
 
 eval MMHelper::my_package_subs();
 
+my %args = MMHelper::mm_args();
+$args{clean}{FILES} = join(' ', ($args{clean}{FILES} || ()),
+    't/recipes/{a,[c-zA-Z]}*', 't/recipes/basics_[a-fh-zA-Z]*');
+
 WriteMakefile(
     NAME => 'Moose',
     test => { TESTS => 't/*.t t/*/*.t' },
     CCFLAGS => MMHelper::ccflags_static('dev'),
-    MMHelper::mm_args(),
+    %args,
 );
