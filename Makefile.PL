@@ -18,12 +18,10 @@ BEGIN {
     ExtUtils::MakeMaker::Dist::Zilla::Develop->import();
 }
 
-use lib 'inc';
-
-use MMHelper;
-use MyInline;
-
 system( $^X, 'author/extract-inline-tests', '--quiet' );
+
+use lib 'inc';
+use MMHelper;
 
 eval MMHelper::my_package_subs();
 

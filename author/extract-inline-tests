@@ -3,11 +3,12 @@
 use strict;
 use warnings;
 
-use lib 'inc';
 use File::Find::Rule;
 use Getopt::Long;
-use MyInline;
 use Test::Inline;
+
+use lib 'inc';
+use MyInline;
 
 my $quiet;
 GetOptions( 'quiet' => \$quiet );
