@@ -39,7 +39,7 @@ $inline->save;
 
         $name =~ s/^moose_cookbook_//;
 
-        path( "t/recipes/$name" )->( $content );
+        path( "t/recipes/$name" )->spew( $content );
 
         return 1;
     }
