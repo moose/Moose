@@ -28,7 +28,7 @@ local $TODO = 'Moose::Exceptions needs refactoring';
 
 my $e = exception { BBB->new };
 ok(
-    $e->isa('AttributeIsRequired'),
+    $e->isa('Moose::Exception::AttributeIsRequired'),
     'got the right exception',
 )
 or note 'got exception ', ref($e), ': ', $e->message;
