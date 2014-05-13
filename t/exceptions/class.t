@@ -215,9 +215,9 @@ use Test::Fatal;
         "Class cannot extend a role");
 
     is(
-	$exception->role_name,
-	'Bar',
-	"Class cannot extend a role");
+        $exception->role_name,
+        'Bar',
+        "Class cannot extend a role");
 }
 
 {
@@ -239,8 +239,8 @@ use Test::Fatal;
         "there is already a method named foo2 defined in the class, so you can't override it");
 
     is(
-	$exception->class_name,
-	'Foo',
+        $exception->class_name,
+        'Foo',
         "there is already a method named foo2 defined in the class, so you can't override it");
 
     is(
@@ -268,8 +268,8 @@ use Test::Fatal;
         "there is already a method named foo defined in the class");
 
     is(
-	$exception->class_name,
-	'Foo',
+        $exception->class_name,
+        'Foo',
         "there is already a method named foo defined in the class");
 
     is(
