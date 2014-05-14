@@ -3,9 +3,7 @@ use warnings;
 
 use Test::More;
 
-use Test::Requires {
-    'Test::Output' => '0.01',
-};
+use Test::Requires 'Test::Output';
 
 {
     package Bar;

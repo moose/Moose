@@ -1,10 +1,8 @@
 use strict;
 use warnings;
-use Test::More;
 
-use Test::Requires {
-    'Test::Output' => '0.01', # skip all if not installed
-};
+use Test::More;
+use Test::Requires 'Test::Output';  # skip all if not installed
 
 # this test script ensures that my idiom of:
 # role: sub BUILD, after BUILD

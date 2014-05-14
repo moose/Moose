@@ -3,11 +3,7 @@ use warnings;
 
 use Test::More;
 use Test::Fatal;
-
-use Test::Requires {
-    'IO::String' => '0.01', # skip all if not installed
-    'IO::File' => '0.01',
-};
+use Test::Requires qw(IO::String IO::File); # skip all if not installed
 
 {
     package Email::Moose;

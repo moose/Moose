@@ -5,9 +5,7 @@ use Test::Fatal;
 use Test::More;
 use Test::Moose qw( with_immutable );
 
-use Test::Requires {
-    'Test::Output' => '0.01',
-};
+use Test::Requires 'Test::Output';
 
 {
     package Baz;

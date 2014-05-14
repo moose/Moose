@@ -2,7 +2,6 @@ use strict;
 use warnings;
 
 use Test::More;
-
 use Test::Requires {
     'SUPER' => 1.10, # skip all if not installed
 };

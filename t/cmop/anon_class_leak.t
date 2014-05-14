@@ -1,12 +1,10 @@
 use strict;
 use warnings;
 
-use Class::MOP;
 use Test::More;
+use Test::Requires 'Test::LeakTrace';   # skip all if not installed
 
-use Test::Requires {
-    'Test::LeakTrace' => '0.01', # skip all if not installed
-};
+use Class::MOP;
 
 # 5.10.0 has a bug on weaken($hash_ref) which leaks an AV.
 my $expected = ( $] == 5.010_000 ? 1 : 0 );

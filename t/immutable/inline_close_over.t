@@ -1,11 +1,12 @@
 use strict;
 use warnings;
+
 use Test::More;
+use Test::Requires qw(Data::Visitor PadWalker);
 
 use Class::Load 'load_class';
-use Test::Requires 'Data::Visitor';
-use Test::Requires 'PadWalker';
 use Try::Tiny;
+
 my $can_partialdump = try {
     load_class('Devel::PartialDump', { -version => 0.14 }); 1;
 };

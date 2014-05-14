@@ -10,9 +10,7 @@ use lib catdir($FindBin::Bin, 'lib');
 
 use Class::MOP;
 
-use Test::Requires {
-    'Algorithm::C3' => '0.01', # skip all if not installed
-};
+use Test::Requires 'Algorithm::C3'; # skip all if not installed
 
 use C3MethodDispatchOrder;
 

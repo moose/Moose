@@ -60,9 +60,7 @@ See the L<Moose::Exporter> docs for more details on its API.
 
 =begin testing-SETUP
 
-use Test::Requires {
-    'Test::Output' => '0',
-};
+use Test::Requires 'Test::Output';
 
 =end testing-SETUP
 

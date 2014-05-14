@@ -1,10 +1,7 @@
 use strict;
 use warnings;
 
-use Test::Requires {
-    'Test::Output' => '0.01',
-};
-
+use Test::Requires 'Test::Output';
 use Test::More;
 
 {

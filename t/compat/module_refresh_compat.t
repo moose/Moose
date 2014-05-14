@@ -9,9 +9,7 @@ use Test::Fatal;
 use File::Spec;
 use File::Temp 'tempdir';
 
-use Test::Requires {
-    'Module::Refresh' => '0.01', # skip all if not installed
-};
+use Test::Requires 'Module::Refresh';   # skip all if not installed
 
 =pod
 

@@ -12,10 +12,7 @@ Pretty well if I do say so myself :)
 
 =cut
 
-use Test::Requires {
-    'Declare::Constraints::Simple' => '0.01', # skip all if not installed
-};
-
+use Test::Requires 'Declare::Constraints::Simple';  # skip all if not installed
 use Test::Fatal;
 
 {

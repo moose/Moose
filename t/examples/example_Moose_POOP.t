@@ -5,7 +5,7 @@ use Test::More;
 
 use Test::Requires {
     'DBM::Deep' => '1.0003', # skip all if not installed
-    'DateTime::Format::MySQL' => '0.01',
+    'DateTime::Format::MySQL' => '0',
 };
 
 use Test::Fatal;
