@@ -30,10 +30,8 @@ use Test::Fatal;
     extends 'Parent';
 }
 
-local $TODO = 'Moose::Exceptions needs refactoring';
-
 # the exception produced should be AttributeIsRequired, however
-# AttributeIsRequired is throwing the exception ClassNamesDoNotMatch.
+# AttributeIsRequired was throwing the exception ClassNamesDoNotMatch.
 
 {
     my $e = exception { my $obj = Child->new };

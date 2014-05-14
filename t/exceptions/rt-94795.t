@@ -7,7 +7,7 @@ use Test::Fatal;
 # https://rt.cpan.org/Ticket/Display.html?id=94795
 
 # the exception produced should be AttributeIsRequired, however
-# AttributeIsRequired is throwing the exception ClassNamesDoNotMatch.
+# AttributeIsRequired was throwing the exception ClassNamesDoNotMatch.
 
 {
     package AAA;
@@ -23,8 +23,6 @@ use Test::Fatal;
     use Moose;
     extends qw/AAA/;
 }
-
-local $TODO = 'Moose::Exceptions needs refactoring';
 
 my $e = exception { BBB->new };
 ok(
