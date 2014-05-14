@@ -18,6 +18,7 @@
 /*.bs
 /xs/*.c
 /*.o
+/xs/*.o
 /cover_db
 /*.gc??
 /test-mydeps-*
