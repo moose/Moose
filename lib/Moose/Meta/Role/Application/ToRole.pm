@@ -19,15 +19,15 @@ sub apply {
 sub check_role_exclusions {
     my ($self, $role1, $role2) = @_;
     if ( $role2->excludes_role($role1->name) ) {
-        throw_exception( ConflictDetectedInCheckRoleExclusions => role          => $role2,
-                                                                  excluded_role => $role1
+        throw_exception( ConflictDetectedInCheckRoleExclusions => role_name          => $role2->name,
+                                                                  excluded_role_name => $role1->name,
                        );
     }
     foreach my $excluded_role_name ($role1->get_excluded_roles_list) {
         if ( $role2->does_role($excluded_role_name) ) {
-            throw_exception( RoleDoesTheExcludedRole => role          => $role2,
-                                                        excluded_role => Class::MOP::class_of($excluded_role_name),
-                                                        second_role   => $role1
+            throw_exception( RoleDoesTheExcludedRole => role_name          => $role2->name,
+                                                        excluded_role_name => $excluded_role_name,
+                                                        second_role_name   => $role1->name,
                            );
         }
         $role2->add_excluded_roles($excluded_role_name);
@@ -60,9 +60,9 @@ sub apply_attributes {
 
             my $role2_name = $role2->name;
 
-            throw_exception( AttributeConflictInRoles => role           => $role1,
-                                                         second_role    => $role2,
-                                                         attribute_name => $attribute_name
+            throw_exception( AttributeConflictInRoles => role_name        => $role1->name,
+                                                         second_role_name => $role2->name,
+                                                         attribute_name   => $attribute_name
                            );
         }
         else {
@@ -108,10 +108,10 @@ sub apply_methods {
         if (   $role2_method
             && $role2_method->body != $method->body ) {
 
-            throw_exception( CannotCreateMethodAliasLocalMethodIsPresent => aliased_method_name => $aliased_method_name,
-                                                                            method              => $method,
-                                                                            role                => $role2,
-                                                                            role_being_applied  => $role1
+            throw_exception( CannotCreateMethodAliasLocalMethodIsPresent => aliased_method_name     => $aliased_method_name,
+                                                                            method                  => $method,
+                                                                            role_name               => $role2->name,
+                                                                            role_being_applied_name => $role1->name,
                            );
         }
 
@@ -136,9 +136,9 @@ sub apply_override_method_modifiers {
             # we have a conflict here, because you cannot
             # combine an overridden method with a locally
             # defined one
-            throw_exception( OverrideConflictInComposition => role               => $role2,
-                                                              role_being_applied => $role1,
-                                                              method_name        => $method_name
+            throw_exception( OverrideConflictInComposition => role_name               => $role2->name,
+                                                              role_being_applied_name => $role1->name,
+                                                              method_name             => $method_name
                            );
         }
         else {
@@ -148,10 +148,10 @@ sub apply_override_method_modifiers {
             if ($role2->has_override_method_modifier($method_name) &&
                 $role1->get_override_method_modifier($method_name) != $role2->get_override_method_modifier($method_name)) {
 
-                throw_exception( OverrideConflictInComposition => role                => $role2,
-                                                                  role_being_applied  => $role1,
-                                                                  method_name         => $method_name,
-                                                                  two_overrides_found => 1
+                throw_exception( OverrideConflictInComposition => role_name               => $role2->name,
+                                                                  role_being_applied_name => $role1->name,
+                                                                  method_name             => $method_name,
+                                                                  two_overrides_found     => 1
                                );
             }
             else {

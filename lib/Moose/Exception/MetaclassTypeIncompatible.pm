@@ -4,6 +4,8 @@ use Moose;
 extends 'Moose::Exception';
 with 'Moose::Exception::Role::Class';
 
+use Moose::Util 'find_meta';
+
 has [qw(superclass_name metaclass_type)] => (
     is       => 'ro',
     isa      => 'Str',
@@ -20,7 +22,9 @@ sub _build_message {
     $metaclass_type_name =~ s/_(?:meta)?class$//;
     $metaclass_type_name =~ s/_/ /g;
 
-    my $self_metaclass_type = $self->class->$metaclass_type;
+    my $class = find_meta( $class_name );
+
+    my $self_metaclass_type = $class->$metaclass_type;
 
     my $super_meta = Class::MOP::get_metaclass_by_name($superclass_name);
     my $super_metatype = $super_meta->$metaclass_type;

@@ -114,12 +114,12 @@ use Moose::Util::TypeConstraints;
         "there is an already defined role of name 'Foo1'");
 
     is(
-        $exception->type->name,
+        $exception->type_name,
         'Foo1',
         "there is an already defined role of name 'Foo1'");
 
     is(
-        $exception->type->_package_defined_in,
+        (find_type_constraint($exception->type_name))->_package_defined_in,
         'Moose::Role',
         "there is an already defined role of name 'Foo1'");
 
@@ -150,12 +150,12 @@ use Moose::Util::TypeConstraints;
         "there is an already defined class of name 'Foo2'");
 
     is(
-        $exception->type->name,
+        $exception->type_name,
         'Foo2',
         "there is an already defined class of name 'Foo2'");
 
     is(
-        $exception->type->_package_defined_in,
+        (find_type_constraint($exception->type_name))->_package_defined_in,
         'Moose',
         "there is an already defined class of name 'Foo2'");
 
@@ -239,12 +239,12 @@ use Moose::Util::TypeConstraints;
         "there is an already defined class of name 'Foo3'");
 
     is(
-        $exception->type->name,
+        $exception->type_name,
         'Foo3',
         "there is an already defined class of name 'Foo3'");
 
     is(
-        $exception->type->_package_defined_in,
+        find_type_constraint($exception->type_name)->_package_defined_in,
         'Moose',
         "there is an already defined class of name 'Foo3'");
 

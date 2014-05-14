@@ -47,8 +47,8 @@ use Moose();
         "attribute name is not given");
 
     is(
-        $exception->class,
-        $class,
+        $exception->class_name,
+        'Foo',
         "attribute name is not given");
 }
 
@@ -69,8 +69,8 @@ use Moose();
         "attribute name is not given");
 
     is(
-        $exception->class,
-        $class,
+        $exception->class_name,
+        "Foo",
         "attribute name is not given");
 }
 
@@ -91,8 +91,8 @@ use Moose();
         "attribute name is not given");
 
     is(
-        $exception->class,
-        $class,
+        $exception->class_name,
+        "Foo",
         "attribute name is not given");
 }
 

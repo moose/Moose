@@ -115,7 +115,7 @@ use Moose();
         "role Foo2 & Bar2, both have an attribute named foo");
 
     is(
-        $exception->second_role->name,
+        $exception->second_role_name,
         "Bar2",
         "role Foo2 & Bar2, both have an attribute named foo");
 

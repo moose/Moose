@@ -17,7 +17,7 @@ sub compile_type_coercion {
 
     (blessed $type_constraint && $type_constraint->isa('Moose::Meta::TypeConstraint::Union'))
      || throw_exception( NeedsTypeConstraintUnionForTypeCoercionUnion => type_coercion_union_object => $self,
-                                                                         type_name                  => $type_constraint
+                                                                         type_name                  => $type_constraint->name
                        );
 
     $self->_compiled_type_coercion(
