@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.1206   2014-05-14
+
   [BUG FIXES]
 
   - exceptions should not throw other exceptions; fixes cases where exceptions
