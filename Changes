@@ -5,14 +5,16 @@ for, noteworthy changes.
 
   [BUG FIXES]
 
-  - exceptions should not throw other exceptions (RT#92818, RT#94795)
+  - exceptions should not throw other exceptions; fixes cases where exceptions
+    were reporting the wrong error (Upasana, RT#92818 and RT#94795)
 
   [OTHER]
 
   - prereqs needed strictly for building with Dist::Zilla have been moved from
     develop requires to develop recommends, to simplify automated testing on
-    older perls that cannot install all Dist::Zilla components, removed instances
-    of metaobjects where they're not really required
+    older perls that cannot install all Dist::Zilla components
+  - removed instances of metaobjects in exception classes where they're not
+    really required
 
 2.1205   2014-04-15
 
