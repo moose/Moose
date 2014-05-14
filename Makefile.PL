@@ -33,5 +33,7 @@ WriteMakefile(
     NAME => 'Moose',
     test => { TESTS => 't/*.t t/*/*.t' },
     CCFLAGS => MMHelper::ccflags_static('dev'),
+    INSTALLMAN1DIR => 'none',
+    INSTALLMAN3DIR => 'none',
     %args,
 );
