@@ -1,14 +1,11 @@
 use strict;
 use warnings;
 
-use FindBin;
-use File::Spec::Functions;
-
 use Test::More;
 
 use Class::Load qw(is_class_loaded);
 
-use lib catdir($FindBin::Bin, 'lib');
+use lib 't/cmop/lib';
 
 {
     package Foo;

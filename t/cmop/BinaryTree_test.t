@@ -1,15 +1,12 @@
 use strict;
 use warnings;
 
-use FindBin;
-use File::Spec::Functions;
-
 use Test::More;
 use Test::Fatal;
 
 use Class::Load qw( is_class_loaded load_class );
 
-use lib catdir($FindBin::Bin, 'lib');
+use lib 't/cmop/lib';
 
 ## ----------------------------------------------------------------------------
 ## These are all tests which are derived from the Tree::Binary test suite

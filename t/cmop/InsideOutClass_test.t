@@ -1,15 +1,11 @@
 use strict;
 use warnings;
 
-use FindBin;
-use File::Spec::Functions;
-
 use Test::More;
-
-use lib catdir($FindBin::Bin, 'lib');
 
 use Scalar::Util 'reftype';
 
+use lib 't/cmop/lib';
 require InsideOutClass;
 
 {

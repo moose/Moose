@@ -1,15 +1,12 @@
 use strict;
 use warnings;
 
-use FindBin;
-use File::Spec::Functions;
-
 use Test::More;
 use Test::Fatal;
 
 use Class::MOP;
 
-use lib catdir($FindBin::Bin, 'lib');
+use lib 't/cmop/lib';
 
 # make sure the Class::MOP::Class->meta does the right thing
 

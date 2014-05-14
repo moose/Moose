@@ -1,15 +1,11 @@
 use strict;
 use warnings;
 
-use FindBin;
-use File::Spec::Functions;
-
 use Test::More;
-
-use lib catdir($FindBin::Bin, 'lib');
 
 use Class::MOP;
 
+use lib 't/cmop/lib';
 use Perl6Attribute;
 
 {
