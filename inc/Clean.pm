@@ -16,14 +16,4 @@ sub before_build {
             die "couldn't exec: $!";
         }
     }
-
-    if (-e 'META.yml') {
-        $self->log("Removing existing META.yml file");
-        unlink('META.yml');
-    }
-
-    if ( -e 'lib/Moose/Manual/Exceptions/Manifest.pod') {
-        $self->log('Removing existing Moose::Manual::Exceptions::Manifest');
-        unlink('lib/Moose/Manual/Exceptions/Manifest.pod');
-    }
 }
