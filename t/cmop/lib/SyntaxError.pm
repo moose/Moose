@@ -1,4 +1,3 @@
-#!/usr/bin/env perl
 package SyntaxError;
 use strict;
 use warnings;
