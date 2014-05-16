@@ -57,4 +57,3 @@ is deep guts.
 See L<Moose/BUGS> for details on reporting bugs.
 
 =cut
-

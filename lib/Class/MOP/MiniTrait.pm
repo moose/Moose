@@ -46,4 +46,3 @@ of applying a trait to a class. It exists solely for use inside Class::MOP and
 L<Moose> core classes.
 
 =cut
-

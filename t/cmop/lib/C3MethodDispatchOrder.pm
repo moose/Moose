@@ -1,4 +1,3 @@
-
 package # hide from PAUSE
     C3MethodDispatchOrder;
 

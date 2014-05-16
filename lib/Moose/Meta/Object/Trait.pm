@@ -1,4 +1,3 @@
-
 package Moose::Meta::Object::Trait;
 
 use Scalar::Util qw(blessed);

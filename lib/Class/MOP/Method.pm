@@ -1,4 +1,3 @@
-
 package Class::MOP::Method;
 
 use strict;
@@ -279,4 +278,3 @@ metaclass.
 =back
 
 =cut
-

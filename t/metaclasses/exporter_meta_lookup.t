@@ -61,4 +61,3 @@ ok(Class::Vacuum::Innards->can('parasol'), 'Vacuum stole the parasol method');
 ok(!Victim2->can('parasol'), 'Victim does not get it at all');
 
 done_testing;
-

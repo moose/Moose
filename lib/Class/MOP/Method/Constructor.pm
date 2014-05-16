@@ -1,4 +1,3 @@
-
 package Class::MOP::Method::Constructor;
 
 use strict;

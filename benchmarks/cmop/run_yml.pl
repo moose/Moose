@@ -16,5 +16,3 @@ foreach my $bench ( @$data ) {
     Bench::Run->new( %$bench )->run;
     print "\n\n";
 }
-
-

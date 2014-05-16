@@ -169,4 +169,3 @@ or not the classes have been made immutable yet.
 See L<Moose/BUGS> for details on reporting bugs.
 
 =cut
-

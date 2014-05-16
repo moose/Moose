@@ -1,4 +1,3 @@
-
 package MyMetaClass::Attribute;
 
 use strict;

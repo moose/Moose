@@ -150,4 +150,3 @@ sub build {
     (my $directory = $arbitrary_file) =~ s{/.*}{};
     return $directory;
 }
-

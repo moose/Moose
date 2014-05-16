@@ -1,4 +1,3 @@
-
 package Moose::Meta::Method::Constructor;
 
 use strict;
@@ -83,4 +82,3 @@ L<Moose::Meta::Method> I<and> L<Class::MOP::Method::Constructor>.
 See L<Moose/BUGS> for details on reporting bugs.
 
 =cut
-

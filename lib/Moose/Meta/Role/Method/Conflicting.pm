@@ -1,4 +1,3 @@
-
 package Moose::Meta::Role::Method::Conflicting;
 
 use strict;

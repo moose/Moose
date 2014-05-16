@@ -1,4 +1,3 @@
-
 package Moose::Meta::Method::Delegation;
 
 use strict;

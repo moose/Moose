@@ -21,4 +21,3 @@ use Moose::Util::TypeConstraints;
 }
 
 done_testing;
-

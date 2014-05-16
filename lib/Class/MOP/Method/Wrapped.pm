@@ -1,4 +1,3 @@
-
 package Class::MOP::Method::Wrapped;
 
 use strict;
@@ -268,4 +267,3 @@ acting as the specified type of modifier.
 =back
 
 =cut
-

@@ -1,4 +1,3 @@
-
 package Class::MOP;
 
 use strict;
@@ -7,7 +6,6 @@ use warnings;
 use 5.008003;
 
 use MRO::Compat;
-
 use Class::Load 0.07 ();
 use Scalar::Util  'weaken', 'isweak', 'reftype', 'blessed';
 use Data::OptList;

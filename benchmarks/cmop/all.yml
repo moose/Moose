@@ -27,4 +27,3 @@
         y: 6
       accessor: x
       accessor_args: [ 5 ]
-

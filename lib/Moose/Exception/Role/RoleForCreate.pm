@@ -10,4 +10,3 @@ has 'attribute_class' => (
 );
 
 1;
-

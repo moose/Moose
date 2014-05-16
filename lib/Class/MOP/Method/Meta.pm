@@ -1,4 +1,3 @@
-
 package Class::MOP::Method::Meta;
 
 use strict;
@@ -105,4 +104,3 @@ accepted by L<Class::MOP::Method>, except that C<body> cannot be passed
 =back
 
 =cut
-

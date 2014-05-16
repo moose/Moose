@@ -269,5 +269,3 @@ The benefits of doing this are:
   them into two pieces (one for the interface with a bunch of requires(), and
   another for the actual impl with the problematic attrs (and stub methods to
   fix the accessors) and method modifiers (dunno if this can even work at all)
-
-

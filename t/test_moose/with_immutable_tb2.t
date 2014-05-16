@@ -67,4 +67,3 @@ ok(!$ret1, 'one of the is_immutable tests failed');
 ok($ret2, 'the find_method_by_name tests passed');
 
 done_testing;
-

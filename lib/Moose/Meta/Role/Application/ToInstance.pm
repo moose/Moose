@@ -64,4 +64,3 @@ __END__
 See L<Moose/BUGS> for details on reporting bugs.
 
 =cut
-

@@ -83,5 +83,3 @@ cmpthese($ins_rounds, {
         $caf_idx++;
     },
 }, 'noc');
-
-

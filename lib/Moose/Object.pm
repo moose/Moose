@@ -1,4 +1,3 @@
-
 package Moose::Object;
 
 use strict;

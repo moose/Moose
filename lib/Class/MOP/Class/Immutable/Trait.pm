@@ -101,4 +101,3 @@ objects. In reality, it is simply a parent class.
 It implements caching and read-only-ness for various metaclass methods.
 
 =cut
-

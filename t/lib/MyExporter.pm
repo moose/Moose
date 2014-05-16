@@ -1,5 +1,3 @@
-
-
 package MyExporter;
 use Moose::Exporter;
 use Test::More;

@@ -1,4 +1,3 @@
-
 package Class::MOP::Package;
 
 use strict;

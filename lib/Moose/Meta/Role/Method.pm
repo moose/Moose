@@ -1,4 +1,3 @@
-
 package Moose::Meta::Role::Method;
 
 use strict;

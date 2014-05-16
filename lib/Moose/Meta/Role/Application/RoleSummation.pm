@@ -310,4 +310,3 @@ bindings and 'disabling' the conflicting bindings
 See L<Moose/BUGS> for details on reporting bugs.
 
 =cut
-

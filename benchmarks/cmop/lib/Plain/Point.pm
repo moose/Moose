@@ -42,4 +42,3 @@ sub clear {
 __PACKAGE__;
 
 __END__
-

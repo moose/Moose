@@ -114,4 +114,3 @@ cmpthese($rounds, {
         CMM::Install::around(method => sub {});
     },
 }, 'noc');
-

@@ -1,4 +1,3 @@
-
 package Foo;
 use Moose;
 

@@ -1,4 +1,3 @@
-
 package Moose::Meta::TypeConstraint;
 
 use strict;

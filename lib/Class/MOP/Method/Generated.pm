@@ -1,4 +1,3 @@
-
 package Class::MOP::Method::Generated;
 
 use strict;
@@ -79,4 +78,3 @@ C<Class::MOP::Method::Constructor>.
 It is not intended to be used directly.
 
 =cut
-

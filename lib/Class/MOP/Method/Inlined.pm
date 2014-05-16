@@ -129,4 +129,3 @@ If it cannot be inlined, it spits out a warning and returns false.
 =back
 
 =cut
-

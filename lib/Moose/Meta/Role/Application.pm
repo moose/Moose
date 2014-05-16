@@ -136,4 +136,3 @@ consideration, and is intentionally not yet documented.
 See L<Moose/BUGS> for details on reporting bugs.
 
 =cut
-

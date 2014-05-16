@@ -1,4 +1,3 @@
-
 package # hide the package from PAUSE
     InstanceCountingClass;
 

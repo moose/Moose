@@ -1,4 +1,3 @@
-
 package MyMetaClass::Random;
 
 use strict;

@@ -1,4 +1,3 @@
-
 package Class::MOP::Method::Overload;
 
 use strict;

@@ -9,4 +9,3 @@ sub _build_message {
 }
 
 1;
-

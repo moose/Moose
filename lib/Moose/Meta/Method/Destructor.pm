@@ -1,4 +1,3 @@
-
 package Moose::Meta::Method::Destructor;
 
 use strict;
@@ -190,4 +189,3 @@ of its parents defines a C<DEMOLISH> method, it needs a destructor.
 See L<Moose/BUGS> for details on reporting bugs.
 
 =cut
-

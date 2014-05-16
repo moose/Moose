@@ -1,4 +1,3 @@
-
 package Moose::Meta::TypeCoercion::Union;
 
 use strict;

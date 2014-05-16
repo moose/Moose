@@ -669,4 +669,3 @@ Here is a list of possible functions to write
 See L<Moose/BUGS> for details on reporting bugs.
 
 =cut
-

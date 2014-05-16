@@ -1,4 +1,3 @@
-
 package Class::MOP::Method::Accessor;
 
 use strict;
@@ -347,4 +346,3 @@ constructed.
 =back
 
 =cut
-

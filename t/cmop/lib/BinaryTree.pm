@@ -1,4 +1,3 @@
-
 package BinaryTree;
 
 use strict;

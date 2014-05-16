@@ -1,4 +1,3 @@
-
 package MyMetaClass::Method;
 
 use strict;

@@ -1,4 +1,3 @@
-
 package MyMetaClass;
 
 use strict;

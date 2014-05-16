@@ -1,4 +1,3 @@
-
 package Bar;
 use Moose;
 use Moose::Util::TypeConstraints;

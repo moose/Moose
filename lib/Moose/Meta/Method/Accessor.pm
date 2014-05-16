@@ -1,4 +1,3 @@
-
 package Moose::Meta::Method::Accessor;
 
 use strict;

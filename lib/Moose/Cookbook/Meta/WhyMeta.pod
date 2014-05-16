@@ -52,5 +52,3 @@ L<MooseX::UndefTolerant>. For a more complex example see
 L<Fey::ORM> or L<Bread::Board::Declare>.
 
 =cut
-
-

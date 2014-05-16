@@ -1,4 +1,3 @@
-
 package Moose::Exception::IncompatibleMetaclassOfSuperclass;
 
 use Moose;

@@ -1,4 +1,3 @@
-
 package Moose::Meta::Class;
 
 use strict;

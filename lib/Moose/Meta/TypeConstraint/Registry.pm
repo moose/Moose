@@ -1,4 +1,3 @@
-
 package Moose::Meta::TypeConstraint::Registry;
 
 use strict;
