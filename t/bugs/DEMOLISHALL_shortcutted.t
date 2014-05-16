@@ -1,3 +1,6 @@
+use strict;
+use warnings;
+
 ## This test ensures that sub DEMOLISHALL fires even if there is no sub DEMOLISH
 ## Currently fails because of a bad optimization in DESTROY
 ## Feb 12, 2009 -- Evan Carroll me@evancarroll.com

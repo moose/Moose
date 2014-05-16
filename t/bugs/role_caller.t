@@ -1,3 +1,6 @@
+use strict;
+use warnings;
+
 package MyRole;
 
 use Moose::Role;

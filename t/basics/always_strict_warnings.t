@@ -1,5 +1,7 @@
 use Test::More;
 
+# very intentionally not doing use strict; use warnings here...
+
 # for classes ...
 {
     package Foo;

@@ -1,8 +1,8 @@
-use lib "t/lib";
 use strict;
 use warnings;
 
 use Test::More;
+use lib 't/lib';
 
 BEGIN {
     package MyExporterRole;

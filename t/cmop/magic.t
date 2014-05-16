@@ -1,8 +1,8 @@
-# Testing magical scalars (using tied scalar)
-# Note that XSUBs do not handle magical scalars automatically.
-
 use strict;
 use warnings;
+
+# Testing magical scalars (using tied scalar)
+# Note that XSUBs do not handle magical scalars automatically.
 
 use Test::More;
 use Test::Fatal;

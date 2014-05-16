@@ -1,8 +1,8 @@
-# this functionality may be pushing toward parametric roles/classes
-# it's off in a corner and may not be that important
-
 use strict;
 use warnings;
+
+# this functionality may be pushing toward parametric roles/classes
+# it's off in a corner and may not be that important
 
 use Test::More;
 use Test::Fatal;
