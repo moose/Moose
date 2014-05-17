@@ -71,7 +71,7 @@ ok( $Foo->has_method('cake'), '... got the constant method stub cake' );
 
 my $foo = sub {'Foo::foo'};
 
-ok( !UNIVERSAL::isa( $foo, 'Class::MOP::Method' ),
+ok( !Scalar::Util::blessed($foo),
     '... our method is not yet blessed' );
 
 is( exception {
