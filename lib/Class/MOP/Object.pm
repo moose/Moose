@@ -16,7 +16,7 @@ sub throw_error {
 
 sub _inline_throw_error {
     my ( $self, $message ) = @_;
-    return 'Moose->throw_error('.$message.')';
+    return 'die Module::Runtime::use_module("Moose::Exception::Legacy")->new(message => ' . $message. ')';
 }
 
 sub _new {

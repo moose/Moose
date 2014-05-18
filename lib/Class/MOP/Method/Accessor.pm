@@ -153,7 +153,7 @@ sub _generate_reader_method_inline {
         $self->_compile_code([
             'sub {',
                 'if (@_ > 1) {',
-                    $self->_inline_throw_exception( "CannotAssignValueToReadOnlyAccessor => ".
+                    $self->_inline_throw_exception( CannotAssignValueToReadOnlyAccessor =>
                                                     'class_name                          => ref $_[0],'.
                                                     'value                               => $_[1],'.
                                                     "attribute_name                      => '".$attr_name."'",
@@ -172,8 +172,8 @@ sub _generate_reader_method_inline {
 }
 
 sub _inline_throw_exception {
-    my ( $self, $throw_args ) = @_;
-    return 'require Moose::Util; Moose::Util::throw_exception('.$throw_args.')';
+    my ( $self, $exception_type, $throw_args ) = @_;
+    return 'die Module::Runtime::use_module("Moose::Exception::' . $exception_type . '")->new(' . ($throw_args || '') . ')';
 }
 
 sub _generate_writer_method {

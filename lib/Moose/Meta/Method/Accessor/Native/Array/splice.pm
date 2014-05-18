@@ -24,7 +24,7 @@ sub _inline_check_arguments {
     return (
         $self->_inline_check_var_is_valid_index('$idx'),
         'if (defined($len) && $len !~ /^-?\d+$/) {',
-            $self->_inline_throw_exception( "InvalidArgumentToMethod => ".
+            $self->_inline_throw_exception( InvalidArgumentToMethod =>
                                             'argument                => $len,'.
                                             'method_name             => "splice",'.
                                             'type_of_argument        => "integer",'.
