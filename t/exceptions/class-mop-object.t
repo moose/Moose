@@ -7,6 +7,7 @@ use Test::Fatal;
 {
     my $exception = exception {
         use Moose ();
+        # XXX call cmop version of throw_error here instead!
         Moose->throw_error("Hello, I am an exception object");
     };
 

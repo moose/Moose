@@ -5,13 +5,12 @@ use warnings;
 
 use parent 'Class::MOP::Mixin';
 use Scalar::Util 'blessed';
+use Module::Runtime 'use_module';
 
 # introspection
 
 sub throw_error {
-    shift;
-    require Moose::Util;
-    Moose::Util::throw_exception( Legacy => message => join('', @_) );
+    shift->_throw_exception( Legacy => message => join('', @_) );
 }
 
 sub _inline_throw_error {
@@ -64,8 +63,7 @@ sub _make_compatible_with {
     my $new_metaclass = $self->_get_compatible_metaclass($other_name);
 
     unless ( defined $new_metaclass ) {
-        require Moose::Util;
-        Moose::Util::throw_exception( CannotMakeMetaclassCompatible => superclass_name => $other_name,
+        $self->_throw_exception( CannotMakeMetaclassCompatible => superclass_name => $other_name,
                                                                        class           => $self,
                                     );
     }
@@ -130,8 +128,8 @@ default maximum depth is 1.
 
 =item B<< $metaclass->throw_error($message) >>
 
-This method calls L<Moose::Util::throw_exception> internally, with an object
-of class Moose::Exception::Legacy.
+This method calls L<Class::MOP::Mixin/_throw_exception> internally, with an object
+of class L<Moose::Exception::Legacy>.
 
 =back
 

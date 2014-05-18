@@ -11,8 +11,6 @@ use Try::Tiny;
 
 use parent 'Class::MOP::Object', 'Class::MOP::Mixin::AttributeCore';
 
-use Moose::Util 'throw_exception';
-
 # NOTE: (meta-circularity)
 # This method will be replaced in the
 # boostrap section of Class::MOP, by
@@ -31,24 +29,24 @@ sub new {
     my $name = $options{name};
 
     (defined $name)
-        || throw_exception( MOPAttributeNewNeedsAttributeName => class  => $class,
+        || $class->_throw_exception( MOPAttributeNewNeedsAttributeName => class  => $class,
                                                                  params => \%options
                           );
 
     $options{init_arg} = $name
         if not exists $options{init_arg};
     if(exists $options{builder}){
-        throw_exception( BuilderMustBeAMethodName => class  => $class,
+        $class->_throw_exception( BuilderMustBeAMethodName => class  => $class,
                                                      params => \%options
                        )
             if ref $options{builder} || !(defined $options{builder});
-        throw_exception( BothBuilderAndDefaultAreNotAllowed => class  => $class,
+        $class->_throw_exception( BothBuilderAndDefaultAreNotAllowed => class  => $class,
                                                                params => \%options
                        )
             if exists $options{default};
     } else {
         ($class->is_default_a_coderef(\%options))
-            || throw_exception( ReferencesAreNotAllowedAsDefault => class          => $class,
+            || $class->_throw_exception( ReferencesAreNotAllowedAsDefault => class          => $class,
                                                                     params         => \%options,
                                                                     attribute_name => $options{name}
                               )
@@ -56,7 +54,7 @@ sub new {
     }
 
     if( $options{required} and not( defined($options{builder}) || defined($options{init_arg}) || exists $options{default} ) ) {
-        throw_exception( RequiredAttributeLacksInitialization => class  => $class,
+        $class->_throw_exception( RequiredAttributeLacksInitialization => class  => $class,
                                                                  params => \%options
                        );
     }
@@ -148,7 +146,7 @@ sub initialize_instance_slot {
             );
         }
         else {
-            throw_exception( BuilderMethodNotSupportedForAttribute => attribute => $self,
+            $self->_throw_exception( BuilderMethodNotSupportedForAttribute => attribute => $self,
                                                                       instance  => $instance
                            );
         }
@@ -251,7 +249,7 @@ sub slots { (shift)->name }
 sub attach_to_class {
     my ($self, $class) = @_;
     (blessed($class) && $class->isa('Class::MOP::Class'))
-        || throw_exception( AttachToClassNeedsAClassMOPClassInstanceOrASubclass => attribute => $self,
+        || $self->_throw_exception( AttachToClassNeedsAClassMOPClassInstanceOrASubclass => attribute => $self,
                                                                                    class     => $class
                           );
     weaken($self->{'associated_class'} = $class);
@@ -379,7 +377,7 @@ sub _process_accessors {
 
     if (ref($accessor)) {
         (ref($accessor) eq 'HASH')
-            || throw_exception( BadOptionFormat => attribute    => $self,
+            || $self->_throw_exception( BadOptionFormat => attribute    => $self,
                                                    option_value => $accessor,
                                                    option_name  => $type
                               );
@@ -416,7 +414,7 @@ sub _process_accessors {
             );
         }
         catch {
-            throw_exception( CouldNotCreateMethod => attribute    => $self,
+            $self->_throw_exception( CouldNotCreateMethod => attribute    => $self,
                                                      option_value => $accessor,
                                                      option_name  => $type,
                                                      error        => $_
