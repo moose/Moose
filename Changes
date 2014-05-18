@@ -7,6 +7,9 @@ for, noteworthy changes.
 
   - Fixed Specio support to work with the latest Specio (0.10). This version of
     Specio no longer uses Moose internally.
+  - exceptions in Class::MOP no longer use Moose::Util, instead using their
+    own private implementation of throw_exception, to avoid needless premature
+    loading of Moose logic.
 
 2.1206   2014-05-14
 
