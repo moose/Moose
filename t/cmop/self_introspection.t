@@ -344,6 +344,7 @@ is_deeply(
         Class::MOP::Module
         Class::MOP::Package
         Class::MOP::Object
+        Class::MOP::Mixin
         Class::MOP::Mixin::HasAttributes
         Class::MOP::Mixin
         Class::MOP::Mixin::HasMethods

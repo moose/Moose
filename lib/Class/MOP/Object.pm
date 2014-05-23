@@ -3,6 +3,7 @@ package Class::MOP::Object;
 use strict;
 use warnings;
 
+use parent 'Class::MOP::Mixin';
 use Scalar::Util 'blessed';
 
 # introspection
@@ -16,11 +17,6 @@ sub throw_error {
 sub _inline_throw_error {
     my ( $self, $message ) = @_;
     return 'Moose->throw_error('.$message.')';
-}
-
-sub meta {
-    require Class::MOP::Class;
-    Class::MOP::Class->initialize(blessed($_[0]) || $_[0]);
 }
 
 sub _new {
