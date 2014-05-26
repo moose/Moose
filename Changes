@@ -3,6 +3,10 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+- Fixed Specio support to work with the latest Specio (0.10). This version of
+  Specio no longer uses Moose internally.
+
+
 2.1206   2014-05-14
 
   [BUG FIXES]

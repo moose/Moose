@@ -28,11 +28,9 @@ sub _check_helper_type {
     my $isa;
     my $isa_name;
 
-    if (
-        Moose::Util::does_role(
-            $options->{isa}, 'Specio::Constraint::Role::Interface'
-        )
-        ) {
+    if (   blessed( $options->{isa} )
+        && $options->{isa}->can('does')
+        && $options->{isa}->does('Specio::Constraint::Role::Interface') ) {
 
         $isa = $options->{isa};
         require Specio::Library::Builtins;

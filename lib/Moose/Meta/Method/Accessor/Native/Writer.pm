@@ -88,8 +88,9 @@ sub _is_root_type {
     my $self = shift;
     my $type = shift;
 
-    if (
-        Moose::Util::does_role( $type, 'Specio::Constraint::Role::Interface' ) )
+    if (   blessed($type)
+        && $type->can('does')
+        && $type->does('Specio::Constraint::Role::Interface') )
     {
         require Specio::Library::Builtins;
         return
