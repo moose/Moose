@@ -41,8 +41,8 @@ sub does {
 }
 
 sub _inline_throw_exception {
-    my ( $self, $throw_args ) = @_;
-    return 'require Moose::Util; Moose::Util::throw_exception('.$throw_args.')';
+    my ( $self, $exception_type, $throw_args ) = @_;
+    return 'die Module::Runtime::use_module("Moose::Exception::' . $exception_type . '")->new(' . ($throw_args || '') . ')';
 }
 
 sub new {
@@ -631,7 +631,7 @@ sub _inline_check_required {
 
     return (
         'if (@_ < 2) {',
-            $self->_inline_throw_exception( "AttributeIsRequired => ".
+            $self->_inline_throw_exception( AttributeIsRequired =>
                                             'attribute_name      => "'.$attr_name.'",'.
                                             'class_name          => $class_name'
             ) . ';',
@@ -688,7 +688,7 @@ sub _inline_check_constraint {
                 'my $msg = do { local $_ = ' . $value . '; '
                 . $message . '->(' . $value . ');'
                 . '};'.
-                $self->_inline_throw_exception( 'ValidationFailedForInlineTypeConstraint => '.
+                $self->_inline_throw_exception( ValidationFailedForInlineTypeConstraint =>
                                                 'type_constraint_message => $msg , '.
                                                 'class_name              => $class_name, '.
                                                 'attribute_name          => "'.$attr_name.'",'.
@@ -703,7 +703,7 @@ sub _inline_check_constraint {
                 'my $msg = do { local $_ = ' . $value . '; '
                 . $message . '->(' . $value . ');'
                 . '};'.
-                $self->_inline_throw_exception( 'ValidationFailedForInlineTypeConstraint => '.
+                $self->_inline_throw_exception( ValidationFailedForInlineTypeConstraint =>
                                                 'type_constraint_message => $msg , '.
                                                 'class_name              => $class_name, '.
                                                 'attribute_name          => "'.$attr_name.'",'.
@@ -922,7 +922,7 @@ sub _inline_generate_default {
             'else {',
                 'my $class = ref(' . $instance . ') || ' . $instance . ';',
                 $self->_inline_throw_exception(
-                    "BuilderMethodNotSupportedForInlineAttribute => ".
+                    BuilderMethodNotSupportedForInlineAttribute =>
                     'class_name     => $class,'.
                     'attribute_name => "'.$attr_name_str.'",'.
                     'instance       => '.$instance.','.

@@ -13,8 +13,7 @@ sub wrap {
     unshift @args, 'body' if @args % 2 == 1;
     my %params = @args;
 
-    require Moose::Util;
-    Moose::Util::throw_exception( OperatorIsRequired => params => \%params,
+    $class->_throw_exception( OperatorIsRequired => params => \%params,
                                                         class  => $class
                                 )
         unless exists $params{operator};

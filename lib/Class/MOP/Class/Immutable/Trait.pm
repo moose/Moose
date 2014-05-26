@@ -4,10 +4,8 @@ use strict;
 use warnings;
 
 use MRO::Compat;
-
 use Scalar::Util 'blessed', 'weaken';
-
-use Moose::Util 'throw_exception';
+use Module::Runtime 'use_module';
 
 # the original class of the metaclass instance
 sub _get_mutable_metaclass_name { $_[0]{__immutable}{original_class} }
@@ -19,12 +17,12 @@ sub _immutable_metaclass { ref $_[1] }
 
 sub _immutable_read_only {
     my $name = shift;
-    throw_exception( CallingReadOnlyMethodOnAnImmutableInstance => method_name => $name );
+    __PACKAGE__->_throw_exception( CallingReadOnlyMethodOnAnImmutableInstance => method_name => $name );
 }
 
 sub _immutable_cannot_call {
     my $name = shift;
-    throw_exception( CallingMethodOnAnImmutableInstance => method_name => $name );
+    __PACKAGE__->_throw_exception( CallingMethodOnAnImmutableInstance => method_name => $name );
 }
 
 for my $name (qw/superclasses/) {
@@ -83,6 +81,11 @@ sub _method_map {
     my $orig = shift;
     my $self = shift;
     $self->{__immutable}{_method_map} ||= $self->$orig;
+}
+
+sub _throw_exception {
+    my ($class, $exception_type, @args_to_exception) = @_;
+    die use_module( "Moose::Exception::$exception_type" )->new( @args_to_exception );
 }
 
 1;

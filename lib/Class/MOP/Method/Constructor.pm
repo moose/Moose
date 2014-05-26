@@ -9,19 +9,18 @@ use Try::Tiny;
 
 use parent 'Class::MOP::Method::Inlined';
 
-use Moose::Util 'throw_exception';
 sub new {
     my $class   = shift;
     my %options = @_;
 
     (blessed $options{metaclass} && $options{metaclass}->isa('Class::MOP::Class'))
-        || throw_exception( MustSupplyAMetaclass => params => \%options,
+        || $class->_throw_exception( MustSupplyAMetaclass => params => \%options,
                                                     class  => $class
                           )
             if $options{is_inline};
 
     ($options{package_name} && $options{name})
-        || throw_exception( MustSupplyPackageNameAndName => params => \%options,
+        || $class->_throw_exception( MustSupplyPackageNameAndName => params => \%options,
                                                             class  => $class
                           );
 
@@ -109,7 +108,7 @@ sub _generate_constructor_method_inline {
     }
     catch {
         my $source = join("\n", @source);
-        throw_exception( CouldNotEvalConstructor => constructor_method => $self,
+        $self->_throw_exception( CouldNotEvalConstructor => constructor_method => $self,
                                                     source             => $source,
                                                     error              => $_
                        );

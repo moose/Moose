@@ -19,7 +19,7 @@ sub _inline_check_arguments {
 
     return (
         'if (!Params::Util::_CODELIKE($_[0])) {',
-            $self->_inline_throw_exception( "InvalidArgumentToMethod => ".
+            $self->_inline_throw_exception( InvalidArgumentToMethod =>
                                             'argument                => $_[0],'.
                                             'method_name             => "first",'.
                                             'type_of_argument        => "code reference",'.

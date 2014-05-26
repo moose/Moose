@@ -3,14 +3,12 @@ package metaclass;
 use strict;
 use warnings;
 
-use Module::Runtime 'use_package_optimistically';
+use Module::Runtime 'use_package_optimistically', 'use_module';
 use Class::Load  'load_class';
 use Scalar::Util 'blessed';
 use Try::Tiny;
 
 use Class::MOP;
-
-use Moose::Util 'throw_exception';
 
 sub import {
     my ( $class, @args ) = @_;
@@ -28,7 +26,7 @@ sub import {
     }
 
     ($metaclass->isa('Class::MOP::Class'))
-        || throw_exception( MetaclassMustBeDerivedFromClassMOPClass => class_name => $metaclass );
+        || die use_module('Moose::Exception::MetaclassMustBeDerivedFromClassMOPClass')->new( class_name => $metaclass );
 
     # make sure the custom metaclasses get loaded
     foreach my $key (grep { /_(?:meta)?class$/ } keys %options) {

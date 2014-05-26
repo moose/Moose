@@ -22,7 +22,6 @@ sub wrap {
     my %params = @args;
     my $code = $params{body};
 
-    require Moose::Util;
     if (blessed($code) && $code->isa(__PACKAGE__)) {
         my $method = $code->clone;
         delete $params{body};
@@ -30,14 +29,14 @@ sub wrap {
         return $method;
     }
     elsif (!ref $code || 'CODE' ne reftype($code)) {
-        Moose::Util::throw_exception( WrapTakesACodeRefToBless => params => \%params,
+        $class->_throw_exception( WrapTakesACodeRefToBless => params => \%params,
                                                                   class  => $class,
                                                                   code   => $code
                                     );
     }
 
     ($params{package_name} && $params{name})
-        || Moose::Util::throw_exception( PackageNameAndNameParamsNotGivenToWrap => params => \%params,
+        || $class->_throw_exception( PackageNameAndNameParamsNotGivenToWrap => params => \%params,
                                                                                    class  => $class,
                                                                                    code   => $code
                                        );

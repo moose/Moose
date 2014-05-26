@@ -9,29 +9,27 @@ use Try::Tiny;
 
 use parent 'Class::MOP::Method::Generated';
 
-use Moose::Util 'throw_exception';
-
 sub new {
     my $class   = shift;
     my %options = @_;
 
     (exists $options{attribute})
-        || throw_exception( MustSupplyAnAttributeToConstructWith => params => \%options,
+        || $class->_throw_exception( MustSupplyAnAttributeToConstructWith => params => \%options,
                                                                     class  => $class,
                           );
 
     (exists $options{accessor_type})
-        || throw_exception( MustSupplyAnAccessorTypeToConstructWith => params => \%options,
+        || $class->_throw_exception( MustSupplyAnAccessorTypeToConstructWith => params => \%options,
                                                                        class  => $class,
                           );
 
     (blessed($options{attribute}) && $options{attribute}->isa('Class::MOP::Attribute'))
-        || throw_exception( MustSupplyAClassMOPAttributeInstance => params => \%options,
+        || $class->_throw_exception( MustSupplyAClassMOPAttributeInstance => params => \%options,
                                                                     class  => $class
                           );
 
     ($options{package_name} && $options{name})
-        || throw_exception( MustSupplyPackageNameAndName => params => \%options,
+        || $class->_throw_exception( MustSupplyPackageNameAndName => params => \%options,
                                                             class  => $class
                           );
 
@@ -122,7 +120,7 @@ sub _generate_accessor_method_inline {
         ]);
     }
     catch {
-        throw_exception( CouldNotGenerateInlineAttributeMethod => instance => $self,
+        $self->_throw_exception( CouldNotGenerateInlineAttributeMethod => instance => $self,
                                                                   error    => $_,
                                                                   option   => "accessor"
                        );
@@ -135,7 +133,7 @@ sub _generate_reader_method {
     my $class = $attr->associated_class;
 
     return sub {
-        throw_exception( CannotAssignValueToReadOnlyAccessor => class_name => $class->name,
+        $self->_throw_exception( CannotAssignValueToReadOnlyAccessor => class_name => $class->name,
                                                                 value      => $_[1],
                                                                 attribute  => $attr
                        )
@@ -153,7 +151,7 @@ sub _generate_reader_method_inline {
         $self->_compile_code([
             'sub {',
                 'if (@_ > 1) {',
-                    $self->_inline_throw_exception( "CannotAssignValueToReadOnlyAccessor => ".
+                    $self->_inline_throw_exception( CannotAssignValueToReadOnlyAccessor =>
                                                     'class_name                          => ref $_[0],'.
                                                     'value                               => $_[1],'.
                                                     "attribute_name                      => '".$attr_name."'",
@@ -164,7 +162,7 @@ sub _generate_reader_method_inline {
         ]);
     }
     catch {
-        throw_exception( CouldNotGenerateInlineAttributeMethod => instance => $self,
+        $self->_throw_exception( CouldNotGenerateInlineAttributeMethod => instance => $self,
                                                                   error    => $_,
                                                                   option   => "reader"
                        );
@@ -172,8 +170,8 @@ sub _generate_reader_method_inline {
 }
 
 sub _inline_throw_exception {
-    my ( $self, $throw_args ) = @_;
-    return 'require Moose::Util; Moose::Util::throw_exception('.$throw_args.')';
+    my ( $self, $exception_type, $throw_args ) = @_;
+    return 'die Module::Runtime::use_module("Moose::Exception::' . $exception_type . '")->new(' . ($throw_args || '') . ')';
 }
 
 sub _generate_writer_method {
@@ -197,7 +195,7 @@ sub _generate_writer_method_inline {
         ]);
     }
     catch {
-        throw_exception( CouldNotGenerateInlineAttributeMethod => instance => $self,
+        $self->_throw_exception( CouldNotGenerateInlineAttributeMethod => instance => $self,
                                                                   error    => $_,
                                                                   option   => "writer"
                        );
@@ -225,7 +223,7 @@ sub _generate_predicate_method_inline {
         ]);
     }
     catch {
-        throw_exception( CouldNotGenerateInlineAttributeMethod => instance => $self,
+        $self->_throw_exception( CouldNotGenerateInlineAttributeMethod => instance => $self,
                                                                   error    => $_,
                                                                   option   => "predicate"
                        );
@@ -253,7 +251,7 @@ sub _generate_clearer_method_inline {
         ]);
     }
     catch {
-        throw_exception( CouldNotGenerateInlineAttributeMethod => instance => $self,
+        $self->_throw_exception( CouldNotGenerateInlineAttributeMethod => instance => $self,
                                                                   error    => $_,
                                                                   option   => "clearer"
                        );

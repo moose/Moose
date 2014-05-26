@@ -7,8 +7,6 @@ use Scalar::Util 'blessed';
 
 use parent 'Class::MOP::Method';
 
-use Moose::Util 'throw_exception';
-
 # NOTE:
 # this ugly beast is the result of trying
 # to micro optimize this as much as possible
@@ -68,7 +66,7 @@ sub wrap {
     my ( $class, $code, %params ) = @_;
 
     (blessed($code) && $code->isa('Class::MOP::Method'))
-        || throw_exception( CanOnlyWrapBlessedCode => params => \%params,
+        || $class->_throw_exception( CanOnlyWrapBlessedCode => params => \%params,
                                                       class  => $class,
                                                       code   => $code
                           );

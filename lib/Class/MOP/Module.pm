@@ -8,8 +8,6 @@ use Scalar::Util 'blessed';
 
 use parent 'Class::MOP::Package';
 
-use Moose::Util 'throw_exception';
-
 sub _new {
     my $class = shift;
     return Class::MOP::Class->initialize($class)->new_object(@_)
@@ -72,7 +70,7 @@ sub _anon_package_prefix { 'Class::MOP::Module::__ANON__::SERIAL::' }
 sub _anon_cache_key {
     my $class = shift;
     my %options = @_;
-    throw_exception( PackagesAndModulesAreNotCachable => class_name => $class,
+    $class->_throw_exception( PackagesAndModulesAreNotCachable => class_name => $class,
                                                          params     => \%options,
                                                          is_module  => 1
                    );

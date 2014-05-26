@@ -7,16 +7,14 @@ use Eval::Closure;
 
 use parent 'Class::MOP::Method';
 
-use Moose::Util 'throw_exception';
-
 ## accessors
 
 sub new {
-    throw_exception( CannotCallAnAbstractBaseMethod => package_name => __PACKAGE__ );
+    $_[0]->_throw_exception( CannotCallAnAbstractBaseMethod => package_name => __PACKAGE__ );
 }
 
 sub _initialize_body {
-    throw_exception( NoBodyToInitializeInAnAbstractBaseClass => package_name => __PACKAGE__ );
+    $_[0]->_throw_exception( NoBodyToInitializeInAnAbstractBaseClass => package_name => __PACKAGE__ );
 }
 
 sub _generate_description {

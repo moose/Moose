@@ -11,8 +11,6 @@ use Package::Stash;
 
 use parent 'Class::MOP::Object';
 
-use Moose::Util 'throw_exception';
-
 # creation ...
 
 sub initialize {
@@ -50,7 +48,7 @@ sub reinitialize {
 
     (defined $package_name && $package_name
       && (!blessed $package_name || $package_name->isa('Class::MOP::Package')))
-        || throw_exception( MustPassAPackageNameOrAnExistingClassMOPPackageInstance => params => \%options,
+        || $class->_throw_exception( MustPassAPackageNameOrAnExistingClassMOPPackageInstance => params => \%options,
                                                                                        class  => $class
                           );
 
@@ -132,7 +130,7 @@ sub create {
     sub _anon_cache_key {
         my $class = shift;
         my %options = @_;
-        throw_exception( PackagesAndModulesAreNotCachable => class_name => $class,
+        $class->_throw_exception( PackagesAndModulesAreNotCachable => class_name => $class,
                                                              params     => \%options,
                                                              is_module  => 0
                        );
