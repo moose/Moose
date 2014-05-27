@@ -4,12 +4,25 @@ use warnings;
 use Test::More;
 use Test::Fatal;
 
+my $_has_method_via_attribute = sub {
+    my ($role, $want) = @_;
+    foreach my $attr ($role->get_attribute_list) {
+        my @methods = $role->get_attribute($attr)->_theoretically_associated_method_names;
+        foreach my $method (@methods) {
+            return 1 if $want eq $method;
+        }
+    }
+    return;
+};
+
 sub req_or_has ($$) {
     my ( $role, $method ) = @_;
     local $Test::Builder::Level = $Test::Builder::Level + 1;
     if ( $role ) {
         ok(
-            $role->has_method($method) || $role->requires_method($method),
+            $role->has_method($method)
+            || $role->requires_method($method)
+            || $role->$_has_method_via_attribute($method),
             $role->name . " has or requires method $method"
         );
     } else {
@@ -84,15 +97,10 @@ sub req_or_has ($$) {
         ::is( ::exception { with qw(Dancer) }, undef );
     }
 
-    package Dancer::80s;
+    package Dancer::80s; #;;
     use Moose;
 
-    # this should pass because ::Robot has the attribute to fill in the requires
-    # but due to the deferrence logic that doesn't actually work
-    {
-        local our $TODO = "attribute accessor in role doesn't satisfy role requires";
-        ::is( ::exception { with qw(Dancer::Robot) }, undef );
-    }
+    ::is( ::exception { with qw(Dancer::Robot) }, undef );
 
     package Foo;
     use Moose;
@@ -207,9 +215,9 @@ isa_ok( $gorch->get_method("gorch_method"), "Moose::Meta::Method" );
 }
 
 {
+    req_or_has($gorch, "attr");
     local $TODO = "attribute related methods are not yet known by the role";
     # we want this to be a part of the interface, somehow
-    req_or_has($gorch, "attr");
     ok( $gorch->has_method("attr"), "has_method attr" );
     isa_ok( $gorch->get_method("attr"), "Moose::Meta::Method" );
     isa_ok( $gorch->get_method("attr"), "Moose::Meta::Method::Accessor" );

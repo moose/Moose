@@ -3,6 +3,12 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  - Allow accessor methods defined in one role to satisfy "requires" in
+    another role. This includes clearer, predicate, delegations, etc
+    associated with the attribute. RT#46347, RT#77406. (Toby Inkster)
+
 2.1207   2014-05-26
 
   [OTHER]
