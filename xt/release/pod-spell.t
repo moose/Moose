@@ -29,6 +29,7 @@ Florian
 Goro
 Goulah
 Hardison
+Inkster
 Kinyon
 Kinyon's
 Kogman
@@ -82,6 +83,7 @@ rlb
 robkinyon
 sartak
 stevan
+tobyink
 tozt
 wreis
 

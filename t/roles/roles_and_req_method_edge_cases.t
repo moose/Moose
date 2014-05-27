@@ -4,6 +4,32 @@ use warnings;
 use Test::More;
 use Test::Fatal;
 
+my $_has_method_via_attribute = sub {
+    my ($role, $want) = @_;
+    foreach my $attr ($role->get_attribute_list) {
+        my @methods = $role->get_attribute($attr)->_theoretically_associated_method_names;
+        foreach my $method (@methods) {
+            return 1 if $want eq $method;
+        }
+    }
+    return;
+};
+
+sub req_or_has ($$) {
+    my ( $role, $method ) = @_;
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+    if ( $role ) {
+        ok(
+            $role->has_method($method)
+            || $role->requires_method($method)
+            || $role->$_has_method_via_attribute($method),
+            $role->name . " has or requires method $method"
+        );
+    } else {
+        fail("role has or requires method $method");
+    }
+}
+
 =pod
 
 NOTE:
@@ -273,5 +299,69 @@ method modifier.
         with 'Bar2::Role';
     }, undef, 'required method exists in superclass as non-modifier, so we live' );
 }
+
+{
+    package Attribute::Embiggen;
+    use Moose::Role;
+    has embiggenator => (is => "ro", predicate => "has_embiggenator");
+    around install_accessors => sub {
+        my $orig = shift;
+        my $self = shift;
+        if ($self->has_embiggenator) {
+            my $associated_class = $self->associated_class;
+            my $method = 'Moose::Meta::Method'->wrap(
+                sub {
+                    my $instance = shift;
+                    $self->set_value($instance, 1 + $self->get_value($instance));
+                },
+                name         => $self->embiggenator,
+                package_name => $associated_class->name,
+            );
+            $associated_class->add_method($self->embiggenator, $method);
+            $self->associate_method($method);
+        }
+        $self->$orig(@_);
+    };
+}
+
+{
+    package Role::WithCounter;
+    use Moose::Role;
+    has counter => (
+        is           => "ro",
+        isa          => "Int",
+        traits       => ["Attribute::Embiggen"],
+        embiggenator => "inc_counter",
+        default      => 0,
+    );
+}
+
+{
+    package Class::WithCounter;
+    use Moose;
+    with "Role::WithCounter";
+}
+
+subtest "check the Attribute::Embiggen trait works" => sub {
+    my $thing = 'Class::WithCounter'->new;
+    is($thing->counter, 0);
+    $thing->inc_counter;
+    is($thing->counter, 1);
+    $thing->inc_counter;
+    is($thing->counter, 2);
+    done_testing;
+};
+
+is_deeply(
+    [ sort 'Role::WithCounter'->meta->get_attribute('counter')->_theoretically_associated_method_names ],
+    [ qw( counter inc_counter ) ],
+    '_theoretically_associated_method_names works on role',
+);
+
+is_deeply(
+    [ sort 'Class::WithCounter'->meta->get_attribute('counter')->_theoretically_associated_method_names ],
+    [ qw( counter inc_counter ) ],
+    '_theoretically_associated_method_names works on class',
+);
 
 done_testing;
