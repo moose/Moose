@@ -10,8 +10,10 @@ use Test::Fatal;
 use Test::Moose qw( with_immutable );
 use Test::More;
 
-plan skip_all => 'These tests requires Specio, which requires perl 5.010'
-    unless $] >= 5.010;
+BEGIN {
+    plan skip_all => 'These tests requires Specio, which requires perl 5.010'
+        unless $] >= 5.010;
+}
 
 use Test::Requires {
     'Specio::Declare'           => '0.10',
