@@ -15,6 +15,7 @@ sub apply {
 
     for my $meth ( grep { $_->package_name ne 'UNIVERSAL' } $trait->get_all_methods ) {
         my $meth_name = $meth->name;
+        next if index($meth_name, '__') == 0;   # skip private subs
 
         if ( $to_class->find_method_by_name($meth_name) ) {
             $to_class->add_around_method_modifier( $meth_name, $meth->body );

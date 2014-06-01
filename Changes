@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  - fix implementation of throw_exception in internal Class::MOP traits,
+    caused by changes in 2.1207 (ether, RT#96112)
+
 2.1207   2014-05-26
 
   [OTHER]
