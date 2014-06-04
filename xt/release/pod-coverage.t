@@ -165,8 +165,14 @@ my %trustme = (
             )
     ],
     'Moose::Meta::Mixin::AttributeCore' => ['.+'],
-    'Moose::Meta::Role::Composite' =>
-        [ 'get_method', 'get_method_list', 'has_method', 'add_method' ],
+    'Moose::Meta::Role::Composite' => [
+        qw( add_method
+            get_method
+            get_method_list
+            has_method
+            is_anon
+            ),
+    ],
     'Moose::Object' => ['BUILDALL', 'DEMOLISHALL'],
     'Moose::Role' => [
         qw( after
