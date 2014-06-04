@@ -50,6 +50,8 @@ use Moose::Meta::Role::Composite;
         Moose::Meta::Role::Application::RoleSummation->new->apply($c);
     }, undef, '... this composed okay' );
 
+    ok(!$c->is_anon, '... composite is not anonymous');
+
     ##... now nest 'em
     {
         my $c2 = Moose::Meta::Role::Composite->new(
@@ -74,6 +76,8 @@ use Moose::Meta::Role::Composite;
                 Role::Baz
                 Role::Gorch
             );
+
+        ok(!$c2->is_anon, '... composite is not anonymous');
     }
 }
 
