@@ -3,6 +3,14 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+- The is_anon method now always returns false when called on
+  Moose::Meta::Role::Composite objects. This isn't strictly right, but for the
+  purposes of Moose internals, where "is_anon" really means "needs to be
+  cleaned up", it's correct. This fixes warnings that were seen when using
+  recent Moose (2.1100+) and MooseX::Role::Parameterized roles as part of a
+  composite role. These warnings only appear with Perl 5.16 and earlier.
+
+
 2.1208   2014-06-01
 
   [BUG FIXES]
