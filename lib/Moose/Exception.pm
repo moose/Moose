@@ -48,7 +48,7 @@ sub BUILD {
 
 1;
 
-# ABSTRACT: Superclass of all Moose exceptions
+# ABSTRACT: Superclass for Moose internal exceptions
 
 __END__
 
@@ -56,8 +56,18 @@ __END__
 
 =head1 DESCRIPTION
 
-This class contains attributes which are common to all Moose exceptions
-classes.
+This class contains attributes which are common to all Moose internal
+exception classes.
+
+=head1 WARNING WARNING WARNING
+
+If you're writing your own exception classes, you should instead prefer
+the L<Throwable> role or the L<Throwable::Error> superclass - this is
+effectively a cut-down internal fork of the latter, and not designed
+for use in user code.
+
+Of course if you're writing metaclass traits, it would then make sense to
+subclass the relevant Moose exceptions - but only then.
 
 =head1 ATTRIBUTES
 
