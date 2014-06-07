@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [OTHER]
+
+  - Clarify that Moose::Exception exists for internal usage and that user
+    code is better using the Throwable role or Throwable::Error superclass.
+
 2.1209   2014-06-04
 
   [OTHER]
