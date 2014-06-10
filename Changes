@@ -7,6 +7,7 @@ for, noteworthy changes.
 
   - Clarify that Moose::Exception exists for internal usage and that user
     code is better using the Throwable role or Throwable::Error superclass.
+  - Moose::Manual::Support policy clarified regarding legacy Perl versions
 
 2.1209   2014-06-04
 
