@@ -70,12 +70,15 @@ use Moose::Util::TypeConstraints;
 }
 
 
-no_leaks_ok(
-    sub {
-        Moose::Meta::Class->create_anon_class->new_object;
-    },
-    'anonymous class with no roles is leak-free'
-);
+{
+    local $TODO = 'anonymous classes leak on 5.8' if $] < 5.010;
+    no_leaks_ok(
+        sub {
+            Moose::Meta::Class->create_anon_class->new_object;
+        },
+        'anonymous class with no roles is leak-free'
+    );
+}
 
 no_leaks_ok(
     sub {
