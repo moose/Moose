@@ -13,6 +13,7 @@ my @exports = qw[
     meta_ok
     does_ok
     has_attribute_ok
+    lacks_attribute_ok
     with_immutable
 ];
 
@@ -65,6 +66,21 @@ sub has_attribute_ok ($$;$) {
     }
     else {
         return $Test->ok(0, $message);
+    }
+}
+
+sub lacks_attribute_ok ($$;$) {
+    my ($class_or_obj, $attr_name, $message) = @_;
+
+    $message ||= "The object does not have an attribute named $attr_name";
+
+    my $meta = find_meta($class_or_obj);
+
+    if ($meta->find_attribute_by_name($attr_name)) {
+        return $Test->ok(0, $message);
+    }
+    else {
+        return $Test->ok(1, $message)
     }
 }
 
@@ -123,6 +139,11 @@ does for the C<isa> method.
 
 Tests if a class or object has a certain attribute, similar to what C<can_ok>
 does for the methods.
+
+=item B<lacks_attribute_ok($class_or_object, $attr_name, ?$message)>
+
+Tests if a class or object lacks a certain attribute, similiar to a what
+a negated version of C<can_ok> does for the methods.
 
 =item B<with_immutable { CODE } @class_names>
 
