@@ -3,17 +3,26 @@
 language: perl
 perl:
     #- dev
-    - "5.19"
+    - "blead"
     #- stable
+    - "5.20"
     - "5.18"
     - "5.16"
     - "5.14"
     - "5.12"
     - "5.10"
+    - "5.8"
+before_install:
+  - git clone git://github.com/haarg/perl-travis-helper
+  - source perl-travis-helper/init
+  - build-perl
+  - perl -V
+  - build-dist
+  - cd $BUILD_DIR
 install:
-    - cpanm -q --notest Moose || (cat /home/travis/.cpanm/build.log; false)
-    - cpanm -q --notest Dist::Zilla || (cat /home/travis/.cpanm/build.log; false)
-    - dzil authordeps --missing | grep -v '^inc::' | cpanm -q --notest || (cat /home/travis/.cpanm/build.log; false)
-    - dzil listdeps --author --missing | cpanm -q --notest || (cat /home/travis/.cpanm/build.log; false)
+  - cpan-install ExtUtils::MakeMaker~6.68 --deps
+  - cpan-install --coverage
 script:
-    - dzil test --all
+  - perl Makefile.PL
+  - make
+  - RELEASE_TESTING=1 prove -b -r -s -j$((SYSTEM_CORES + 1)) $(test-dirs)
