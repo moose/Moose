@@ -71,16 +71,13 @@ sub has_attribute_ok ($$;$) {
 sub with_immutable (&@) {
     my $block = shift;
     my $before = $Test->current_test;
-    my $passing_before = (Test::Builder->VERSION < 1.005 ? 0 : $Test->history->pass_count) || 0;
 
     $block->(0);
     Class::MOP::class_of($_)->make_immutable for @_;
     $block->(1);
 
     my $num_tests = $Test->current_test - $before;
-    my $all_passed = Test::Builder->VERSION < 1.005
-        ? all { $_ } ($Test->summary)[-$num_tests..-1]
-        : $num_tests == $Test->history->pass_count - $passing_before;
+    my $all_passed = all { $_ } ($Test->summary)[-$num_tests..-1];
     return $all_passed;
 }
 

@@ -4,9 +4,6 @@ use warnings;
 use Test::Builder::Tester;
 use Test::More;
 
-plan skip_all => 'These tests are only for Test::Builder 0.9x'
-    if Test::Builder->VERSION >= 1.005;
-
 use Test::Moose;
 
 {
