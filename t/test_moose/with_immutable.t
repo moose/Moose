@@ -3,7 +3,6 @@ use warnings;
 
 use Test::Builder::Tester;
 use Test::More;
-
 use Test::Moose;
 
 {
