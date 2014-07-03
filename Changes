@@ -3,11 +3,16 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
-  [OTHER]
+  [DOCUMENTATION]
 
   - Clarify that Moose::Exception exists for internal usage and that user
     code is better using the Throwable role or Throwable::Error superclass.
   - Moose::Manual::Support policy clarified regarding legacy Perl versions
+
+  [OTHER]
+
+  - tests have been removed for an alpha branch of Test::Builder that will
+    never see the light of day (Exodist)
 
 2.1209   2014-06-04
 
