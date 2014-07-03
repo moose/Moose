@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.1210   2014-07-03
+
   [DOCUMENTATION]
 
   - Clarify that Moose::Exception exists for internal usage and that user
