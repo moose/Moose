@@ -115,22 +115,22 @@ will provide at least six months notice (two major releases) when we decide to
 increase the officially supported Perl version.
 
 "Officially supported" does not mean that these are the only versions of Perl
-that Moose will work with. Our declared perl dependency will remain at 5.8.3 as
-long as our test suite continues to pass on 5.8.3. What this does mean is that
-the core Moose dev team will not be spending any time fixing bugs on versions
-that aren't officially supported, and new contributions will not be rejected
-due to being incompatible with older versions of perl except in the most
-trivial of cases. We will, however, still welcome patches to make Moose
+that Moose will work with. Our declared perl dependency will remain at 5.8.3
+as long as our test suite continues to pass on 5.8.3. What this does mean is
+that the core Moose dev team will not be spending any time fixing bugs on
+versions that aren't officially supported, and new contributions will not be
+rejected due to being incompatible with older versions of perl except in the
+most trivial of cases. We will, however, still welcome patches to make Moose
 compatible with earlier versions, if other people are still interested in
-maintaining compatibility. As such, the current minimum required version 
-of 5.8.3 will remain for as long as downstream users are happy 
-to assist with maintenance.
+maintaining compatibility. As such, the current minimum required version of
+5.8.3 will remain for as long as downstream users are happy to assist with
+maintenance.
 
-Note that although performance regressions are acceptable in order to maintain 
-backwards compatibility (as long as they only affect the older versions), 
-functionality changes and buggy behavior will not be. If it becomes 
-impossible to provide identical functionality between modern Perl versions 
-and unsupported Perl versions, we will increase our declared perl dependency 
+Note that although performance regressions are acceptable in order to maintain
+backwards compatibility (as long as they only affect the older versions),
+functionality changes and buggy behavior will not be. If it becomes impossible
+to provide identical functionality between modern Perl versions and
+unsupported Perl versions, we will increase our declared perl dependency
 instead.
 
 =head1 CONTRIBUTING
