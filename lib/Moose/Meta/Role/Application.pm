@@ -163,6 +163,8 @@ consideration, and is intentionally not yet documented.
 
 =item B<apply_methods>
 
+=item B<apply_overloading>
+
 =item B<apply_method_modifiers>
 
 =item B<apply_before_method_modifiers>

@@ -15,7 +15,7 @@ __PACKAGE__->meta->add_attribute('rebless_params' => (
     Class::MOP::_definition_context(),
 ));
 
-use constant NEED_OVERLOAD_HACK_FOR_OBJECTS => $] < 5.008009;
+use constant _NEED_OVERLOAD_HACK_FOR_OBJECTS => $] < 5.008009;
 
 sub apply {
     my ( $self, $role, $object, $args ) = @_;
@@ -36,10 +36,10 @@ sub apply {
 
     $class->rebless_instance( $object, %{ $self->rebless_params } );
 
-    if ( NEED_OVERLOAD_HACK_FOR_OBJECTS
+    if ( _NEED_OVERLOAD_HACK_FOR_OBJECTS
         && overload::Overloaded( ref $object ) ) {
 
-        reset_amagic($object);
+        _reset_amagic($object);
     }
 }
 

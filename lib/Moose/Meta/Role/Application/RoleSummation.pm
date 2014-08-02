@@ -361,6 +361,8 @@ bindings and 'disabling' the conflicting bindings
 
 =item B<apply_methods>
 
+=item B<apply_overloading>
+
 =item B<apply_method_modifiers>
 
 =item B<apply_override_method_modifiers>
