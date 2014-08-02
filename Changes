@@ -13,6 +13,14 @@ for, noteworthy changes.
     MooseX::Role::WithOverloading, upgrade to version 0.15+ and it will simply
     become a no-op when used with this version of Moose.
 
+  [OTHER]
+
+  - The overloading info methods for roles and classes no longer treat
+    "fallback" as an overloaded op. Instead, there are new
+    get_overload_fallback_value() and set_overload_fallback_value() methods to
+    deal with this explicitly. This is arguably a bug fix.
+
+
 2.1210   2014-07-03
 
   [DOCUMENTATION]
