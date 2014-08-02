@@ -3,6 +3,16 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [ENHANCEMENTS]
+
+  - Moose now has core support for overloading in roles. When a role with
+    overloading is applied to classes or other roles, the overloading settings
+    are transferred to the consumer. Conflicts between roles are treated much
+    like method conflicts. This obviates the need for
+    MooseX::Role::WithOverloading. If you are using
+    MooseX::Role::WithOverloading, upgrade to version 0.15+ and it will simply
+    become a no-op when used with this version of Moose.
+
 2.1210   2014-07-03
 
   [DOCUMENTATION]
