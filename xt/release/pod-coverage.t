@@ -171,6 +171,11 @@ my %trustme = (
             get_method_list
             has_method
             is_anon
+            add_overloaded_operator
+            get_all_overloaded_operators
+            get_overload_fallback_value
+            is_overloaded
+            set_overload_fallback_value
             ),
     ],
     'Moose::Object' => ['BUILDALL', 'DEMOLISHALL'],

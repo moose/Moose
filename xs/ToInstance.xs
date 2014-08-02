@@ -54,7 +54,7 @@ MODULE = Moose::Meta::Role::Application::ToInstance PACKAGE = Moose::Meta::Role:
 PROTOTYPES: DISABLE
 
 void
-reset_amagic (rv)
+_reset_amagic (rv)
         SV *rv
     CODE:
         if (Gv_AMG (SvSTASH (SvRV (rv))) && !SvAMAGIC (rv)) {
