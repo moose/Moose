@@ -83,10 +83,16 @@ sub build_import_methods {
     my $package = Class::MOP::Package->initialize($exporting_package);
     for my $to_install ( @{ $args{install} || [] } ) {
         my $symbol = '&' . $to_install;
+
         next
             unless $methods{$to_install}
                 && !$package->has_package_symbol($symbol);
-        $package->add_package_symbol( $symbol, $methods{$to_install} );
+        $package->add_package_symbol(
+            $symbol,
+            subname(
+                $exporting_package . '::' . $to_install, $methods{$to_install}
+            )
+        );
     }
 
     return ( $methods{import}, $methods{unimport}, $methods{init_meta} );

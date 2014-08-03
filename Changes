@@ -3,6 +3,9 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  - The subs installed by Moose::Exporter->setup_import_methods are now named
+    used Sub::Name. RT #97572.
+
 2.1210   2014-07-03
 
   [DOCUMENTATION]
