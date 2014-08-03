@@ -867,6 +867,9 @@ Each superclass can be followed by a hash reference containing a
 L<-version|Class::MOP/Class Loading Options> value. If the version
 requirement is not satisfied an error will be thrown.
 
+When you pass classes to this method, we will attempt to load them if they are
+not already loaded.
+
 =item B<< $metaclass->add_override_method_modifier($name, $sub) >>
 
 This adds an C<override> method modifier to the package.
