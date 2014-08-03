@@ -11,6 +11,11 @@ for, noteworthy changes.
   - Added a pointer from the auto_deref feature to
     Moose::Meta::Attribute::Native. This is often a better choice.
 
+  [OTHER]
+
+  - The subs installed by Moose::Exporter->setup_import_methods are now named
+    using Sub::Name (Dave Rolsky, RT#97572)
+
 2.1210   2014-07-03
 
   [DOCUMENTATION]
