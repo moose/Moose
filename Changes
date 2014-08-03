@@ -247,9 +247,8 @@ for, noteworthy changes.
     Rolsky)
 
   - You can now use Specio types instead of Moose builtins or
-    MooseX::Types. As a bonus, Specio types inline coercion. However, this
-    support is still experimental (as is Specio), so use it with care. (Dave
-    Rolsky)
+    MooseX::Types. However, this support is still experimental (as is Specio),
+    so use it with care. (Dave Rolsky)
 
 2.0900   2013-05-26 (TRIAL RELEASE)
 
