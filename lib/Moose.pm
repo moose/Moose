@@ -904,11 +904,11 @@ respectively.
 
 Metaclass compatibility is a thorny subject. You should start by
 reading the "About Metaclass compatibility" section in the
-C<Class::MOP> docs.
+L<Class::MOP> docs.
 
 Moose will attempt to resolve a few cases of metaclass incompatibility
 when you set the superclasses for a class, in addition to the cases that
-C<Class::MOP> handles.
+L<Class::MOP> handles.
 
 Moose tries to determine if the metaclasses only "differ by roles". This
 means that the parent and child's metaclass share a common ancestor in
