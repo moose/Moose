@@ -123,6 +123,7 @@ XS_EXTERNAL(boot_Class__MOP__Method__Overload);
 XS_EXTERNAL(boot_Class__MOP__Class);
 XS_EXTERNAL(boot_Class__MOP__Attribute);
 XS_EXTERNAL(boot_Class__MOP__Instance);
+XS_EXTERNAL(boot_Moose__Meta__Role__Application__ToInstance);
 
 MODULE = Moose  PACKAGE = Moose::Exporter
 
@@ -143,6 +144,7 @@ BOOT:
     MOP_CALL_BOOT (boot_Class__MOP__Class);
     MOP_CALL_BOOT (boot_Class__MOP__Attribute);
     MOP_CALL_BOOT (boot_Class__MOP__Instance);
+    MOP_CALL_BOOT (boot_Moose__Meta__Role__Application__ToInstance);
 
 void
 _flag_as_reexport (SV *sv)

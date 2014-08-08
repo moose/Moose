@@ -2022,6 +2022,14 @@ C<< use overload $op => $impl; >>
 
 Remove overloading for operator C<$op>. Corresponds to C<< no overload $op; >>
 
+=item B<< $metaclass->get_overload_fallback_value >>
+
+Returns the overload C<fallback> setting for the package.
+
+=item B<< $metaclass->set_overload_fallback_value($fallback) >>
+
+Sets the overload C<fallback> setting for the package.
+
 =back
 
 =head2 Class Immutability

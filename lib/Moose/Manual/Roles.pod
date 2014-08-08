@@ -303,6 +303,21 @@ then provide a method of the same name in the class itself.
 
 Also see L<Moose::Cookbook::Roles::Restartable_AdvancedComposition> for an example.
 
+=head1 OVERLOADING
+
+When a Moose role uses overloading, that overloading is composed into any
+classes that consume the role. This includes the setting of the C<fallback>
+value for that role's overloading. Just as with methods and attributes, when a
+role consumes another role, that other role's overloading settings are applied
+to the role.
+
+Just as with methods, there can be conflicts with overloading implementations
+between two roles. If two roles both implement overloading for a given
+operator, that is a conflict. If two roles both implement overloading and have
+different C<fallback> values, that is also considered a conflict. These
+conflicts are detected either when a role consumes another role or when
+multiple roles are being composed into a class together.
+
 =head1 ROLE EXCLUSION
 
 A role can say that it cannot be combined with some other role. This

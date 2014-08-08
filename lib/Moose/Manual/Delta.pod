@@ -18,6 +18,27 @@ feature.  If you encounter a problem and have a solution but don't see
 it documented here, or think we missed an important feature, please
 send us a patch.
 
+=head1 2.1400
+
+=over 4
+
+=item Core support for overloading in roles
+
+Roles which use overloading now pass that overloading onto other classes (and
+roles) which consume that role.
+
+This works much like L<MooseX::Role::WithOverloading>, except that we properly
+detect overloading conflicts during role summation and when applying one role
+to another. L<MooseX::Role::WithOverloading> did not do any conflict
+detection.
+
+If you want to write code that uses overloading and works with previous
+versions of Moose and this one, upgrade to L<MooseX::Role::WithOverloading>
+version 0.15 or greater. That version will detect when Moose itself handles
+overloading and get out of the way.
+
+=back
+
 =head1 2.1200
 
 =over 4

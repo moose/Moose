@@ -34,6 +34,17 @@ __PACKAGE__->meta->add_attribute('_methods' => (
     Class::MOP::_definition_context(),
 ));
 
+__PACKAGE__->meta->add_attribute('_overloads' => (
+    reader  => '_overload_map',
+    default => sub { {} },
+    Class::MOP::_definition_context(),
+));
+
+__PACKAGE__->meta->add_attribute('_overload_fallback' => (
+    accessor  => '_overload_fallback',
+    Class::MOP::_definition_context(),
+));
+
 __PACKAGE__->meta->add_attribute(
     'application_role_summation_class',
     reader  => 'application_role_summation_class',
@@ -128,6 +139,53 @@ sub get_method {
     my ($self, $method_name) = @_;
 
     return $self->_method_map->{$method_name};
+}
+
+sub is_overloaded {
+    my ($self) = @_;
+    return keys %{ $self->_overload_map };
+}
+
+sub add_overloaded_operator {
+    my ( $self, $op_name, $method ) = @_;
+
+    unless ( defined $op_name && $op_name ) {
+        throw_exception(
+            'MustDefineAMethodName',
+            instance => $self,
+        );
+    }
+
+    my $body;
+    if ( blessed($method) ) {
+        $body = $method->body;
+        if ( $method->package_name ne $self->name ) {
+            $method = $method->clone(
+                package_name => $self->name,
+                name         => $op_name
+            ) if $method->can('clone');
+        }
+    }
+    else {
+        $method = $self->_wrap_overload( $op_name, $method );
+    }
+
+    $self->_overload_map->{$op_name} = $method;
+}
+
+sub get_overload_fallback_value {
+    my ($self) = @_;
+    return $self->_overload_fallback;
+}
+
+sub set_overload_fallback_value {
+    my $self = shift;
+    $self->_overload_fallback(shift);
+}
+
+sub get_all_overloaded_operators {
+    my ( $self, $method_name ) = @_;
+    return values %{ $self->_overload_map };
 }
 
 sub apply_params {
