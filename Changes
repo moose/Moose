@@ -8,7 +8,8 @@ for, noteworthy changes.
   - Updated Changes and Moose::Manual::Delta to note when we started removing
     lazy_build from docs. Also added a note in the Moose::Meta::Attribute docs
     stating that use of this feature is discouraged.
-
+  - Added a pointer from the auto_deref feature to
+    Moose::Meta::Attribute::Native. This is often a better choice.
 
 2.1210   2014-07-03
 

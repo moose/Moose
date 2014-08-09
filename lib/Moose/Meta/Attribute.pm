@@ -1387,6 +1387,9 @@ $attr->documentation >>.
 
 =item * auto_deref => $bool
 
+B<Note that in cases where you want this feature you are often better served
+by using a L<Moose::Meta::Attribute::Native> trait instead>.
+
 If this is true, then the reader will dereference the value when it is
 called. The attribute must have a type constraint which defines the
 attribute as an array or hash reference.
