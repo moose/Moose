@@ -57,6 +57,6 @@ __END__
 =head1 DESCRIPTION
 
 This class implements the core attributes (aka properties) shared by all
-attributes. See the L<Class::MOP::Attribute> documentation for API details.
+attributes. See the L<Moose::Meta::Attribute> documentation for API details.
 
 =cut

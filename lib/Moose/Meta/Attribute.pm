@@ -1349,39 +1349,56 @@ __END__
 
 =pod
 
+=head1 SYNOPSIS
+
+  $meta->add_attribute(
+      Moose::Meta::Attribute->new(
+          size => (
+              is      => 'ro',
+              default => 42,
+          )
+      )
+  );
+
+  $meta->add_attribute(
+      Moose::Meta::Attribute->new(
+          color => (
+              is        => 'r2',
+              predicate => '_has_color',
+              clearer   => '_clear_color',
+          )
+      )
+  );
+
 =head1 DESCRIPTION
 
-This class is a subclass of L<Class::MOP::Attribute> that provides
-additional Moose-specific functionality.
+The Attribute Protocol is almost entirely an invention of C<Class::MOP>. Perl
+5 does not have a consistent notion of attributes. There are so many ways in
+which this is done, and very few (if any) are easily discoverable by this
+module.
 
-To really understand this class, you will need to start with the
-L<Class::MOP::Attribute> documentation. This class can be understood
-as a set of additional features on top of the basic feature provided
-by that parent class.
+With that said, this module attempts to inject some order into this chaos, by
+introducing a consistent API which can be used to create object attributes.
 
 =head1 INHERITANCE
 
-C<Moose::Meta::Attribute> is a subclass of L<Class::MOP::Attribute>.
+C<Moose::Meta::Attribute> is a subclass of L<Class::MOP::Attribute>. However,
+all of the methods for both classes are documented here.
 
 =head1 METHODS
 
-Many of the documented below override methods in
-L<Class::MOP::Attribute> and add Moose specific features.
+This class provides the following methods
 
 =head2 Creation
 
+These methods can be used to create new attribute objects.
+
+=head3 Moose::Meta::Attribute->new($name, ?%options)
+
+An attribute must, at the very least, have a C<$name>. All other C<%options>
+are added as key-value pairs.
+
 =over 4
-
-=item B<< Moose::Meta::Attribute->new($name, %options) >>
-
-This method overrides the L<Class::MOP::Attribute> constructor.
-
-Many of the options below are described in more detail in the
-L<Moose::Manual::Attributes> document.
-
-It adds the following options to the constructor:
-
-=over 8
 
 =item * is => 'ro', 'rw', 'bare'
 
@@ -1394,10 +1411,26 @@ with the same name. If you provide an explicit C<writer> for a
 read-write attribute, then you will have a C<reader> with the same
 name as the attribute, and a C<writer> with the name you provided.
 
-Use 'bare' when you are deliberately not installing any methods
-(accessor, reader, etc.) associated with this attribute; otherwise,
-Moose will issue a warning when this attribute is added to a
-metaclass.
+Use 'bare' when you are deliberately not asking for any accessor, reader, or
+write methods to be created with this attribute; otherwise, Moose will issue a
+warning when this attribute is added to a metaclass. One common case for using
+'bare' is when all of the methods associated with an attribute are being
+created through the use of L<Moose::Meta::Attribute::Native> traits.
+
+=item * required => $bool
+
+An attribute which is required must be provided to the constructor.
+
+Note that specifying both C<required> and a C<default> or C<builder> is
+pointless, since the C<default> or C<builder> will guarantee that the
+attribute is populated, regardless of whether it is specified as
+C<required>. However, you can specify both without error.
+
+=item * lazy => $bool
+
+A lazy attribute must have a C<default> or C<builder>. When an
+attribute is lazy, the default value will not be calculated until the
+attribute is read.
 
 =item * isa => $type
 
@@ -1424,25 +1457,138 @@ this attribute is set.
 
 You cannot make both this and the C<weak_ref> option true.
 
+=item * init_arg
+
+This is a string value representing the expected key in an
+initialization hash. For instance, if we have an C<init_arg> value of
+C<-foo>, then the following code will Just Work.
+
+  MyClass->meta->new_object( -foo => 'Hello There' );
+
+If an init_arg is not assigned, it will automatically use the
+attribute's name. If C<init_arg> is explicitly set to C<undef>, the
+attribute cannot be specified during initialization.
+
+=item * builder
+
+This provides the name of a method that will be called to initialize
+the attribute. This method will be called on the object after it is
+constructed. It is expected to return a valid value for the attribute.
+
+=item * default
+
+This can be used to provide an explicit default for initializing the
+attribute. If the default you provide is a subroutine reference, then
+this reference will be called I<as a method> on the object.
+
+If the value is a simple scalar (string or number), then it can be
+just passed as is. However, if you wish to initialize it with a HASH
+or ARRAY ref, then you need to wrap that inside a subroutine
+reference:
+
+  Moose::Meta::Attribute->new(
+      'foo' => (
+          default => sub { [] },
+      )
+  );
+
+  # or ...
+
+  Moose::Meta::Attribute->new(
+      'foo' => (
+          default => sub { {} },
+      )
+  );
+
+If you wish to initialize an attribute with a subroutine reference
+itself, then you need to wrap that in a subroutine as well:
+
+  Moose::Meta::Attribute->new(
+      'foo' => (
+          default => sub {
+              sub { print "Hello World" }
+          },
+      )
+  );
+
+And lastly, if the value of your attribute is dependent upon some
+other aspect of the instance structure, then you can take advantage of
+the fact that when the C<default> value is called as a method:
+
+  Moose::Meta::Attribute->new(
+      'object_identity' => (
+          default => sub { Scalar::Util::refaddr( $_[0] ) },
+      )
+  );
+
+Note that there is no guarantee that attributes are initialized in any
+particular order, so you cannot rely on the value of some other
+attribute when generating the default.
+
+=back
+
+The C<accessor>, C<reader>, C<writer>, C<predicate> and C<clearer>
+options all accept the same parameters. You can provide the name of
+the method, in which case an appropriate default method will be
+generated for you. Or instead you can also provide hash reference
+containing exactly one key (the method name) and one value. The value
+should be a subroutine reference, which will be installed as the
+method itself.
+
+=over 4
+
+=item * accessor
+
+An C<accessor> is a standard Perl-style read/write accessor. It will
+return the value of the attribute, and if a value is passed as an
+argument, it will assign that value to the attribute.
+
+Note that C<undef> is a legitimate value, so this will work:
+
+  $object->set_something(undef);
+
+=item * reader
+
+This is a basic read-only accessor. It returns the value of the
+attribute.
+
+=item * writer
+
+This is a basic write accessor, it accepts a single argument, and
+assigns that value to the attribute.
+
+Note that C<undef> is a legitimate value, so this will work:
+
+  $object->set_something(undef);
+
+=item * predicate
+
+The predicate method returns a boolean indicating whether or not the
+attribute has been explicitly set.
+
+Note that the predicate returns true even if the attribute was set to
+a false value (C<0> or C<undef>).
+
+=item * clearer
+
+This method will uninitialize the attribute. After an attribute is
+cleared, its C<predicate> will return false.
+
+=item * definition_context
+
+This option should be a hash reference containing several keys which
+will be used when inlining the attribute's accessors. The keys should
+include C<line>, the line number where the attribute was created, and
+either C<file> or C<description>.
+
+This information will ultimately be used when eval'ing inlined
+accessor code so that error messages report a useful line and file
+name.
+
 =item * trigger => $sub
 
 This option accepts a subroutine reference, which will be called after
 the attribute is set.
-
-=item * required => $bool
-
-An attribute which is required must be provided to the constructor. An
-attribute which is required can also have a C<default> or C<builder>,
-which will satisfy its required-ness.
-
-A required attribute must have a C<default>, C<builder> or a
-non-C<undef> C<init_arg>
-
-=item * lazy => $bool
-
-A lazy attribute must have a C<default> or C<builder>. When an
-attribute is lazy, the default value will not be calculated until the
-attribute is read.
 
 =item * weak_ref => $bool
 
@@ -1514,129 +1660,94 @@ builder name.
 
 If provided, this should be a L<Moose::Meta::Role::Attribute> object.
 
+=item * initializer
+
+B<Note that this option comes from C<Class::MOP::Attribute>, which does not
+allow for types and coercion. With Moose, you are probably better off using
+those features instead.>
+
+This option can be either a method name or a subroutine
+reference. This method will be called when setting the attribute's
+value in the constructor. Unlike C<default> and C<builder>, the
+initializer is only called when a value is provided to the
+constructor. The initializer allows you to munge this value during
+object construction.
+
+The initializer is called as a method with three arguments. The first
+is the value that was passed to the constructor. The second is a
+subroutine reference that can be called to actually set the
+attribute's value, and the last is the associated
+C<Moose::Meta::Attribute> object.
+
+This contrived example shows an initializer that sets the attribute to
+twice the given value.
+
+  Moose::Meta::Attribute->new(
+      'doubled' => (
+          initializer => sub {
+              my ( $self, $value, $set, $attr ) = @_;
+              $set->( $value * 2 );
+          },
+      )
+  );
+
+Since an initializer can be a method name, you can easily make
+attribute initialization use the writer:
+
+  Moose::Meta::Attribute->new(
+      'some_attr' => (
+          writer      => 'some_attr',
+          initializer => 'some_attr',
+      )
+  );
+
+Your writer (actually, a wrapper around the writer, using
+L<method modifications|Moose::Manual::MethodModifiers>) will need to examine
+C<@_> and determine under which
+context it is being called:
+
+  around 'some_attr' => sub {
+      my $orig = shift;
+      my $self = shift;
+      # $value is not defined if being called as a reader
+      # $setter and $attr are only defined if being called as an initializer
+      my ($value, $setter, $attr) = @_;
+
+      # the reader behaves normally
+      return $self->$orig if not @_;
+
+      # mutate $value as desired
+      # $value = <something($value);
+
+      # if called as an initializer, set the value and we're done
+      return $setter->($row) if $setter;
+
+      # otherwise, call the real writer with the new value
+      $self->$orig($row);
+  };
+
 =back
 
-=item B<< $attr->clone(%options) >>
+=head3 Moose::Meta::Class->interpolate_class_and_new($name, %options)
+
+This is an alternate constructor that handles the C<metaclass> and
+C<traits> options.
+
+Effectively, this method is a factory that finds or creates the appropriate
+class based on the given C<metaclass> and/or C<traits>.
+
+Once it has found or created the appropriate class, it will call C<<
+$class->new($name, %options) >> on that class.
+
+=head3 $attr->clone(%options)
 
 This creates a new attribute based on attribute being cloned. You must
 supply a C<name> option to provide a new name for the attribute.
 
 The C<%options> can only specify options handled by
-L<Class::MOP::Attribute>.
+L<Moose::Meta::Attribute>.
 
-=back
-
-=head2 Value management
-
-=over 4
-
-=item B<< $attr->initialize_instance_slot($meta_instance, $instance, $params) >>
-
-This method is used internally to initialize the attribute's slot in
-the object C<$instance>.
-
-This overrides the L<Class::MOP::Attribute> method to handle lazy
-attributes, weak references, and type constraints.
-
-=item B<get_value>
-
-=item B<set_value>
-
-  eval { $point->meta->get_attribute('x')->set_value($point, 'forty-two') };
-  if($@) {
-    print "Oops: $@\n";
-  }
-
-I<Attribute (x) does not pass the type constraint (Int) with 'forty-two'>
-
-Before setting the value, a check is made on the type constraint of
-the attribute, if it has one, to see if the value passes it. If the
-value fails to pass, the set operation dies.
-
-Any coercion to convert values is done before checking the type constraint.
-
-To check a value against a type constraint before setting it, fetch the
-attribute instance using L<Class::MOP::Class/find_attribute_by_name>,
-fetch the type_constraint from the attribute using L<Moose::Meta::Attribute/type_constraint>
-and call L<Moose::Meta::TypeConstraint/check>. See L<Moose::Cookbook::Basics::Company_Subtypes>
-for an example.
-
-=back
-
-=head2 Attribute Accessor generation
-
-=over 4
-
-=item B<< $attr->install_accessors >>
-
-This method overrides the parent to also install delegation methods.
-
-If, after installing all methods, the attribute object has no associated
-methods, it throws an error unless C<< is => 'bare' >> was passed to the
-attribute constructor.  (Trying to add an attribute that has no associated
-methods is almost always an error.)
-
-=item B<< $attr->remove_accessors >>
-
-This method overrides the parent to also remove delegation methods.
-
-=item B<< $attr->inline_set($instance_var, $value_var) >>
-
-This method return a code snippet suitable for inlining the relevant
-operation. It expect strings containing variable names to be used in the
-inlining, like C<'$self'> or C<'$_[1]'>.
-
-=item B<< $attr->install_delegation >>
-
-This method adds its delegation methods to the attribute's associated
-class, if it has any to add.
-
-=item B<< $attr->remove_delegation >>
-
-This method remove its delegation methods from the attribute's
-associated class.
-
-=item B<< $attr->accessor_metaclass >>
-
-Returns the accessor metaclass name, which defaults to
-L<Moose::Meta::Method::Accessor>.
-
-=item B<< $attr->delegation_metaclass >>
-
-Returns the delegation metaclass name, which defaults to
-L<Moose::Meta::Method::Delegation>.
-
-=back
-
-=head2 Additional Moose features
-
-These methods are not found in the superclass. They support features
-provided by Moose.
-
-=over 4
-
-=item B<< $attr->does($role) >>
-
-This indicates whether the I<attribute itself> does the given
-role. The role can be given as a full class name, or as a resolvable
-trait name.
-
-Note that this checks the attribute itself, not its type constraint,
-so it is checking the attribute's metaclass and any traits applied to
-the attribute.
-
-=item B<< Moose::Meta::Class->interpolate_class_and_new($name, %options) >>
-
-This is an alternate constructor that handles the C<metaclass> and
-C<traits> options.
-
-Effectively, this method is a factory that finds or creates the
-appropriate class for the given C<metaclass> and/or C<traits>.
-
-Once it has the appropriate class, it will call C<< $class->new($name,
-%options) >> on that class.
-
-=item B<< $attr->clone_and_inherit_options(%options) >>
+=head3 $attr->clone_and_inherit_options(%options)
 
 This method supports the C<has '+foo'> feature. It does various bits
 of processing on the supplied C<%options> before ultimately calling
@@ -1646,7 +1757,7 @@ One of its main tasks is to make sure that the C<%options> provided
 does not include the options returned by the
 C<illegal_options_for_inheritance> method.
 
-=item B<< $attr->illegal_options_for_inheritance >>
+=head3 $attr->illegal_options_for_inheritance
 
 This returns a blacklist of options that can not be overridden in a
 subclass's attribute definition.
@@ -1654,94 +1765,386 @@ subclass's attribute definition.
 This exists to allow a custom metaclass to change or add to the list
 of options which can not be changed.
 
-=item B<< $attr->type_constraint >>
+=head2 Informational
+
+These are all basic read-only accessors for the values passed into
+the constructor.
+
+=head3 $attr->name
+
+Returns the attribute's name.
+
+=head3 $attr->accessor, $attr->reader, $attr->writer, $attr->predicate, $attr->clearer
+
+The C<accessor>, C<reader>, C<writer>, C<predicate>, and C<clearer> methods
+all return exactly what was passed to the constructor, either a string
+containing a method name or a hash reference.
+
+=head3 $attr->has_accessor, $attr->has_reader, $attr->has_writer, $attr->has_predicate, $attr->has_clearer,
+
+These return true or false.
+
+=head3 $attr->init_arg
+
+Returns the init_arg for this attribute. If none was specified when the
+attribute was constructed, this will be the same as the attribute's name.
+
+=head3 $attr->has_init_arg
+
+This will be I<false> if the C<init_arg> was set to C<undef>.
+
+=head3 $attr->builder
+
+Returns the name of the builder sub
+
+=head3 $attr->has_builder
+
+This returns true or false.
+
+=head3 $attr->default($instance)
+
+The C<$instance> argument is optional. If you don't pass it, the
+return value for this method is exactly what was passed to the
+constructor, either a simple scalar or a subroutine reference.
+
+If you I<do> pass an C<$instance> and the default is a subroutine
+reference, then the reference is called as a method on the
+C<$instance> and the generated value is returned.
+
+=head3 $attr->has_default
+
+This will be I<false> if the C<default> was set to C<undef>, since
+C<undef> is the default C<default> anyway.
+
+=head3 $attr->is_default_a_coderef
+
+Returns true if the default is a subroutine reference.
+
+=head3 $attr->type_constraint
 
 Returns the L<Moose::Meta::TypeConstraint> object for this attribute,
 if it has one.
 
-=item B<< $attr->has_type_constraint >>
+=head3 $attr->has_type_constraint
 
-Returns true if this attribute has a type constraint.
+Returns true or false.
 
-=item B<< $attr->verify_against_type_constraint($value) >>
+=head3 $attr->handles
+
+This returns the value of the C<handles> option passed to the
+constructor.
+
+=head3 $attr->has_handles
+
+Returns true if this attribute performs delegation.
+
+=head3 $attr->is_weak_ref
+
+Returns true if this attribute stores its value as a weak reference.
+=
+head3 $attr->is_required
+
+Returns true if this attribute is required to have a value.
+
+=head3 $attr->is_lazy
+
+Returns true if this attribute is lazy.
+
+=head3 $attr->is_lazy_build
+
+Returns true if the C<lazy_build> option was true when passed to the
+constructor.
+
+=head3 $attr->should_coerce
+
+Returns true if the C<coerce> option passed to the constructor was
+true.
+
+=head3 $attr->should_auto_deref
+
+Returns true if the C<auto_deref> option passed to the constructor was
+true.
+
+=head3 $attr->documentation
+
+Returns the value that was in the C<documentation> option passed to
+the constructor, if any.
+
+=head3 $attr->has_documentation
+
+Returns true if this attribute has any documentation.
+
+=head3 $attr->trigger
+
+This is the subroutine reference that was in the C<trigger> option
+passed to the constructor, if any.
+
+=head3 $attr->has_trigger
+
+Returns true if this attribute has a trigger set.
+
+=head3 $attr->does($role)
+
+This indicates whether the I<attribute itself> does the given
+role. The role can be given as a full class name, or as a resolvable
+trait name.
+
+Note that this checks the attribute itself, not its type constraint,
+so it is checking the attribute's metaclass and any traits applied to
+the attribute.
+
+=head3 $attr->role_attribute
+
+Returns the L<Moose::Meta::Role::Attribute> object from which this attribute
+was created, if any. This may return C<undef>.
+
+=head3 $attr->has_role_attribute
+
+Returns true if this attribute has an associated role attribute.
+
+=head3 $attr->applied_traits
+
+This returns an array reference of all the traits which were applied
+to this attribute. If none were applied, this returns C<undef>.
+
+=head3 $attr->has_applied_traits
+
+Returns true if this attribute has any traits applied.
+
+=head3 $attr->slots
+
+Return a list of slots required by the attribute. This is usually just
+one, the name of the attribute.
+
+A slot is the name of the hash key used to store the attribute in an
+object instance.
+
+=head3 $attr->get_read_method
+
+=head3 $attr->get_write_method
+
+Returns the name of a method suitable for reading or writing the value
+of the attribute in the associated class.
+
+If an attribute is read- or write-only, then these methods can return
+C<undef> as appropriate.
+
+=head3 $attr->has_read_method
+
+=head3 $attr->has_write_method
+
+This returns a boolean indicating whether the attribute has a I<named>
+read or write method.
+
+=head3 $attr->get_read_method_ref
+
+=head3 $attr->get_write_method_ref
+
+Returns the subroutine reference of a method suitable for reading or
+writing the attribute's value in the associated class. These methods
+always return a subroutine reference, regardless of whether or not the
+attribute is read- or write-only.
+
+=head3 $attr->insertion_order
+
+If this attribute has been inserted into a class, this returns a zero
+based index regarding the order of insertion.
+
+=head3 $attr->has_insertion_order
+
+This will be I<false> if this attribute has not be inserted into a class
+
+=head3 $attr->initializer
+
+Returns the initializer as passed to the constructor, so this may be
+either a method name or a subroutine reference.
+
+=head3 $attr->has_initializer
+
+Returns true or false.
+
+=head2 Value management
+
+These methods are basically "back doors" to the instance, and can be
+used to bypass the regular accessors but still stay within the MOP.
+
+These methods are not for general use, and should only be used if you
+really know what you are doing.
+
+=head3 $attr->initialize_instance_slot($meta_instance, $instance, $params)
+
+This method is used internally to initialize the attribute's slot in
+the object C<$instance>.
+
+The C<$params> is a hash reference of the values passed to the object
+constructor.
+
+It's unlikely that you'll need to call this method yourself.
+
+=head3 $attr->set_value($instance, $value)
+
+Sets the value without going through the accessor. Note that this
+works even with read-only attributes.
+
+Before setting the value, a check is made on the type constraint of the
+attribute, if it has one, to see if the value passes it. If the value fails to
+pass, the set operation dies.
+
+Any coercion to convert values is done before checking the type constraint.
+
+=head3 $attr->set_raw_value($instance, $value)
+
+Sets the value with no side effects such as a trigger.
+
+This doesn't actually apply to Class::MOP attributes, only to subclasses.
+
+=head3 $attr->set_initial_value($instance, $value)
+
+Sets the value without going through the accessor. This method is only
+called when the instance is first being initialized.
+
+=head3 $attr->get_value($instance)
+
+Returns the value without going through the accessor. Note that this
+works even with write-only accessors.
+
+=head3 $attr->get_raw_value($instance)
+
+Returns the value without any side effects such as lazy attributes.
+
+Doesn't actually apply to Class::MOP attributes, only to subclasses.
+
+=head3 $attr->has_value($instance)
+
+Return a boolean indicating whether the attribute has been set in
+C<$instance>. This how the default C<predicate> method works.
+
+=head3 $attr->clear_value($instance)
+
+This will clear the attribute's value in C<$instance>. This is what
+the default C<clearer> calls.
+
+Note that this works even if the attribute does not have any
+associated read, write or clear methods.
+
+=head3 $attr->verify_against_type_constraint($value)
 
 Given a value, this method returns true if the value is valid for the
 attribute's type constraint. If the value is not valid, it throws an
 error.
 
-=item B<< $attr->handles >>
+=head2 Class association
 
-This returns the value of the C<handles> option passed to the
-constructor.
+These methods allow you to manage the attributes association with
+the class that contains it. These methods should not be used
+lightly, nor are they very magical, they are mostly used internally
+and by metaclass instances.
 
-=item B<< $attr->has_handles >>
+=head3 $attr->associated_class
 
-Returns true if this attribute performs delegation.
+This returns the L<Class::MOP::Class> with which this attribute is
+associated, if any.
 
-=item B<< $attr->is_weak_ref >>
+=head3 $attr->attach_to_class($metaclass)
 
-Returns true if this attribute stores its value as a weak reference.
+This method stores a weakened reference to the C<$metaclass> object
+internally.
 
-=item B<< $attr->is_required >>
+This method does not remove the attribute from its old class,
+nor does it create any accessors in the new class.
 
-Returns true if this attribute is required to have a value.
+It is probably best to use the L<Class::MOP::Class> C<add_attribute>
+method instead.
 
-=item B<< $attr->is_lazy >>
+=head3 $attr->detach_from_class
 
-Returns true if this attribute is lazy.
+This method removes the associate metaclass object from the attribute
+it has one.
 
-=item B<< $attr->is_lazy_build >>
+This method does not remove the attribute itself from the class, or
+remove its accessors.
 
-Returns true if the C<lazy_build> option was true when passed to the
-constructor.
+It is probably best to use the L<Class::MOP::Class>
+C<remove_attribute> method instead.
 
-=item B<< $attr->should_coerce >>
+=head2 Attribute Accessor generation
 
-Returns true if the C<coerce> option passed to the constructor was
-true.
+These methods are used when generating accessors for an attribute. Typically,
+this is done when the attribute is added to a class.
 
-=item B<< $attr->should_auto_deref >>
+=head3 $attr->accessor_metaclass
 
-Returns true if the C<auto_deref> option passed to the constructor was
-true.
+Accessor methods are generated using an accessor metaclass. By default, this
+is L<Moose::Meta::Method::Accessor>. This method returns the name of the
+accessor metaclass that this attribute uses.
 
-=item B<< $attr->trigger >>
+=head3 $attr->delegation_metaclass
 
-This is the subroutine reference that was in the C<trigger> option
-passed to the constructor, if any.
+Returns the delegation metaclass name, which defaults to
+L<Moose::Meta::Method::Delegation>.
 
-=item B<< $attr->has_trigger >>
+=head3 $attr->associate_method($method)
 
-Returns true if this attribute has a trigger set.
+This associates a L<Class::MOP::Method> object with the
+attribute. Typically, this is called internally when an attribute
+generates its accessors.
 
-=item B<< $attr->documentation >>
+=head3 $attr->associated_methods
 
-Returns the value that was in the C<documentation> option passed to
-the constructor, if any.
+This returns the list of methods which have been associated with the
+attribute.
 
-=item B<< $attr->has_documentation >>
+=head3 $attr->install_accessors
 
-Returns true if this attribute has any documentation.
+This method generates and installs code the attributes various accessors. It
+is typically called from the L<Moose::Meta::Class> C<add_attribute> method.
 
-=item B<< $attr->role_attribute >>
+If, after installing all methods, the attribute object has no associated
+methods, it throws an error unless C<< is => 'bare' >> was passed to the
+attribute constructor. (Trying to add an attribute that has no associated
+methods is almost always an error.)
 
-Returns the L<Moose::Meta::Role::Attribute> object from which this attribute
-was created, if any. This may return C<undef>.
+=head3 $attr->remove_accessors
 
-=item B<< $attr->has_role_attribute >>
+This method removes all of the accessors associated with the
+attribute.
 
-Returns true if this attribute has an associated role attribute.
+This does not currently remove methods from the list returned by
+C<associated_methods>.
 
-=item B<< $attr->applied_traits >>
+=head3 $attr->inline_get($instance_var)
 
-This returns an array reference of all the traits which were applied
-to this attribute. If none were applied, this returns C<undef>.
+=head3 $attr->inline_has($instance_var)
 
-=item B<< $attr->has_applied_traits >>
+=head3 $attr->inline_clear($instance_var)
 
-Returns true if this attribute has any traits applied.
+These methods return a code snippet suitable for inlining the relevant
+operation. They expect strings containing variable names to be used in the
+inlining, like C<'$self'> or C<'$_[1]'>.
 
-=back
+=head3 $attr->inline_set($instance_var, $value_var)
+
+This method return a code snippet suitable for inlining the relevant
+operation. It expect strings containing variable names to be used in the
+inlining, like C<'$self'> or C<'$_[1]'>.
+
+=head3 $attr->install_delegation
+
+This method adds its delegation methods to the attribute's associated
+class, if it has any to add.
+
+=head3 $attr->remove_delegation
+
+This method remove its delegation methods from the attribute's
+associated class.
+
+=head2 Moose::Meta::Attribute->meta
+
+This will return a L<Class::MOP::Class> instance for this class.
+
+It should also be noted that L<Class::MOP> will actually bootstrap
+this module by installing a number of attribute meta-objects into its
+metaclass.
 
 =head1 BUGS
 
