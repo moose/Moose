@@ -804,143 +804,782 @@ __END__
 
 =pod
 
+=head1 SYNOPSIS
+
+  # assuming that class Foo has been defined, you can ...
+
+  # get all the methods in a class ...
+  for my $method ( Foo->meta->get_all_methods ) { ... }
+
+  # get a list of all the classes searched the method dispatcher in the
+  # correct order
+  Foo->meta->class_precedence_list()
+
+  # add a method to Foo ...
+  Foo->meta->add_method( 'bar' => sub {...} )
+
+  # remove a method from Foo ...
+  Foo->meta->remove_method('bar');
+
+  # or use this to actually create classes ...
+  Moose::Meta::Class->create(
+      'Bar' => (
+          version      => '0.01',
+          superclasses => ['Foo'],
+          attributes   => [
+              Moose::Meta::Attribute->new(...),
+              Moose::Meta::Attribute->new(...),
+          ],
+          methods => {
+              calculate_bar => sub {...},
+              construct_baz => sub {...}
+          }
+      )
+  );
+
 =head1 DESCRIPTION
 
-This class is a subclass of L<Class::MOP::Class> that provides
-additional Moose-specific functionality.
-
-To really understand this class, you will need to start with the
-L<Class::MOP::Class> documentation. This class can be understood as a
-set of additional features on top of the basic feature provided by
-that parent class.
+The Class Protocol is the largest and most complex part of the
+Class::MOP meta-object protocol. It controls the introspection and
+manipulation of Perl 5 classes, and it can create them as well. The
+best way to understand what this module can do is to read the
+documentation for each of its methods.
 
 =head1 INHERITANCE
 
-C<Moose::Meta::Class> is a subclass of L<Class::MOP::Class>.
+C<Moose::Meta::Class> is a subclass of L<Class::MOP::Class>. All of the
+methods provided by both classes are documented here.
+
+However, C<Class::MOP::Class> is itself a subclass of L<Class::MOP::Module>,
+which is in turn a subclass of L<Class::MOP::Package>. You may want to look at
+those two classes for additional API documentation.
 
 =head1 METHODS
 
+This class provides the following methods.
+
+=head2 Class construction
+
+These methods all create new C<Moose::Meta::Class> objects. These
+objects can represent existing classes or they can be used to create
+new classes from scratch.
+
+The metaclass object for a given class is a singleton. If you attempt
+to create a metaclass for the same class twice, you will just get the
+existing object.
+
+=head3 Moose::Meta::Class->create($package_name, %options)
+
+This method creates a new C<Moose::Meta::Class> object with the given
+package name. It accepts a number of options:
+
 =over 4
 
-=item B<< Moose::Meta::Class->initialize($package_name, %options) >>
+=item * version
 
-This overrides the parent's method in order to provide its own
-defaults for the C<attribute_metaclass>, C<instance_metaclass>, and
-C<method_metaclass> options.
+An optional version number for the newly created package.
 
-These all default to the appropriate Moose class.
+=item * authority
 
-=item B<< Moose::Meta::Class->create($package_name, %options) >>
+An optional authority for the newly created package.
+See L<Class::MOP::Module/authority> for more details.
 
-This overrides the parent's method in order to accept a C<roles>
-option. This should be an array reference containing roles
-that the class does, each optionally followed by a hashref of options
-(C<-excludes> and C<-alias>).
+=item * superclasses
+
+An optional array reference of superclass names.
+
+Each entry in both the C<superclasses> array ref can be followed by a hash
+reference with arguments. The only valid key for superclasses is
+C<-version>. This ensures the loaded superclass satisfies the required
+version.
+
+=item * roles
+
+This should be an array reference containing roles that the class does, each
+optionally followed by a hashref of options.
 
   my $metaclass = Moose::Meta::Class->create( 'New::Class', roles => [...] );
 
-=item B<< Moose::Meta::Class->create_anon_class >>
+Just as with C<superclasses>, the C<role> option takes the C<-version> as an
+argument, but the optional hash reference can also contain any other role
+relevant values like exclusions or parameterized role arguments.
 
-This overrides the parent's method to accept a C<roles> option, just
-as C<create> does.
+=item * methods
 
-It also accepts a C<cache> option. If this is C<true>, then the anonymous
-class will be cached based on its superclasses and roles. If an
-existing anonymous class in the cache has the same superclasses and
-roles, it will be reused.
+An optional hash reference of methods for the class. The keys of the
+hash reference are method names and values are subroutine references.
 
-  my $metaclass = Moose::Meta::Class->create_anon_class(
-      superclasses => ['Foo'],
-      roles        => [qw/Some Roles Go Here/],
-      cache        => 1,
-  );
+=item * attributes
 
-Each entry in both the C<superclasses> and the C<roles> option can be
-followed by a hash reference with arguments. The C<superclasses>
-option can be supplied with a L<-version|Class::MOP/Class Loading
-Options> option that ensures the loaded superclass satisfies the
-required version. The C<role> option also takes the C<-version> as an
-argument, but the option hash reference can also contain any other
-role relevant values like exclusions or parameterized role arguments.
+An optional array reference of L<Class::MOP::Attribute> objects.
 
-=item B<< $metaclass->new_object(%params) >>
+=item * meta_name
 
-This overrides the parent's method in order to add support for
-attribute triggers.
+Specifies the name to install the C<meta> method for this class under.  If it
+is not passed, then the method will be named C<meta>. If C<undef> is given
+then no meta method will be installed.
 
-=item B<< $metaclass->superclasses(@superclasses) >>
+=item * weaken
+
+If true, the metaclass that is stored in the global cache will be a
+weak reference.
+
+Classes created in this way are destroyed once the metaclass they are
+attached to goes out of scope, and will be removed from Perl's internal
+symbol table.
+
+All instances of a class with a weakened metaclass keep a special
+reference to the metaclass object, which prevents the metaclass from
+going out of scope while any instances exist.
+
+This only works if the instance is based on a hash reference, however.
+
+=back
+
+=head3 Moose::Meta::Class->create_anon_class(%options)
+
+This method works just like C<< Moose::Meta::Class->create >> but it
+creates an "anonymous" class. In fact, the class does have a name, but
+that name is a unique name generated internally by this module.
+
+It accepts the same C<superclasses>, C<methods>, and C<attributes>
+parameters that C<create> accepts.
+
+It also accepts a C<cache> option. If this is C<true>, then the anonymous class
+will be cached based on its superclasses and roles. If an existing anonymous
+class in the cache has the same superclasses and roles, it will be reused.
+
+Anonymous classes default to C<< weaken => 1 >> if cache is C<false>, although
+this can be overridden.
+
+=head3 Moose::Meta::Class->initialize($package_name, %options)
+
+This method will initialize a C<Moose::Meta::Class> object for the
+named package. Unlike C<create>, this method I<will not> create a new
+class.
+
+The purpose of this method is to retrieve a C<Moose::Meta::Class>
+object for introspecting an existing class.
+
+If an existing C<Moose::Meta::Class> object exists for the named
+package, it will be returned, and any options provided will be
+ignored!
+
+If the object does not yet exist, it will be created.
+
+The valid options that can be passed to this method are
+C<attribute_metaclass>, C<method_metaclass>, C<wrapped_method_metaclass>, and
+C<instance_metaclass>. These are all optional, and default to the appropriate
+Moose metaclass.
+
+=head2 Object instance construction and cloning
+
+These methods are all related to creating and/or cloning object
+instances.
+
+=head3 $metaclass->new_object(%params)
+
+This method is used to create a new object of the metaclass's class. Any
+parameters you provide are used to initialize the instance's attributes. A
+special C<__INSTANCE__> key can be passed to provide an already generated
+instance, rather than having the metaclass generate it for you. This is mostly
+useful for using Moose with foreign classes which generate instances using
+their own constructors.
+
+=head3 $metaclass->clone_object($instance, %params)
+
+This method clones an existing object instance. Any parameters you
+provide are will override existing attribute values in the object.
+
+This is a convenience method for cloning an object instance, then
+blessing it into the appropriate package.
+
+You could implement a clone method in your class, using this method:
+
+  sub clone {
+      my ( $self, %params ) = @_;
+      $self->meta->clone_object( $self, %params );
+  }
+
+=head3 $metaclass->rebless_instance($instance, %params)
+
+This method changes the class of C<$instance> to the metaclass's class.
+
+You can only rebless an instance into a subclass of its current
+class. If you pass any additional parameters, these will be treated
+like constructor parameters and used to initialize the object's
+attributes. Any existing attributes that are already set will be
+overwritten.
+
+Before reblessing the instance, this method will call
+C<rebless_instance_away> on the instance's current metaclass. This method
+will be passed the instance, the new metaclass, and any parameters
+specified to C<rebless_instance>. By default, C<rebless_instance_away>
+does nothing; it is merely a hook.
+
+=head3 $metaclass->rebless_instance_back($instance)
+
+Does the same thing as C<rebless_instance>, except that you can only
+rebless an instance into one of its superclasses. Any attributes that
+do not exist in the superclass will be deinitialized.
+
+This is a much more dangerous operation than C<rebless_instance>,
+especially when multiple inheritance is involved, so use this carefully!
+
+=head3 $metaclass->instance_metaclass
+
+Returns the class name of the instance metaclass. See
+L<Class::MOP::Instance> for more information on the instance
+metaclass.
+
+=head3 $metaclass->get_meta_instance
+
+Returns an instance of the C<instance_metaclass> to be used in the
+construction of a new instance of the class.
+
+=head2 Informational predicates
+
+These methods allow you to ask for information about the class itself.
+
+=head3 $metaclass->is_anon_class
+
+This returns true if the class was created by calling C<<
+Class::MOP::Class->create_anon_class >>.
+
+=head3 $metaclass->is_mutable
+
+This returns true if the class is still mutable.
+
+=head3 $metaclass->is_immutable
+
+This returns true if the class has been made immutable.
+
+=head3 $metaclass->is_pristine
+
+A class is I<not> pristine if it has non-inherited attributes or if it
+has any generated methods.
+
+=head2 Inheritance Introspection and Manipulation
+
+These methods are related to inheritance between classes.
+
+=head3 $metaclass->superclasses(?@superclasses)
 
 This is the accessor allowing you to read or change the parents of
 the class.
 
-Each superclass can be followed by a hash reference containing a
-L<-version|Class::MOP/Class Loading Options> value. If the version
-requirement is not satisfied an error will be thrown.
+This is basically sugar around getting and setting C<@ISA>.
+
+When called without any arguments, this method simply returns a list of class
+I<names> for the parent class(es) of the class this is called on. The classes
+are returned in method dispatch order.
+
+You can also set a class's superclasses with this method. The arguments should
+be a list of class I<names>, each of which can be followed by an optional hash
+reference containing a L<-version|Class::MOP/Class Loading Options> value. If
+the version requirement is not satisfied an error will be thrown.
 
 When you pass classes to this method, we will attempt to load them if they are
 not already loaded.
 
-=item B<< $metaclass->add_override_method_modifier($name, $sub) >>
+After setting the new superclasses, this method always returns the current
+superclass names.
 
-This adds an C<override> method modifier to the package.
+=head3 $metaclass->class_precedence_list
 
-=item B<< $metaclass->add_augment_method_modifier($name, $sub) >>
+This returns a list of all of the class's ancestor classes as a list of class
+names. The classes are returned in method dispatch order.
 
-This adds an C<augment> method modifier to the package.
+=head3 $metaclass->linearized_isa
 
-=item B<< $metaclass->calculate_all_roles >>
+This returns a list based on C<class_precedence_list> but with all
+duplicates removed.
+
+=head3 $metaclass->subclasses
+
+This returns a list of all descendants for this class, even grandchildren and
+other indirect descendants.
+
+=head3 $metaclass->direct_subclasses
+
+This returns a list of immediate subclasses for this class. This is only the
+immediate children of the class.
+
+=head2 Role introspection and creation
+
+These methods allow you to introspect a class's role, as well as add or remove
+them.
+
+=head3 $metaclass->calculate_all_roles
 
 This will return a unique array of L<Moose::Meta::Role> instances
 which are attached to this class.
 
-=item B<< $metaclass->calculate_all_roles_with_inheritance >>
+=head3 $metaclass->calculate_all_roles_with_inheritance
 
 This will return a unique array of L<Moose::Meta::Role> instances
 which are attached to this class, and each of this class's ancestors.
 
-=item B<< $metaclass->add_role($role) >>
+=head3 $metaclass->add_role($role)
 
 This takes a L<Moose::Meta::Role> object, and adds it to the class's
 list of roles. This I<does not> actually apply the role to the class.
 
-=item B<< $metaclass->role_applications >>
+=head3 $metaclass->role_applications
 
 Returns a list of L<Moose::Meta::Role::Application::ToClass>
 objects, which contain the arguments to role application.
 
-=item B<< $metaclass->add_role_application($application) >>
+=head3 $metaclass->add_role_application($application)
 
 This takes a L<Moose::Meta::Role::Application::ToClass> object, and
 adds it to the class's list of role applications. This I<does not>
 actually apply any role to the class; it is only for tracking role
 applications.
 
-=item B<< $metaclass->does_role($role) >>
+=head3 $metaclass->does_role($role)
 
 This returns a boolean indicating whether or not the class does the specified
 role. The role provided can be either a role name or a L<Moose::Meta::Role>
 object. This tests both the class and its parents.
 
-=item B<< $metaclass->excludes_role($role_name) >>
+=head3 $metaclass->excludes_role($role_name)
 
 A class excludes a role if it has already composed a role which
 excludes the named role. This tests both the class and its parents.
 
-=item B<< $metaclass->add_attribute($attr_name, %params|$params) >>
+=head2 Attribute introspection and creation
 
-This overrides the parent's method in order to allow the parameters to
-be provided as a hash reference.
+Because Perl 5 does not have a core concept of attributes in classes,
+we can only return information about attributes which have been added
+via this class's methods. We cannot discover information about
+attributes which are defined in terms of "regular" Perl 5 methods.
 
-=item B<< $metaclass->constructor_class($class_name) >>
+=head3 $metaclass->get_attribute($attribute_name)
 
-=item B<< $metaclass->destructor_class($class_name) >>
+This will return a L<Class::MOP::Attribute> for the specified
+C<$attribute_name>. If the class does not have the specified
+attribute, it returns C<undef>.
+
+NOTE that get_attribute does not search superclasses, for that you
+need to use C<find_attribute_by_name>.
+
+=head3 $metaclass->has_attribute($attribute_name)
+
+Returns a boolean indicating whether or not the class defines the
+named attribute. It does not include attributes inherited from parent
+classes.
+
+=head3 $metaclass->get_attribute_list
+
+This will return a list of attributes I<names> for all attributes
+defined in this class.  Note that this operates on the current class
+only, it does not traverse the inheritance hierarchy.
+
+=head3 $metaclass->get_all_attributes
+
+This will traverse the inheritance hierarchy and return a list of all
+the L<Class::MOP::Attribute> objects for this class and its parents.
+
+=head3 $metaclass->find_attribute_by_name($attribute_name)
+
+This will return a L<Class::MOP::Attribute> for the specified
+C<$attribute_name>. If the class does not have the specified
+attribute, it returns C<undef>.
+
+Unlike C<get_attribute>, this attribute I<will> look for the named
+attribute in superclasses.
+
+=head3 $metaclass->add_attribute(...)
+
+This method accepts either an existing L<Class::MOP::Attribute>
+object or parameters suitable for passing to that class's C<new>
+method.
+
+The attribute provided will be added to the class.
+
+Any accessor methods defined by the attribute will be added to the
+class when the attribute is added.
+
+If an attribute of the same name already exists, the old attribute
+will be removed first.
+
+=head3 $metaclass->remove_attribute($attribute_name)
+
+This will remove the named attribute from the class, and
+L<Class::MOP::Attribute> object.
+
+Removing an attribute also removes any accessor methods defined by the
+attribute.
+
+However, note that removing an attribute will only affect I<future>
+object instances created for this class, not existing instances.
+
+=head3 $metaclass->attribute_metaclass
+
+Returns the class name of the attribute metaclass for this class. By
+default, this is L<Class::MOP::Attribute>.
+
+=head2 Method introspection and creation
+
+These methods allow you to introspect a class's methods, as well as
+add, remove, or change methods.
+
+Determining what is truly a method in a Perl 5 class requires some
+heuristics (aka guessing).
+
+Methods defined outside the package with a fully qualified name (C<sub
+Package::name { ... }>) will be included. Similarly, methods named
+with a fully qualified name using L<Sub::Name> are also included.
+
+However, we attempt to ignore imported functions.
+
+Ultimately, we are using heuristics to determine what truly is a
+method in a class, and these heuristics may get the wrong answer in
+some edge cases. However, for most "normal" cases the heuristics work
+correctly.
+
+=head3 $metaclass->get_method($method_name)
+
+This will return a L<Moose::Meta::Method> for the specified
+C<$method_name>. If the class does not have the specified method, it returns
+C<undef>
+
+=head3 $metaclass->has_method($method_name)
+
+Returns a boolean indicating whether or not the class defines the
+named method. It does not include methods inherited from parent
+classes.
+
+=head3 $metaclass->get_method_list
+
+This will return a list of method I<names> for all methods defined in
+this class.
+
+=head3 $metaclass->add_method($method_name, $method)
+
+This method takes a method name and a subroutine reference, and adds
+the method to the class.
+
+The subroutine reference can be a L<Moose::Meta::Method>, and you are strongly
+encouraged to pass a meta method object instead of a code reference. If you do
+so, that object gets stored as part of the class's method map directly. If
+not, the meta information will have to be recreated later, and may be
+incorrect.
+
+If you provide a method object, this method will clone that object if the
+object's package name does not match the class name. This lets us track the
+original source of any methods added from other classes (notably Moose roles).
+
+=head3 $metaclass->remove_method($method_name)
+
+Remove the named method from the class. This method returns the
+L<Moose::Meta::Method> object for the method.
+
+=head3 $metaclass->method_metaclass
+
+Returns the class name of the method metaclass, see
+L<Moose::Meta::Method> for more information on the method metaclass.
+
+=head3 $metaclass->wrapped_method_metaclass
+
+Returns the class name of the wrapped method metaclass, see
+L<Moose::Meta::Method::Wrapped> for more information on the wrapped
+method metaclass.
+
+=head3 $metaclass->get_all_methods
+
+This will traverse the inheritance hierarchy and return a list of all
+the L<Moose::Meta::Method> objects for this class and its parents.
+
+=head3 $metaclass->find_method_by_name($method_name)
+
+This will return a L<Moose::Meta::Method> for the specified
+C<$method_name>. If the class does not have the specified method, it
+returns C<undef>
+
+Unlike C<get_method>, this method I<will> look for the named method in
+superclasses.
+
+=head3 $metaclass->get_all_method_names
+
+This will return a list of method I<names> for all of this class's
+methods, including inherited methods.
+
+=head3 $metaclass->find_all_methods_by_name($method_name)
+
+This method looks for the named method in the class and all of its
+parents. It returns every matching method it finds in the inheritance
+tree, so it returns a list of methods.
+
+Each method is returned as a hash reference with three keys. The keys
+are C<name>, C<class>, and C<code>. The C<code> key has a
+L<Moose::Meta::Method> object as its value.
+
+The list of methods is distinct.
+
+=head3 $metaclass->find_next_method_by_name($method_name)
+
+This method returns the first method in any superclass matching the
+given name. It is effectively the method that C<SUPER::$method_name>
+would dispatch to.
+
+=head2 Overload introspection and creation
+
+These methods provide an API to the core L<overload> functionality.
+
+=head3 $metaclass->is_overloaded
+
+Returns true if overloading is enabled for this class. Corresponds to
+L<overload::Overloaded|overload/Public Functions>.
+
+=head3 $metaclass->get_overloaded_operator($op)
+
+Returns the L<Class::MOP::Overload> object corresponding to the operator named
+C<$op>, if one exists for this class.
+
+=head3 $metaclass->has_overloaded_operator($op)
+
+Returns whether or not the operator C<$op> is overloaded for this class.
+
+=head3 $metaclass->get_overload_list
+
+Returns a list of operator names which have been overloaded (see
+L<overload/Overloadable Operations> for the list of valid operator names).
+
+=head3 $metaclass->get_all_overloaded_operators
+
+Returns a list of L<Class::MOP::Overload> objects corresponding to the
+operators that have been overloaded.
+
+=head3 $metaclass->add_overloaded_operator($op, $impl)
+
+Overloads the operator C<$op> for this class, with the implementation C<$impl>.
+C<$impl> can be either a coderef or a method name. Corresponds to
+C<< use overload $op => $impl; >>
+
+=head3 $metaclass->remove_overloaded_operator($op)
+
+Remove overloading for operator C<$op>. Corresponds to C<< no overload $op; >>
+
+=head3 $metaclass->get_overload_fallback_value
+
+Returns the overload C<fallback> setting for the package.
+
+=head3 $metaclass->set_overload_fallback_value($fallback)
+
+Sets the overload C<fallback> setting for the package.
+
+=head2 Method Modifiers
+
+Method modifiers are hooks which allow a method to be wrapped with
+I<before>, I<after> and I<around> method modifiers. Every time a
+method is called, its modifiers are also called.
+
+A class can modify its own methods, as well as methods defined in
+parent classes.
+
+=head3 How method modifiers work?
+
+Method modifiers work by wrapping the original method and then
+replacing it in the class's symbol table. The wrappers will handle
+calling all the modifiers in the appropriate order and preserving the
+calling context for the original method.
+
+The return values of C<before> and C<after> modifiers are
+ignored. This is because their purpose is B<not> to filter the input
+and output of the primary method (this is done with an I<around>
+modifier).
+
+This may seem like an odd restriction to some, but doing this allows
+for simple code to be added at the beginning or end of a method call
+without altering the function of the wrapped method or placing any
+extra responsibility on the code of the modifier.
+
+Of course if you have more complex needs, you can use the C<around>
+modifier which allows you to change both the parameters passed to the
+wrapped method, as well as its return value.
+
+Before and around modifiers are called in last-defined-first-called
+order, while after modifiers are called in first-defined-first-called
+order. So the call tree might looks something like this:
+
+  before 2
+   before 1
+    around 2
+     around 1
+      primary
+     around 1
+    around 2
+   after 1
+  after 2
+
+=head3 What is the performance impact?
+
+Of course there is a performance cost associated with method
+modifiers, but we have made every effort to make that cost directly
+proportional to the number of modifier features you use.
+
+The wrapping method does its best to B<only> do as much work as it
+absolutely needs to. In order to do this we have moved some of the
+performance costs to set-up time, where they are easier to amortize.
+
+All this said, our benchmarks have indicated the following:
+
+  simple wrapper with no modifiers             100% slower
+  simple wrapper with simple before modifier   400% slower
+  simple wrapper with simple after modifier    450% slower
+  simple wrapper with simple around modifier   500-550% slower
+  simple wrapper with all 3 modifiers          1100% slower
+
+These numbers may seem daunting, but you must remember, every feature
+comes with some cost. To put things in perspective, just doing a
+simple C<AUTOLOAD> which does nothing but extract the name of the
+method called and return it costs about 400% over a normal method
+call.
+
+=head3 $metaclass->add_before_method_modifier($method_name, $code)
+
+This wraps the specified method with the supplied subroutine
+reference. The modifier will be called as a method itself, and will
+receive the same arguments as are passed to the method.
+
+When the modifier exits, the wrapped method will be called.
+
+The return value of the modifier will be ignored.
+
+=head3 $metaclass->add_after_method_modifier($method_name, $code)
+
+This wraps the specified method with the supplied subroutine
+reference. The modifier will be called as a method itself, and will
+receive the same arguments as are passed to the method.
+
+When the wrapped methods exits, the modifier will be called.
+
+The return value of the modifier will be ignored.
+
+=head3 $metaclass->add_around_method_modifier($method_name, $code)
+
+This wraps the specified method with the supplied subroutine
+reference.
+
+The first argument passed to the modifier will be a subroutine
+reference to the wrapped method. The second argument is the object,
+and after that come any arguments passed when the method is called.
+
+The around modifier can choose to call the original method, as well as
+what arguments to pass if it does so.
+
+The return value of the modifier is what will be seen by the caller.
+
+=head3 $metaclass->add_override_method_modifier($name, $sub)
+
+This adds an C<override> method modifier to the package.
+
+=head3 $metaclass->add_augment_method_modifier($name, $sub)
+
+This adds an C<augment> method modifier to the package.
+
+=head2 Class Immutability
+
+Making a class immutable "freezes" the class definition. You can no
+longer call methods which alter the class, such as adding or removing
+methods or attributes.
+
+Making a class immutable lets us optimize the class by inlining some
+methods, and also allows us to optimize some methods on the metaclass
+object itself.
+
+After immutabilization, the metaclass object will cache most informational
+methods that returns information about methods or attributes. Methods which
+would alter the class, such as C<add_attribute> and C<add_method>, will
+throw an error on an immutable metaclass object.
+
+=head3 $metaclass->make_immutable(%options)
+
+This method will create an immutable transformer and use it to make
+the class and its metaclass object immutable, and returns true
+(you should not rely on the details of this value apart from its truth).
+
+This method accepts the following options:
+
+=over 4
+
+=item * inline_accessors
+
+=item * inline_constructor
+
+=item * inline_destructor
+
+These are all booleans indicating whether the specified method(s)
+should be inlined.
+
+By default, accessors and the constructor are inlined, but not the
+destructor.
+
+=item * immutable_trait
+
+The name of a class which will be used as a parent class for the
+metaclass object being made immutable. This "trait" implements the
+post-immutability functionality of the metaclass (but not the
+transformation itself).
+
+This defaults to L<Moose::Meta::Class::Immutable::Trait>.
+
+=item * constructor_name
+
+This is the constructor method name. This defaults to "new".
+
+=item * constructor_class
+
+The name of the method metaclass for constructors. It will be used to
+generate the inlined constructor. This defaults to
+"Moose::Meta::Method::Constructor".
+
+=item * replace_constructor
+
+This is a boolean indicating whether an existing constructor should be
+replaced when inlining a constructor. This defaults to false.
+
+=item * destructor_class
+
+The name of the method metaclass for destructors. It will be used to
+generate the inlined destructor. This defaults to
+"Moose::Meta::Method::Destructor".
+
+=item * replace_destructor
+
+This is a boolean indicating whether an existing destructor should be
+replaced when inlining a destructor. This defaults to false.
+
+=back
+
+=head3 $metaclass->immutable_options
+
+Returns a hash of the options used when making the class immutable, including
+both defaults and anything supplied by the user in the call to C<<
+$metaclass->make_immutable >>. This is useful if you need to temporarily make
+a class mutable and then restore immutability as it was before.
+
+=head3 $metaclass->make_mutable
+
+Calling this method reverses the immutabilization transformation.
+
+=head3 $metaclass->constructor_class($class_name), $metaclass->destructor_class($class_name)
 
 These are the names of classes used when making a class immutable. These
 default to L<Moose::Meta::Method::Constructor> and
 L<Moose::Meta::Method::Destructor> respectively. These accessors are
-read-write, so you can use them to change the class name.
+read-write, so you can use them to change the class names associated with an
+existing metaclass.
 
-=back
+=head2 Moose::Meta::Class->meta
+
+This will return a L<Class::MOP::Class> instance for this class.
+
+It should also be noted that L<Class::MOP> will actually bootstrap
+this module by installing a number of attribute meta-objects into its
+metaclass.
 
 =head1 BUGS
 
