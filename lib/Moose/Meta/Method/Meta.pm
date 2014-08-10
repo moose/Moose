@@ -35,12 +35,26 @@ __END__
 
 =head1 DESCRIPTION
 
-This class is a subclass of L<Class::MOP::Method::Meta> that
-provides additional Moose-specific functionality, all of which is
-private.
+This is a subclass of L<Moose::Meta::Method> which represents the C<meta>
+method installed into classes which use L<Moose>.
 
-To understand this class, you should read the the
-L<Class::MOP::Method::Meta> documentation.
+=head1 INHERITANCE
+
+C<Moose::Meta::Method::Meta> is a subclass of L<Moose::Meta::Method> I<and>
+C<Class::MOP::Method::Meta>. All of the methods for
+C<Moose::Meta::Method::Meta> and C<Class::MOP::Method::Meta> are documented
+here.
+
+=head1 METHODS
+
+This class provides the following method:
+
+=head2 Moose::Meta::Method::Meta->wrap($metamethod, %options)
+
+This is the constructor. It accepts a L<Moose::Meta::Method> object and a hash
+of options. The options accepted are identical to the ones accepted by
+L<Moose::Meta::Method>, except that C<body> cannot be passed (it will be
+generated automatically).
 
 =head1 BUGS
 

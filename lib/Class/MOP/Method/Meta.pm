@@ -87,20 +87,6 @@ __END__
 
 =head1 DESCRIPTION
 
-This is a L<Class::MOP::Method> subclass which represents C<meta>
-methods installed into classes by Class::MOP.
-
-=head1 METHODS
-
-=over 4
-
-=item B<< Class::MOP::Method::Wrapped->wrap($metamethod, %options) >>
-
-This is the constructor. It accepts a L<Class::MOP::Method> object and
-a hash of options. The options accepted are identical to the ones
-accepted by L<Class::MOP::Method>, except that C<body> cannot be passed
-(it will be generated automatically).
-
-=back
+See the L<Moose::Meta::Method::Meta> documentation for API details.
 
 =cut
