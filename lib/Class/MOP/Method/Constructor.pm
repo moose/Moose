@@ -125,64 +125,8 @@ __END__
 
 =pod
 
-=head1 SYNOPSIS
-
-  use Class::MOP::Method::Constructor;
-
-  my $constructor = Class::MOP::Method::Constructor->new(
-      metaclass => $metaclass,
-      options   => {
-          debug => 1, # this is all for now
-      },
-  );
-
-  # calling the constructor ...
-  $constructor->body->execute($metaclass->name, %params);
-
 =head1 DESCRIPTION
 
-This is a subclass of L<Class::MOP::Method> which generates
-constructor methods.
-
-=head1 METHODS
-
-=over 4
-
-=item B<< Class::MOP::Method::Constructor->new(%options) >>
-
-This creates a new constructor object. It accepts a hash reference of
-options.
-
-=over 8
-
-=item * metaclass
-
-This should be a L<Class::MOP::Class> object. It is required.
-
-=item * name
-
-The method name (without a package name). This is required.
-
-=item * package_name
-
-The package name for the method. This is required.
-
-=item * is_inline
-
-This indicates whether or not the constructor should be inlined. This
-defaults to false.
-
-=back
-
-=item B<< $metamethod->is_inline >>
-
-Returns a boolean indicating whether or not the constructor is
-inlined.
-
-=item B<< $metamethod->associated_metaclass >>
-
-This returns the L<Class::MOP::Class> object for the method.
-
-=back
+See the L<Moose::Meta::Method::Constructor> documentation for API details.
 
 =cut

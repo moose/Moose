@@ -62,18 +62,70 @@ __END__
 
 =pod
 
+=head1 SYNOPSIS
+
+  use Moose::Meta::Method::Constructor;
+
+  my $constructor = Moose::Meta::Method::Constructor->new(
+      metaclass => $metaclass,
+      options   => {
+          debug => 1, # this is all for now
+      },
+  );
+
+  # calling the constructor ...
+  $constructor->body->execute($metaclass->name, %params);
+
 =head1 DESCRIPTION
 
-This class is a subclass of L<Class::MOP::Method::Constructor> that
-provides additional Moose-specific functionality
-
-To understand this class, you should read the the
-L<Class::MOP::Method::Constructor> documentation as well.
+This is a subclass of L<Moose::Meta::Method> which generates constructor
+methods.
 
 =head1 INHERITANCE
 
-C<Moose::Meta::Method::Constructor> is a subclass of
-L<Moose::Meta::Method> I<and> L<Class::MOP::Method::Constructor>.
+C<Moose::Meta::Method::Constructor> is a subclass of L<Moose::Meta::Method>
+I<and> C<Class::MOP::Method::Constructor>. All of the methods for
+C<Moose::Meta::Method::Constructor> and C<Class::MOP::Method::Constructor> are
+documented here.
+
+=head1 METHODS
+
+This class provides the following methods.
+
+=head2 Moose::Meta::Method::Constructor->new(%options)
+
+This creates a new constructor object. It accepts a hash reference of
+options.
+
+=over 4
+
+=item * metaclass
+
+This should be a L<Moose::Meta::Class> object. It is required.
+
+=item * name
+
+The method name (without a package name). This is required.
+
+=item * package_name
+
+The package name for the method. This is required.
+
+=item * is_inline
+
+This indicates whether or not the constructor should be inlined. This
+defaults to false.
+
+=back
+
+=head2 $metamethod->is_inline
+
+Returns a boolean indicating whether or not the constructor is
+inlined.
+
+=head2 $metamethod->associated_metaclass
+
+This returns the L<Moose::Meta::Class> object for the method.
 
 =head1 BUGS
 
