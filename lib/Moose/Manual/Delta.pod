@@ -335,6 +335,10 @@ simply throw an error.
 
 The things on the chopping block are:
 
+=item The lazy_build attribute feature is discouraged
+
+While not deprecated, we strongly discourage you from using this feature.
+
 =over 8
 
 =item * Old public methods in Class::MOP and Moose

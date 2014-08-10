@@ -1380,13 +1380,25 @@ attribute is read.
 If this is true, the attribute's value will be stored as a weak
 reference.
 
+=item * documentation
+
+An arbitrary string that can be retrieved later by calling C<<
+$attr->documentation >>.
+
 =item * auto_deref => $bool
+
+B<Note that in cases where you want this feature you are often better served
+by using a L<Moose::Meta::Attribute::Native> trait instead>.
 
 If this is true, then the reader will dereference the value when it is
 called. The attribute must have a type constraint which defines the
 attribute as an array or hash reference.
 
 =item * lazy_build => $bool
+
+B<Note that use of this feature is strongly discouraged.> Some documentation
+used to encourage use of this feature as a best practice, but we have changed
+our minds.
 
 Setting this to true makes the attribute lazy and provides a number of
 default methods.
@@ -1428,11 +1440,6 @@ becomes:
 Note the doubled underscore in the builder name. Internally, Moose
 simply prepends the attribute name with "_build_" to come up with the
 builder name.
-
-=item * documentation
-
-An arbitrary string that can be retrieved later by calling C<<
-$attr->documentation >>.
 
 =back
 

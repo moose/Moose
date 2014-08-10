@@ -3,6 +3,14 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [DOCUMENTATION]
+
+  - Updated Changes and Moose::Manual::Delta to note when we started removing
+    lazy_build from docs. Also added a note in the Moose::Meta::Attribute docs
+    stating that use of this feature is discouraged.
+  - Added a pointer from the auto_deref feature to
+    Moose::Meta::Attribute::Native. This is often a better choice.
+
 2.1210   2014-07-03
 
   [DOCUMENTATION]
@@ -323,6 +331,11 @@ for, noteworthy changes.
     never been tested or documented, but since the generated init_meta is
     nothing more than a compatibility shim at this point, there's no reason to
     not make it as compatible as possible. Reported by Moritz Onken. (doy)
+
+  [DOCUMENTATION]
+
+  - The lazy_build attribute feature was removed from
+    Moose::Manual::BestPractices.
 
 2.0601   2012-05-01
 
@@ -782,6 +795,11 @@ for, noteworthy changes.
     other classes, such as those found in pluggable regexp engines.
     Additionally the 'Object' constraint no longer rejects objects implemented
     as a blessed regular expression. (David Leadbeater)
+
+  [DOCUMENTATION]
+
+  - The lazy_build attribute feature was mostly removed from the docs and is
+    no longer encouraged.
 
   [OTHER]
 
