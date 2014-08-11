@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.1211   2014-08-11
+
   [DOCUMENTATION]
 
   - Updated Changes and Moose::Manual::Delta to note when we started removing
