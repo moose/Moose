@@ -4,6 +4,10 @@ use warnings;
 use Test::More;
 use Test::Requires 'Test::LeakTrace';   # skip all if not installed
 
+BEGIN {
+    plan skip_all => 'Leak tests fail under Devel::Cover' if $INC{'Devel/Cover.pm'};
+}
+
 use Class::MOP;
 
 # 5.10.0 has a bug on weaken($hash_ref) which leaks an AV.
