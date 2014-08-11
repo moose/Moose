@@ -56,6 +56,8 @@ my $anon_class_id;
     ok(exists $main::Class::MOP::Class::__ANON__::SERIAL::{$anon_class_id . '::'}, '... the package still exists');
 }
 
+local $TODO = "anon class doesn't get GCed under Devel::Cover" if $INC{'Devel/Cover.pm'};
+
 ok(!exists $main::Class::MOP::Class::__ANON__::SERIAL::{$anon_class_id . '::'}, '... the package no longer exists');
 
 # but it breaks down when we try to create another one ...
