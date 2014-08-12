@@ -15,8 +15,8 @@ my @modules
 plan tests => scalar @modules;
 
 my %trustme = (
-    'Moose::Exception' => [ "BUILD" ],
-    'Class::MOP' => [
+    'Moose::Exception' => ['BUILD'],
+    'Class::MOP'       => [
         'DEBUG_NO_META',
         'HAVE_ISAREV',
         'IS_RUNNING_ON_5_10',
@@ -29,6 +29,7 @@ my %trustme = (
     ],
     'Class::MOP::Attribute' => ['process_accessors'],
     'Class::MOP::Class'     => [
+
         # deprecated
         'alias_method',
         'compute_all_applicable_attributes',
@@ -106,10 +107,10 @@ my %trustme = (
     'Class::MOP::Mixin::AttributeCore' => ['.+'],
     'Class::MOP::Mixin::HasAttributes' => ['.+'],
     'Class::MOP::Mixin::HasMethods'    => ['.+'],
-    'Class::MOP::Package'    => [ 'get_method_map', 'wrap_method_body' ],
-    'Moose' => ['init_meta', 'throw_error'],
+    'Class::MOP::Package' => [ 'get_method_map', 'wrap_method_body' ],
+    'Moose'                  => [ 'init_meta', 'throw_error' ],
     'Moose::Error::Confess'  => ['new'],
-    'Moose::Error::Util' => ['.+'],
+    'Moose::Error::Util'     => ['.+'],
     'Moose::Meta::Attribute' => [
         qw( interpolate_class
             throw_error
@@ -165,16 +166,21 @@ my %trustme = (
             )
     ],
     'Moose::Meta::Mixin::AttributeCore' => ['.+'],
-    'Moose::Meta::Role::Composite' => [
+    'Moose::Meta::Role::Composite'      => [
         qw( add_method
             get_method
             get_method_list
             has_method
             is_anon
+            add_overloaded_operator
+            get_all_overloaded_operators
+            get_overload_fallback_value
+            is_overloaded
+            set_overload_fallback_value
             ),
     ],
-    'Moose::Object' => ['BUILDALL', 'DEMOLISHALL'],
-    'Moose::Role' => [
+    'Moose::Object' => [ 'BUILDALL', 'DEMOLISHALL' ],
+    'Moose::Role'   => [
         qw( after
             around
             augment
@@ -197,7 +203,7 @@ my %trustme = (
         [qw( constraint equals get_message )],
     'Moose::Meta::TypeConstraint::Parameterizable' => ['.+'],
     'Moose::Meta::TypeConstraint::Parameterized'   => ['.+'],
-    'Moose::Meta::TypeConstraint::Role' => [qw( equals is_a_type_of )],
+    'Moose::Meta::TypeConstraint::Role'  => [qw( equals is_a_type_of )],
     'Moose::Meta::TypeConstraint::Union' => [
         qw( compile_type_constraint
             coercion

@@ -178,6 +178,27 @@ sub apply_method_modifiers {
     }
 }
 
+sub _handle_overloading_fallback_conflict {
+    my ( $self, $role1, $role2 ) = @_;
+
+    throw_exception(
+        'OverloadConflictInComposition',
+        role_name               => $role2->name,
+        role_being_applied_name => $role1->name,
+        overloaded_op           => 'fallback',
+    );
+}
+
+sub _handle_overloading_operator_conflict {
+    my ( $self, $role1, $role2, $overloaded_op ) = @_;
+
+    throw_exception(
+        'OverloadConflictInComposition',
+        role_name               => $role2->name,
+        role_being_applied_name => $role1->name,
+        overloaded_op           => $overloaded_op,
+    );
+}
 
 1;
 
