@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.1300   2014-08-11 (TRIAL RELEASE)
+
   [ENHANCEMENTS]
 
   - Moose now has core support for overloading in roles. When a role with
