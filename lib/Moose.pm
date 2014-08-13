@@ -2,6 +2,8 @@ use strict;
 use warnings;
 package Moose;
 
+# AUTHORITY
+
 use 5.008003;
 
 use Scalar::Util 'blessed';
