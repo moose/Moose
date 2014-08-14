@@ -12,9 +12,23 @@ perl:
     - "5.12"
     - "5.10"
     - "5.8"
+env:
+  global:
+    - TEST_PARTITIONS=4
+    - RELEASE_TESTING=1
+matrix:
+  include:
+    - perl: "5.20"
+      env: COVERAGE=1 TEST_PARTITION=1
+    - perl: "5.20"
+      env: COVERAGE=1 TEST_PARTITION=2
+    - perl: "5.20"
+      env: COVERAGE=1 TEST_PARTITION=3
+    - perl: "5.20"
+      env: COVERAGE=1 TEST_PARTITION=4
 before_install:
-  - git clone git://github.com/haarg/perl-travis-helper
-  - source perl-travis-helper/init
+  - git clone git://github.com/haarg/perl-travis-helper ~/perl-travis-helper
+  - source ~/perl-travis-helper/init
   - build-perl
   - perl -V
   - build-dist
@@ -22,7 +36,11 @@ before_install:
 install:
   - cpan-install ExtUtils::MakeMaker~6.68 --deps
   - cpan-install --coverage
+before_script:
+  - coverage-setup
 script:
   - perl Makefile.PL
   - make
-  - RELEASE_TESTING=1 prove -b -r -s -j$((SYSTEM_CORES + 1)) $(test-dirs)
+  - prove -b -r -s -j$(test-jobs) $(test-files)
+after_success:
+  - coverage-report
