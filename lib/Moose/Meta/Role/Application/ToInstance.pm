@@ -41,6 +41,8 @@ sub apply {
 
         _reset_amagic($object);
     }
+
+    return $object;
 }
 
 1;
