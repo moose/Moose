@@ -9,6 +9,8 @@ use Test::More;
     use Moose::Role;
 }
 
+$::HAS_NC_AC = 0;
+
 {
     package Foo;
     use Moose ();
