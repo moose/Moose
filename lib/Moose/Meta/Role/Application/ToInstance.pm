@@ -39,7 +39,8 @@ sub apply {
     if ( _NEED_OVERLOAD_HACK_FOR_OBJECTS
         && overload::Overloaded( ref $object ) ) {
 
-        _reset_amagic($object);
+        # need to use $_[2] here to apply to the object in the caller
+        _reset_amagic($_[2]);
     }
 
     return $object;
