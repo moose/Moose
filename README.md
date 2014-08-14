@@ -1,6 +1,6 @@
 [![CPAN version](https://badge.fury.io/pl/Moose.svg)](http://badge.fury.io/pl/Moose)
 [![Build Status](https://travis-ci.org/moose/Moose.png?branch=master,stable/2.12)](https://travis-ci.org/moose/Moose)
-[![Coverage Status](https://coveralls.io/repos/moose/moose/badge.png?branch=master)](https://coveralls.io/r/moose/moose?branch=master)
+[![Coverage Status](https://coveralls.io/repos/moose/Moose/badge.png?branch=master)](https://coveralls.io/r/moose/Moose?branch=master)
 
 Moose
 =====
