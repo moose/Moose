@@ -34,7 +34,7 @@ use lib 't/lib';
     use Moose;
     ::like(
         ::exception { with qw( Role::HasFallback Role::NoFallback ) },
-        qr/\QWe have encountered an overloading conflict for the fallback during composition. This is fatal error./,
+        qr/\QWe have encountered an overloading conflict for the fallback during composition. This is a fatal error./,
         'exception from fallback conflict during role summation'
     );
 }
@@ -51,7 +51,7 @@ use lib 't/lib';
     use Moose;
     ::like(
         ::exception { with qw( Role::HasFallback Role::NoFallback Role::NoOverloading ) },
-        qr/\QWe have encountered an overloading conflict for the fallback during composition. This is fatal error./,
+        qr/\QWe have encountered an overloading conflict for the fallback during composition. This is a fatal error./,
         'exception from fallback conflict during role summation including role without overloading'
     );
 }
@@ -136,24 +136,33 @@ use lib 't/lib';
 
     ::like(
         ::exception { with 'Role::HasFallback' },
-        qr/\QWe have encountered an overloading conflict for the fallback setting when applying Role::HasFallback to Role::Consumer1. This is fatal error./,
+        qr/\QWe have encountered an overloading conflict for the fallback setting when applying Role::HasFallback to Role::Consumer1. This is a fatal error./,
         'exception when a role with overloading consumes a role with a conflicting fallback setting'
     );
 }
 
 {
-    package Role::Consumer2;
-    use Moose::Role;
+    package R1 {
+        use Moose::Role;
 
-    use overload
-        q{""} => sub {'foo'},
-        fallback => 1;
+        use overload '&{}' => 'as_code';
 
-    ::like(
-        ::exception { with 'Role::HasFallback' },
-        qr/\QWe have encountered an overloading conflict between overloading methods when applying Role::HasFallback to Role::Consumer2. The two roles both overload the '""' operator. This is a fatal error./,
-        'exception when a role with overloading consumes a role with conflicting overloading methods'
-    );
+        sub as_code { }
+    }
+
+    package R2 {
+        use Moose::Role;
+        with 'R1';
+    }
+
+    package C1 {
+        use Moose;
+        ::is(
+            ::exception { with 'R1', 'R2' },
+            undef,
+            'no conflict when class consumes multiple roles with the same overloading'
+        );
+    }
 }
 
 done_testing();

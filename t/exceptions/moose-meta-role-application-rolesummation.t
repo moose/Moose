@@ -191,7 +191,7 @@ use Moose();
 
     like(
         $exception,
-        qr/\QWe have encountered an 'override' method conflict during composition (Two 'override' methods of the same name encountered). This is fatal error./,
+        qr/\QWe have encountered an 'override' method conflict during composition (Two 'override' methods of the same name encountered). This is a fatal error./,
         "role Foo4 & Bar4, both are overriding the same method 'foo'");
 
     isa_ok(

@@ -3,6 +3,17 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  - Conflict detection for overloading operators is now more correct. If a
+    class consumed two roles that both had identical overloading methods
+    (because they got them from some other role, for example), this caused an
+    error, but it shouldn't. GH #4. (rjbs)
+  - Similarly, when a role consumes another role, conflicts in overloading
+    operators are now silently resolved in favor of the consuming role, just
+    as they are with methods. Note that conflicts between the fallback setting
+    for roles are still an error.
+
 2.1300   2014-08-11 (TRIAL RELEASE)
 
   [ENHANCEMENTS]
