@@ -4,66 +4,66 @@ use warnings;
 use Test::More;
 
 {
-    package A;
+    package First;
     use Moose;
 
     sub foo {
-        ::BAIL_OUT('A::foo called twice') if $main::seen{'A::foo'}++;
-        return 'a';
+        ::BAIL_OUT('First::foo called twice') if $main::seen{'First::foo'}++;
+        return '1';
     }
 
     sub bar {
-        ::BAIL_OUT('A::bar called twice') if $main::seen{'A::bar'}++;
-        return 'a';
+        ::BAIL_OUT('First::bar called twice') if $main::seen{'First::bar'}++;
+        return '1';
     }
 
     sub baz {
-        ::BAIL_OUT('A::baz called twice') if $main::seen{'A::baz'}++;
-        return 'a';
+        ::BAIL_OUT('First::baz called twice') if $main::seen{'First::baz'}++;
+        return '1';
     }
 }
 
 {
-    package B;
+    package Second;
     use Moose;
-    extends qw(A);
+    extends qw(First);
 
     sub foo {
-        ::BAIL_OUT('B::foo called twice') if $main::seen{'B::foo'}++;
-        return 'b' . super();
+        ::BAIL_OUT('Second::foo called twice') if $main::seen{'Second::foo'}++;
+        return '2' . super();
     }
 
     sub bar {
-        ::BAIL_OUT('B::bar called twice') if $main::seen{'B::bar'}++;
-        return 'b' . ( super() || '' );
+        ::BAIL_OUT('Second::bar called twice') if $main::seen{'Second::bar'}++;
+        return '2' . ( super() || '' );
     }
 
     override baz => sub {
-        ::BAIL_OUT('B::baz called twice') if $main::seen{'B::baz'}++;
-        return 'b' . super();
+        ::BAIL_OUT('Second::baz called twice') if $main::seen{'Second::baz'}++;
+        return '2' . super();
     };
 }
 
 {
-    package C;
+    package Third;
     use Moose;
-    extends qw(B);
+    extends qw(Second);
 
-    sub foo { return 'c' . ( super() || '' ) }
+    sub foo { return '3' . ( super() || '' ) }
 
     override bar => sub {
-        ::BAIL_OUT('C::bar called twice') if $main::seen{'C::bar'}++;
-        return 'c' . super();
+        ::BAIL_OUT('Third::bar called twice') if $main::seen{'Third::bar'}++;
+        return '3' . super();
     };
 
     override baz => sub {
-        ::BAIL_OUT('C::baz called twice') if $main::seen{'C::baz'}++;
-        return 'c' . super();
+        ::BAIL_OUT('Third::baz called twice') if $main::seen{'Third::baz'}++;
+        return '3' . super();
     };
 }
 
-is( C->new->foo, 'c' );
-is( C->new->bar, 'cb' );
-is( C->new->baz, 'cba' );
+is( Third->new->foo, '3' );
+is( Third->new->bar, '32' );
+is( Third->new->baz, '321' );
 
 done_testing;
