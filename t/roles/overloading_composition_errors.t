@@ -127,7 +127,8 @@ use lib 't/lib';
 }
 
 {
-    package R1 {
+    {
+        package R1;
         use Moose::Role;
 
         use overload '&{}' => 'as_code';
@@ -135,12 +136,14 @@ use lib 't/lib';
         sub as_code { }
     }
 
-    package R2 {
+    {
+        package R2;
         use Moose::Role;
         with 'R1';
     }
 
-    package C1 {
+    {
+        package C1;
         use Moose;
         ::is(
             ::exception { with 'R1', 'R2' },

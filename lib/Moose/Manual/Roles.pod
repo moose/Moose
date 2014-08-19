@@ -319,7 +319,7 @@ between multiple roles when they are all consumed by a class. If two roles
 both provide different overloading implementations for a given operator, that
 is a conflict. If two roles both implement overloading and have different
 C<fallback> values, that is also considered a conflict. These conflicts are
-detected either when multiple roles are being composed into a class together.
+detected when multiple roles are being composed into a class together.
 
 When a role consumes another role, the consuming role's overloading fallback
 and operator implementations silently "win" the conflict.
