@@ -178,16 +178,6 @@ sub apply_method_modifiers {
     }
 }
 
-sub _handle_overloading_fallback_conflict {
-    my ( $self, $role1, $role2 ) = @_;
-
-    throw_exception(
-        'OverloadFallbackConflictInComposition',
-        role_name               => $role2->name,
-        role_being_applied_name => $role1->name,
-    );
-}
-
 1;
 
 # ABSTRACT: Compose a role into another role

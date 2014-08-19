@@ -127,21 +127,6 @@ use lib 't/lib';
 }
 
 {
-    package Role::Consumer1;
-    use Moose::Role;
-
-    use overload
-        '0+' => sub {42},
-        fallback => 0;
-
-    ::like(
-        ::exception { with 'Role::HasFallback' },
-        qr/\QWe have encountered an overloading conflict for the fallback setting when applying Role::HasFallback to Role::Consumer1. This is a fatal error./,
-        'exception when a role with overloading consumes a role with a conflicting fallback setting'
-    );
-}
-
-{
     package R1 {
         use Moose::Role;
 
