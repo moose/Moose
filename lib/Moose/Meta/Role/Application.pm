@@ -107,13 +107,9 @@ sub apply_overloading {
     }
 
     for my $meth ( $role->get_all_overloaded_operators ) {
-        if (   $other->is_overloaded
-            && $other->has_overloaded_operator( $meth->operator ) ) {
-
-            next
-                if $self->_handle_overloading_operator_conflict( $role,
-                $other, $meth->operator );
-        }
+        next
+            if $other->is_overloaded
+            && $other->has_overloaded_operator( $meth->operator );
 
         $other->add_overloaded_operator( $meth->operator => $meth );
     }

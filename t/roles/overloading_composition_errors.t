@@ -142,18 +142,27 @@ use lib 't/lib';
 }
 
 {
-    package Role::Consumer2;
-    use Moose::Role;
+    package R1 {
+        use Moose::Role;
 
-    use overload
-        q{""} => sub {'foo'},
-        fallback => 1;
+        use overload '&{}' => 'as_code';
 
-    ::like(
-        ::exception { with 'Role::HasFallback' },
-        qr/\QWe have encountered an overloading conflict between overloading methods when applying Role::HasFallback to Role::Consumer2. The two roles both overload the '""' operator. This is a fatal error./,
-        'exception when a role with overloading consumes a role with conflicting overloading methods'
-    );
+        sub as_code { }
+    }
+
+    package R2 {
+        use Moose::Role;
+        with 'R1';
+    }
+
+    package C1 {
+        use Moose;
+        ::is(
+            ::exception { with 'R1', 'R2' },
+            undef,
+            'no conflict when class consumes multiple roles with the same overloading'
+        );
+    }
 }
 
 done_testing();
