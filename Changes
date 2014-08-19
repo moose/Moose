@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.1301   2014-08-19 (TRIAL RELEASE)
+
   [BUG FIXES]
 
   - Conflict detection for overloading operators is now more correct. If a
