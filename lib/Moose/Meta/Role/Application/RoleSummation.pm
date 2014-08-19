@@ -1,5 +1,5 @@
 package Moose::Meta::Role::Application::RoleSummation;
-$Moose::Meta::Role::Application::RoleSummation::VERSION = '2.1301';
+
 use strict;
 use warnings;
 use metaclass;
@@ -329,16 +329,6 @@ __END__
 
 =pod
 
-=encoding UTF-8
-
-=head1 NAME
-
-Moose::Meta::Role::Application::RoleSummation - Combine two or more roles
-
-=head1 VERSION
-
-version 2.1301
-
 =head1 DESCRIPTION
 
 Summation composes two traits, forming the union of non-conflicting
@@ -383,62 +373,5 @@ bindings and 'disabling' the conflicting bindings
 =item B<apply_override_method_modifiers>
 
 =back
-
-=head1 BUGS
-
-See L<Moose/BUGS> for details on reporting bugs.
-
-=head1 AUTHORS
-
-=over 4
-
-=item *
-
-Stevan Little <stevan.little@iinteractive.com>
-
-=item *
-
-Dave Rolsky <autarch@urth.org>
-
-=item *
-
-Jesse Luehrs <doy@tozt.net>
-
-=item *
-
-Shawn M Moore <code@sartak.org>
-
-=item *
-
-יובל קוג'מן (Yuval Kogman) <nothingmuch@woobling.org>
-
-=item *
-
-Karen Etheridge <ether@cpan.org>
-
-=item *
-
-Florian Ragwitz <rafl@debian.org>
-
-=item *
-
-Hans Dieter Pearcey <hdp@weftsoar.net>
-
-=item *
-
-Chris Prather <chris@prather.org>
-
-=item *
-
-Matt S Trout <mst@shadowcat.co.uk>
-
-=back
-
-=head1 COPYRIGHT AND LICENSE
-
-This software is copyright (c) 2006 by Infinity Interactive, Inc..
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
 
 =cut
