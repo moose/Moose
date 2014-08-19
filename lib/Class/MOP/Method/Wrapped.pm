@@ -216,18 +216,14 @@ after, and around method modifiers.
 
 =head1 METHODS
 
-=head2 Construction
-
-=over 4
-
-=item B<< Class::MOP::Method::Wrapped->wrap($metamethod, %options) >>
+=head2 Class::MOP::Method::Wrapped->wrap($metamethod, %options)
 
 This is the constructor. It accepts a L<Class::MOP::Method> object and
 a hash of options.
 
 The options are:
 
-=over 8
+=over 4
 
 =item * name
 
@@ -246,29 +242,27 @@ method's class.
 
 =back
 
-=item B<< $metamethod->get_original_method >>
+=head2 $metamethod->get_original_method
 
 This returns the L<Class::MOP::Method> object that was passed to the
 constructor.
 
-=item B<< $metamethod->add_before_modifier($code) >>
+=head2 $metamethod->add_before_modifier($code)
 
-=item B<< $metamethod->add_after_modifier($code) >>
+=head2 $metamethod->add_after_modifier($code)
 
-=item B<< $metamethod->add_around_modifier($code) >>
+=head2 $metamethod->add_around_modifier($code)
 
 These methods all take a subroutine reference and apply it as a
 modifier to the original method.
 
-=item B<< $metamethod->before_modifiers >>
+=head2 $metamethod->before_modifiers
 
-=item B<< $metamethod->after_modifiers >>
+=head2 $metamethod->after_modifiers
 
-=item B<< $metamethod->around_modifiers >>
+=head2 $metamethod->around_modifiers
 
 These methods all return a list of subroutine references which are
 acting as the specified type of modifier.
-
-=back
 
 =cut

@@ -226,9 +226,7 @@ details).
 
 Moose::Role also offers two role-specific keyword exports:
 
-=over 4
-
-=item B<requires (@method_names)>
+=head2 requires (@method_names)
 
 Roles can require that certain methods are implemented by any class which
 C<does> the role.
@@ -236,15 +234,13 @@ C<does> the role.
 Note that attribute accessors also count as methods for the purposes
 of satisfying the requirements of a role.
 
-=item B<excludes (@role_names)>
+=head2 excludes (@role_names)
 
 Roles can C<exclude> other roles, in effect saying "I can never be combined
 with these C<@role_names>". This is a feature which should not be used
 lightly.
 
-=back
-
-=head2 B<unimport>
+=head2 no Moose::Role
 
 Moose::Role offers a way to remove the keywords it exports, through the
 C<unimport> method. You simply have to say C<no Moose::Role> at the bottom of

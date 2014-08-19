@@ -140,55 +140,49 @@ introspectable, they have very little behavior.
 
 =head1 METHODS
 
-This class provides the following methods:
-
-=over 4
-
-=item B<< Moose::Meta::Role::Attribute->new(...) >>
+=head2 Moose::Meta::Role::Attribute->new(...)
 
 This method accepts all the options that would be passed to the constructor
 for L<Moose::Meta::Attribute>.
 
-=item B<< $attr->metaclass >>
+=head2 $attr->metaclass
 
-=item B<< $attr->is >>
+=head2 $attr->is
 
 Returns the option as passed to the constructor.
 
-=item B<< $attr->associated_role >>
+=head2 $attr->associated_role
 
 Returns the L<Moose::Meta::Role> to which this attribute belongs, if any.
 
-=item B<< $attr->original_role >>
+=head2 $attr->original_role
 
 Returns the L<Moose::Meta::Role> in which this attribute was first
 defined. This may not be the same as the value of C<associated_role()> for
 attributes in a composite role, or when one role consumes other roles.
 
-=item B<< $attr->original_options >>
+=head2 $attr->original_options
 
 Returns a hash reference of options passed to the constructor. This is used
 when creating a L<Moose::Meta::Attribute> object from this object.
 
-=item B<< $attr->attach_to_role($role) >>
+=head2 $attr->attach_to_role($role)
 
 Attaches the attribute to the given L<Moose::Meta::Role>.
 
-=item B<< $attr->attribute_for_class($metaclass) >>
+=head2 $attr->attribute_for_class($metaclass)
 
 Given an attribute metaclass name, this method calls C<<
 $metaclass->interpolate_class_and_new >> to construct an attribute object
 which can be added to a L<Moose::Meta::Class>.
 
-=item B<< $attr->clone >>
+=head2 $attr->clone
 
 Creates a new object identical to the object on which the method is called.
 
-=item B<< $attr->is_same_as($other_attr) >>
+=head2 $attr->is_same_as($other_attr)
 
 Compares two role attributes and returns true if they are identical.
-
-=back
 
 In addition, this class implements all informational predicates implements by
 L<Moose::Meta::Attribute> (and L<Class::MOP::Attribute>).

@@ -42,9 +42,7 @@ This trait provides native delegation methods for hash references.
 
 =head1 PROVIDED METHODS
 
-=over 4
-
-=item B<get($key, $key2, $key3...)>
+=head2 get($key, $key2, $key3...)
 
 Returns values from the hash.
 
@@ -53,7 +51,7 @@ scalar context it returns the value for the last key specified.
 
 This method requires at least one argument.
 
-=item B<set($key =E<gt> $value, $key2 =E<gt> $value2...)>
+=head2 set($key =E<gt> $value, $key2 =E<gt> $value2...)
 
 Sets the elements in the hash to the given values. It returns the new values
 set for each key, in the same order as the keys passed to the method.
@@ -61,38 +59,38 @@ set for each key, in the same order as the keys passed to the method.
 This method requires at least two arguments, and expects an even number of
 arguments.
 
-=item B<delete($key, $key2, $key3...)>
+=head2 delete($key, $key2, $key3...)
 
 Removes the elements with the given keys.
 
 In list context it returns a list of values in the hash for the deleted
 keys. In scalar context it returns the value for the last key specified.
 
-=item B<keys>
+=head2 keys
 
 Returns the list of keys in the hash.
 
 This method does not accept any arguments.
 
-=item B<exists($key)>
+=head2 exists($key)
 
 Returns true if the given key is present in the hash.
 
 This method requires a single argument.
 
-=item B<defined($key)>
+=head2 defined($key)
 
 Returns true if the value of a given key is defined.
 
 This method requires a single argument.
 
-=item B<values>
+=head2 values
 
 Returns the list of values in the hash.
 
 This method does not accept any arguments.
 
-=item B<kv>
+=head2 kv
 
 Returns the key/value pairs in the hash as an array of array references.
 
@@ -102,59 +100,59 @@ Returns the key/value pairs in the hash as an array of array references.
 
 This method does not accept any arguments.
 
-=item B<elements>
+=head2 elements
 
 Returns the key/value pairs in the hash as a flattened list..
 
 This method does not accept any arguments.
 
-=item B<clear>
+=head2 clear
 
 Resets the hash to an empty value, like C<%hash = ()>.
 
 This method does not accept any arguments.
 
-=item B<count>
+=head2 count
 
 Returns the number of elements in the hash. Also useful to check for a nonempty hash, because C<count> returns a true (nonzero) value if there is something in the hash:
 C<< has_options => 'count' >>.
 
 This method does not accept any arguments.
 
-=item B<is_empty>
+=head2 is_empty
 
 If the hash is populated, returns false. Otherwise, returns true.
 
 This method does not accept any arguments.
 
-=item B<accessor($key)>
+=head2 accessor($key)
 
-=item B<accessor($key, $value)>
+=head2 accessor($key, $value)
 
 If passed one argument, returns the value of the specified key. If passed two
 arguments, sets the value of the specified key.
 
 When called as a setter, this method returns the value that was set.
 
-=item B<shallow_clone>
+=head2 shallow_clone
 
 This method returns a shallow clone of the hash reference.  The return value
 is a reference to a new hash with the same keys and values.  It is I<shallow>
 because any values that were references in the original will be the I<same>
 references in the clone.
 
-=back
+=head2 Why no C<each>?
 
-Note that C<each> is deliberately omitted, due to its stateful interaction
-with the hash iterator. C<keys> or C<kv> are much safer.
+We have deliberately omitted a method for C<each>, due to its stateful
+interaction with the hash iterator. Using C<keys> or C<kv> is much safer.
 
-=head1 METHODS
+=head2 Moose::Meta::Attribute->meta
 
-=over 4
+This will return a L<Class::MOP::Class> instance for this class.
 
-=item B<meta>
-
-=back
+It should also be noted that L<Class::MOP> will actually bootstrap
+this module by installing a number of attribute meta-objects into its
+metaclass.
 
 =head1 BUGS
 

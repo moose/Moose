@@ -118,15 +118,11 @@ can be inlined.
 
 =head1 METHODS
 
-=over 4
-
-=item B<< $metamethod->can_be_inlined >>
+=head2 $metamethod->can_be_inlined
 
 This method returns true if the method in question can be inlined in
 the associated metaclass.
 
 If it cannot be inlined, it spits out a warning and returns false.
-
-=back
 
 =cut

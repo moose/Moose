@@ -147,9 +147,7 @@ L<Moose::Meta::TypeConstraint>.
 
 =head1 METHODS
 
-=over 4
-
-=item B<< Moose::Meta::TypeConstraint::Class->new(%options) >>
+=head2 Moose::Meta::TypeConstraint::Class->new(%options)
 
 This creates a new class type constraint based on the given
 C<%options>.
@@ -162,16 +160,16 @@ C<Object> type.
 The constructor also overrides the hand optimized type constraint with
 one it creates internally.
 
-=item B<< $constraint->class >>
+=head2 $constraint->class
 
 Returns the class name associated with the constraint.
 
-=item B<< $constraint->parents >>
+=head2 $constraint->parents
 
 Returns all the type's parent types, corresponding to its parent
 classes.
 
-=item B<< $constraint->is_subtype_of($type_name_or_object) >>
+=head2 $constraint->is_subtype_of($type_name_or_object)
 
 If the given type is also a class type, then this checks that the
 type's class is a subclass of the other type's class.
@@ -179,7 +177,7 @@ type's class is a subclass of the other type's class.
 Otherwise it falls back to the implementation in
 L<Moose::Meta::TypeConstraint>.
 
-=item B<< $constraint->create_child_type(%options) >>
+=head2 $constraint->create_child_type(%options)
 
 This returns a new L<Moose::Meta::TypeConstraint> object with the type
 as its parent.
@@ -187,13 +185,11 @@ as its parent.
 Note that it does I<not> return a
 C<Moose::Meta::TypeConstraint::Class> object!
 
-=item B<< $constraint->get_message($value) >>
+=head2 $constraint->get_message($value)
 
 This is the same as L<Moose::Meta::TypeConstraint/get_message> except
 that it explicitly says C<isa> was checked. This is to help users deal
 with accidentally autovivified type constraints.
-
-=back
 
 =head1 BUGS
 

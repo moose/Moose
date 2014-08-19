@@ -380,13 +380,11 @@ C<Moose::Meta::TypeConstraint> is a subclass of L<Class::MOP::Object>.
 
 =head1 METHODS
 
-=over 4
-
-=item B<< Moose::Meta::TypeConstraint->new(%options) >>
+=head2 Moose::Meta::TypeConstraint->new(%options)
 
 This creates a new type constraint based on the provided C<%options>:
 
-=over 8
+=over 4
 
 =item * name
 
@@ -429,23 +427,23 @@ the values are I<references> to the variables.
 
 =back
 
-=item B<< $constraint->equals($type_name_or_object) >>
+=head2 $constraint->equals($type_name_or_object)
 
 Returns true if the supplied name or type object is the same as the
 current type.
 
-=item B<< $constraint->is_subtype_of($type_name_or_object) >>
+=head2 $constraint->is_subtype_of($type_name_or_object)
 
 Returns true if the supplied name or type object is a parent of the
 current type.
 
-=item B<< $constraint->is_a_type_of($type_name_or_object) >>
+=head2 $constraint->is_a_type_of($type_name_or_object)
 
 Returns true if the given type is the same as the current type, or is
 a parent of the current type. This is a shortcut for checking
 C<equals> and C<is_subtype_of>.
 
-=item B<< $constraint->coerce($value) >>
+=head2 $constraint->coerce($value)
 
 This will attempt to coerce the value to the type. If the type does not
 have any defined coercions this will throw an error.
@@ -453,86 +451,84 @@ have any defined coercions this will throw an error.
 If no coercion can produce a value matching C<$constraint>, the original
 value is returned.
 
-=item B<< $constraint->assert_coerce($value) >>
+=head2 $constraint->assert_coerce($value)
 
 This method behaves just like C<coerce>, but if the result is not valid
 according to C<$constraint>, an error is thrown.
 
-=item B<< $constraint->check($value) >>
+=head2 $constraint->check($value)
 
 Returns true if the given value passes the constraint for the type.
 
-=item B<< $constraint->validate($value) >>
+=head2 $constraint->validate($value)
 
 This is similar to C<check>. However, if the type I<is valid> then the
 method returns an explicit C<undef>. If the type is not valid, we call
 C<< $self->get_message($value) >> internally to generate an error
 message.
 
-=item B<< $constraint->assert_valid($value) >>
+=head2 $constraint->assert_valid($value)
 
 Like C<check> and C<validate>, this method checks whether C<$value> is
 valid under the constraint.  If it is, it will return true.  If it is not,
 an exception will be thrown with the results of
 C<< $self->get_message($value) >>.
 
-=item B<< $constraint->name >>
+=head2 $constraint->name
 
 Returns the type's name, as provided to the constructor.
 
-=item B<< $constraint->parent >>
+=head2 $constraint->parent
 
 Returns the type's parent, as provided to the constructor, if any.
 
-=item B<< $constraint->has_parent >>
+=head2 $constraint->has_parent
 
 Returns true if the type has a parent type.
 
-=item B<< $constraint->parents >>
+=head2 $constraint->parents
 
 Returns all of the types parents as an list of type constraint objects.
 
-=item B<< $constraint->constraint >>
+=head2 $constraint->constraint
 
 Returns the type's constraint, as provided to the constructor.
 
-=item B<< $constraint->get_message($value) >>
+=head2 $constraint->get_message($value)
 
 This generates a method for the given value. If the type does not have
 an explicit message, we generate a default message.
 
-=item B<< $constraint->has_message >>
+=head2 $constraint->has_message
 
 Returns true if the type has a message.
 
-=item B<< $constraint->message >>
+=head2 $constraint->message
 
 Returns the type's message as a subroutine reference.
 
-=item B<< $constraint->coercion >>
+=head2 $constraint->coercion
 
 Returns the type's L<Moose::Meta::TypeCoercion> object, if one
 exists.
 
-=item B<< $constraint->has_coercion >>
+=head2 $constraint->has_coercion
 
 Returns true if the type has a coercion.
 
-=item B<< $constraint->can_be_inlined >>
+=head2 $constraint->can_be_inlined
 
 Returns true if this type constraint can be inlined. A type constraint which
 subtypes an inlinable constraint and does not add an additional constraint
 "inherits" its parent type's inlining.
 
-=item B<< $constraint->create_child_type(%options) >>
+=head2 $constraint->create_child_type(%options)
 
 This returns a new type constraint of the same class using the
 provided C<%options>. The C<parent> option will be the current type.
 
 This method exists so that subclasses of this class can override this
 behavior and change how child types are created.
-
-=back
 
 =head1 BUGS
 

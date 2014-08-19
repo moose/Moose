@@ -761,13 +761,11 @@ C<Moose::Meta::Role> is a subclass of L<Class::MOP::Module>.
 
 =head2 Construction
 
-=over 4
-
-=item B<< Moose::Meta::Role->initialize($role_name) >>
+=head3 Moose::Meta::Role->initialize($role_name)
 
 This method creates a new role object with the provided name.
 
-=item B<< Moose::Meta::Role->combine( [ $role => { ... } ], [ $role ], ... ) >>
+=head3 Moose::Meta::Role->combine( [ $role => { ... } ], [ $role ], ... )
 
 This method accepts a list of array references. Each array reference
 should contain a role name or L<Moose::Meta::Role> object as its first element. The second element is
@@ -777,7 +775,7 @@ and C<-alias> keys to control how methods are composed from the role.
 The return value is a new L<Moose::Meta::Role::Composite> that
 represents the combined roles.
 
-=item B<< $metarole->composition_class_roles >>
+=head3 $metarole->composition_class_roles
 
 When combining multiple roles using C<combine>, this method is used to obtain a
 list of role names to be applied to the L<Moose::Meta::Role::Composite>
@@ -785,31 +783,27 @@ instance returned by C<combine>. The default implementation returns an empty
 list. Extensions that need to hook into role combination may wrap this method
 to return additional role names.
 
-=item B<< Moose::Meta::Role->create($name, %options) >>
+=head3 Moose::Meta::Role->create($name, %options)
 
 This method is identical to the L<Moose::Meta::Class> C<create>
 method.
 
-=item B<< Moose::Meta::Role->create_anon_role >>
+=head3 Moose::Meta::Role->create_anon_role
 
 This method is identical to the L<Moose::Meta::Class>
 C<create_anon_class> method.
 
-=item B<< $metarole->is_anon_role >>
+=head3 $metarole->is_anon_role
 
 Returns true if the role is an anonymous role.
 
-=item B<< $metarole->consumers >>
+=head3 $metarole->consumers
 
 Returns a list of names of classes and roles which consume this role.
 
-=back
-
 =head2 Role application
 
-=over 4
-
-=item B<< $metarole->apply( $thing, @options ) >>
+=head3 $metarole->apply( $thing, @options )
 
 This method applies a role to the given C<$thing>. That can be another
 L<Moose::Meta::Role>, object, a L<Moose::Meta::Class> object, or a
@@ -822,74 +816,64 @@ Note that this will apply the role even if the C<$thing> in question already
 C<does> this role.  L<Moose::Util/does_role> is a convenient wrapper for
 finding out if role application is necessary.
 
-=back
-
 =head2 Roles and other roles
 
-=over 4
-
-=item B<< $metarole->get_roles >>
+=head3 $metarole->get_roles
 
 This returns an array reference of roles which this role does. This
 list may include duplicates.
 
-=item B<< $metarole->calculate_all_roles >>
+=head3 $metarole->calculate_all_roles
 
 This returns a I<unique> list of all roles that this role does, and
 all the roles that its roles do.
 
-=item B<< $metarole->does_role($role) >>
+=head3 $metarole->does_role($role)
 
 Given a role I<name> or L<Moose::Meta::Role> object, returns true if this role
 does the given role.
 
-=item B<< $metarole->add_role($role) >>
+=head3 $metarole->add_role($role)
 
 Given a L<Moose::Meta::Role> object, this adds the role to the list of
 roles that the role does.
 
-=item B<< $metarole->get_excluded_roles_list >>
+=head3 $metarole->get_excluded_roles_list
 
 Returns a list of role names which this role excludes.
 
-=item B<< $metarole->excludes_role($role_name) >>
+=head3 $metarole->excludes_role($role_name)
 
 Given a role I<name>, returns true if this role excludes the named
 role.
 
-=item B<< $metarole->add_excluded_roles(@role_names) >>
+=head3 $metarole->add_excluded_roles(@role_names)
 
 Given one or more role names, adds those roles to the list of excluded
 roles.
-
-=back
 
 =head2 Methods
 
 The methods for dealing with a role's methods are all identical in API
 and behavior to the same methods in L<Class::MOP::Class>.
 
-=over 4
-
-=item B<< $metarole->method_metaclass >>
+=head3 $metarole->method_metaclass
 
 Returns the method metaclass name for the role. This defaults to
 L<Moose::Meta::Role::Method>.
 
-=item B<< $metarole->get_method($name) >>
+=head3 $metarole->get_method($name)
 
-=item B<< $metarole->has_method($name) >>
+=head3 $metarole->has_method($name)
 
-=item B<< $metarole->add_method( $name, $body ) >>
+=head3 $metarole->add_method( $name, $body )
 
-=item B<< $metarole->get_method_list >>
+=head3 $metarole->get_method_list
 
-=item B<< $metarole->find_method_by_name($name) >>
+=head3 $metarole->find_method_by_name($name)
 
 These methods are all identical to the methods of the same name in
 L<Class::MOP::Package>
-
-=back
 
 =head2 Attributes
 
@@ -904,69 +888,57 @@ is passed directly to the metaclass's C<add_attribute> method.
 
 This is quite likely to change in the future.
 
-=over 4
+=head3 $metarole->get_attribute($attribute_name)
 
-=item B<< $metarole->get_attribute($attribute_name) >>
+=head3 $metarole->has_attribute($attribute_name)
 
-=item B<< $metarole->has_attribute($attribute_name) >>
+=head3 $metarole->get_attribute_list
 
-=item B<< $metarole->get_attribute_list >>
+=head3 $metarole->add_attribute($name, %options)
 
-=item B<< $metarole->add_attribute($name, %options) >>
-
-=item B<< $metarole->remove_attribute($attribute_name) >>
-
-=back
+=head3 $metarole->remove_attribute($attribute_name)
 
 =head2 Overload introspection and creation
 
 The methods for dealing with a role's overloads are all identical in API and
 behavior to the same methods in L<Class::MOP::Class>.
 
-=over 4
+=head3 $metarole->is_overloaded
 
-=item B<< $metarole->is_overloaded >>
+=head3 $metarole->get_overloaded_operator($op)
 
-=item B<< $metarole->get_overloaded_operator($op) >>
+=head3 $metarole->has_overloaded_operator($op)
 
-=item B<< $metarole->has_overloaded_operator($op) >>
+=head3 $metarole->get_overload_list
 
-=item B<< $metarole->get_overload_list >>
+=head3 $metarole->get_all_overloaded_operators
 
-=item B<< $metarole->get_all_overloaded_operators >>
+=head3 $metarole->add_overloaded_operator($op, $impl)
 
-=item B<< $metarole->add_overloaded_operator($op, $impl) >>
-
-=item B<< $metarole->remove_overloaded_operator($op) >>
-
-=back
+=head3 $metarole->remove_overloaded_operator($op)
 
 =head2 Required methods
 
-=over 4
-
-=item B<< $metarole->get_required_method_list >>
+=head3 $metarole->get_required_method_list
 
 Returns the list of methods required by the role.
 
-=item B<< $metarole->requires_method($name) >>
+=head3 $metarole->requires_method($name)
 
 Returns true if the role requires the named method.
 
-=item B<< $metarole->add_required_methods(@names) >>
+=head3 $metarole->add_required_methods(@names)
 
 Adds the named methods to the role's list of required methods.
 
-=item B<< $metarole->remove_required_methods(@names) >>
+=head3 $metarole->remove_required_methods(@names)
 
 Removes the named methods from the role's list of required methods.
 
-=item B<< $metarole->add_conflicting_method(%params) >>
+=head3 $metarole->add_conflicting_method(%params)
 
 Instantiate the parameters as a L<Moose::Meta::Role::Method::Conflicting>
 object, then add it to the required method list.
-
-=back
 
 =head2 Method modifiers
 
@@ -976,54 +948,46 @@ L<Moose::Meta::Class>.
 However, method modifiers are simply stored internally, and are not
 applied until the role itself is applied to a class.
 
-=over 4
+=head3 $metarole->add_after_method_modifier($method_name, $method)
 
-=item B<< $metarole->add_after_method_modifier($method_name, $method) >>
+=head3 $metarole->add_around_method_modifier($method_name, $method)
 
-=item B<< $metarole->add_around_method_modifier($method_name, $method) >>
+=head3 $metarole->add_before_method_modifier($method_name, $method)
 
-=item B<< $metarole->add_before_method_modifier($method_name, $method) >>
-
-=item B<< $metarole->add_override_method_modifier($method_name, $method) >>
+=head3 $metarole->add_override_method_modifier($method_name, $method)
 
 These methods all add an appropriate modifier to the internal list of
 modifiers.
 
-=item B<< $metarole->has_after_method_modifiers >>
+=head3 $metarole->has_after_method_modifiers
 
-=item B<< $metarole->has_around_method_modifiers >>
+=head3 $metarole->has_around_method_modifiers
 
-=item B<< $metarole->has_before_method_modifiers >>
+=head3 $metarole->has_before_method_modifiers
 
-=item B<< $metarole->has_override_method_modifier >>
+=head3 $metarole->has_override_method_modifier
 
 Return true if the role has any modifiers of the given type.
 
-=item B<< $metarole->get_after_method_modifiers($method_name) >>
+=head3 $metarole->get_after_method_modifiers($method_name)
 
-=item B<< $metarole->get_around_method_modifiers($method_name) >>
+=head3 $metarole->get_around_method_modifiers($method_name)
 
-=item B<< $metarole->get_before_method_modifiers($method_name) >>
+=head3 $metarole->get_before_method_modifiers($method_name)
 
 Given a method name, returns a list of the appropriate modifiers for
 that method.
 
-=item B<< $metarole->get_override_method_modifier($method_name) >>
+=head3 $metarole->get_override_method_modifier($method_name)
 
 Given a method name, returns the override method modifier for that
 method, if it has one.
 
-=back
-
 =head2 Introspection
 
-=over 4
-
-=item B<< Moose::Meta::Role->meta >>
+=head3 Moose::Meta::Role->meta
 
 This will return a L<Class::MOP::Class> instance for this class.
-
-=back
 
 =head1 BUGS
 

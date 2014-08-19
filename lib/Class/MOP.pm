@@ -985,16 +985,14 @@ Note that this module does not export any constants or functions.
 
 Note that these are all called as B<functions, not methods>.
 
-=over 4
-
-=item B<Class::MOP::get_code_info($code)>
+=head3 Class::MOP::get_code_info($code)
 
 This function returns two values, the name of the package the C<$code>
 is from and the name of the C<$code> itself. This is used by several
 elements of the MOP to determine where a given C<$code> reference is
 from.
 
-=item B<Class::MOP::class_of($instance_or_class_name)>
+=head3 Class::MOP::class_of($instance_or_class_name)
 
 This will return the metaclass of the given instance or class name.  If the
 class lacks a metaclass, no metaclass will be initialized, and C<undef> will be
@@ -1003,8 +1001,6 @@ returned.
 You should almost certainly be using
 L<C<Moose::Util::find_meta>|Moose::Util/find_meta> instead.
 
-=back
-
 =head2 Metaclass cache functions
 
 C<Class::MOP> holds a cache of metaclasses. The following are functions
@@ -1012,54 +1008,50 @@ C<Class::MOP> holds a cache of metaclasses. The following are functions
 recommended that you mess with these. Bad things could happen, but if
 you are brave and willing to risk it: go for it!
 
-=over 4
-
-=item B<Class::MOP::get_all_metaclasses>
+=head3 Class::MOP::get_all_metaclasses
 
 This will return a hash of all the metaclass instances that have
 been cached by L<Class::MOP::Class>, keyed by the package name.
 
-=item B<Class::MOP::get_all_metaclass_instances>
+=head3 Class::MOP::get_all_metaclass_instances
 
 This will return a list of all the metaclass instances that have
 been cached by L<Class::MOP::Class>.
 
-=item B<Class::MOP::get_all_metaclass_names>
+=head3 Class::MOP::get_all_metaclass_names
 
 This will return a list of all the metaclass names that have
 been cached by L<Class::MOP::Class>.
 
-=item B<Class::MOP::get_metaclass_by_name($name)>
+=head3 Class::MOP::get_metaclass_by_name($name)
 
 This will return a cached L<Class::MOP::Class> instance, or nothing
 if no metaclass exists with that C<$name>.
 
-=item B<Class::MOP::store_metaclass_by_name($name, $meta)>
+=head3 Class::MOP::store_metaclass_by_name($name, $meta)
 
 This will store a metaclass in the cache at the supplied C<$key>.
 
-=item B<Class::MOP::weaken_metaclass($name)>
+=head3 Class::MOP::weaken_metaclass($name)
 
 In rare cases (e.g. anonymous metaclasses) it is desirable to
 store a weakened reference in the metaclass cache. This
 function will weaken the reference to the metaclass stored
 in C<$name>.
 
-=item B<Class::MOP::metaclass_is_weak($name)>
+=head3 Class::MOP::metaclass_is_weak($name)
 
 Returns true if the metaclass for C<$name> has been weakened
 (via C<weaken_metaclass>).
 
-=item B<Class::MOP::does_metaclass_exist($name)>
+=head3 Class::MOP::does_metaclass_exist($name)
 
 This will return true of there exists a metaclass stored in the
 C<$name> key, and return false otherwise.
 
-=item B<Class::MOP::remove_metaclass_by_name($name)>
+=head3 Class::MOP::remove_metaclass_by_name($name)
 
 This will remove the metaclass stored in the C<$name> key.
-
-=back
 
 Some utility functions (such as C<Class::MOP::load_class>) that were
 previously defined in C<Class::MOP> regarding loading of classes have been

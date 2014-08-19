@@ -78,13 +78,11 @@ C<Moose::Meta::Method::Augmented> is a subclass of L<Moose::Meta::Method>.
 
 =head1 METHODS
 
-=over 4
-
-=item B<< Moose::Meta::Method::Augmented->new(%options) >>
+=head2 Moose::Meta::Method::Augmented->new(%options)
 
 This constructs a new object. It accepts the following options:
 
-=over 8
+=over 4
 
 =item * class
 
@@ -100,8 +98,6 @@ in one of the class's superclasses. This option is required.
 
 The subroutine reference which implements the augmentation. This
 option is required.
-
-=back
 
 =back
 

@@ -413,9 +413,7 @@ Moose will export a number of functions into the class's namespace which
 may then be used to set up the class. These functions all work directly
 on the current class.
 
-=over 4
-
-=item B<extends (@superclasses)>
+=head2 extends (@superclasses)
 
 This function will set the superclass(es) for the current class. If the parent
 classes are not yet loaded, then C<extends> tries to load them.
@@ -434,7 +432,7 @@ only L<-version|Class::MOP/Class Loading Options> is recognized:
 An exception will be thrown if the version requirements are not
 satisfied.
 
-=item B<with (@roles)>
+=head2 with (@roles)
 
 This will apply a given set of C<@roles> to the local class.
 
@@ -450,7 +448,7 @@ exception will be thrown.
 If your role takes options or arguments, they can be passed along in the
 hash reference as well.
 
-=item B<has $name|@$names =E<gt> %options>
+=head2 has $name|@$names =E<gt> %options
 
 This will install an attribute of a given C<$name> into the current class. If
 the first parameter is an array reference, it will create an attribute for
@@ -708,11 +706,9 @@ whose value has expired.
 An arbitrary string that can be retrieved later by calling C<<
 $attr->documentation >>.
 
-
-
 =back
 
-=item B<has +$name =E<gt> %options>
+=head2 has +$name =E<gt> %options
 
 This is variation on the normal attribute creator C<has> which allows you to
 clone and extend an attribute from a superclass or from a role. Here is an
@@ -789,56 +785,54 @@ B<are not> overridden, or removed.
 
 =back
 
-=item B<before $name|@names|\@names|qr/.../ =E<gt> sub { ... }>
+=head2 before $name|@names|\@names|qr/.../ =E<gt> sub { ... }
 
-=item B<after $name|@names|\@names|qr/.../ =E<gt> sub { ... }>
+=head2 after $name|@names|\@names|qr/.../ =E<gt> sub { ... }
 
-=item B<around $name|@names|\@names|qr/.../ =E<gt> sub { ... }>
+=head2 around $name|@names|\@names|qr/.../ =E<gt> sub { ... }
 
 These three items are syntactic sugar for the before, after, and around method
 modifier features that L<Class::MOP> provides. More information on these may be
 found in L<Moose::Manual::MethodModifiers> and the
 L<Class::MOP::Class documentation|Class::MOP::Class/"Method Modifiers">.
 
-=item B<override ($name, &sub)>
+=head2 override ($name, &sub)
 
 An C<override> method is a way of explicitly saying "I am overriding this
 method from my superclass". You can call C<super> within this method, and
 it will work as expected. The same thing I<can> be accomplished with a normal
 method call and the C<SUPER::> pseudo-package; it is really your choice.
 
-=item B<super>
+=head2 super
 
 The keyword C<super> is a no-op when called outside of an C<override> method. In
 the context of an C<override> method, it will call the next most appropriate
 superclass method with the same arguments as the original method.
 
-=item B<augment ($name, &sub)>
+=head2 augment ($name, &sub)
 
 An C<augment> method, is a way of explicitly saying "I am augmenting this
 method from my superclass". Once again, the details of how C<inner> and
 C<augment> work is best described in the
 L<Moose::Cookbook::Basics::Document_AugmentAndInner>.
 
-=item B<inner>
+=head2 inner
 
 The keyword C<inner>, much like C<super>, is a no-op outside of the context of
 an C<augment> method. You can think of C<inner> as being the inverse of
 C<super>; the details of how C<inner> and C<augment> work is best described in
 the L<Moose::Cookbook::Basics::Document_AugmentAndInner>.
 
-=item B<blessed>
+=head2 blessed
 
 This is the C<Scalar::Util::blessed> function. It is highly recommended that
 this is used instead of C<ref> anywhere you need to test for an object's class
 name.
 
-=item B<confess>
+=head2 confess
 
 This is the C<Carp::confess> function, and exported here for historical
 reasons.
-
-=back
 
 =head1 METACLASS
 
@@ -943,10 +937,6 @@ unresolvable conflict.
 
 =head1 CAVEATS
 
-=over 4
-
-=item *
-
 It should be noted that C<super> and C<inner> B<cannot> be used in the same
 method. However, they may be combined within the same class hierarchy; see
 F<t/basics/override_augment_inner_super.t> for an example.
@@ -960,8 +950,6 @@ This might seem like a restriction, but I am of the opinion that keeping these
 two features separate (yet interoperable) actually makes them easy to use, since
 their behavior is then easier to predict. Time will tell whether I am right or
 not (UPDATE: so far so good).
-
-=back
 
 =head1 GETTING HELP
 

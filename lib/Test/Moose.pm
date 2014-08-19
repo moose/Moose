@@ -106,31 +106,27 @@ is an experimental first release, so comments and suggestions are very welcome.
 
 =head1 EXPORTED FUNCTIONS
 
-=over 4
-
-=item B<meta_ok ($class_or_object)>
+=head2 meta_ok ($class_or_object)
 
 Tests if a class or object has a metaclass.
 
-=item B<does_ok ($class_or_object, $role, ?$message)>
+=head2 does_ok ($class_or_object, $role, ?$message)
 
 Tests if a class or object does a certain role, similar to what C<isa_ok>
 does for the C<isa> method.
 
-=item B<has_attribute_ok($class_or_object, $attr_name, ?$message)>
+=head2 has_attribute_ok($class_or_object, $attr_name, ?$message)
 
 Tests if a class or object has a certain attribute, similar to what C<can_ok>
 does for the methods.
 
-=item B<with_immutable { CODE } @class_names>
+=head2 with_immutable { CODE } @class_names
 
 Runs B<CODE> (which should contain normal tests) twice, and make each
 class in C<@class_names> immutable in between the two runs.
 
 The B<CODE> block is called with a single boolean argument indicating whether
 or not the classes have been made immutable yet.
-
-=back
 
 =head1 TODO
 

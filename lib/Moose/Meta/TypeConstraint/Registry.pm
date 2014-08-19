@@ -87,13 +87,11 @@ L<Class::MOP::Object>.
 
 =head1 METHODS
 
-=over 4
-
-=item B<< Moose::Meta::TypeConstraint::Registry->new(%options) >>
+=head2 Moose::Meta::TypeConstraint::Registry->new(%options)
 
 This creates a new registry object based on the provided C<%options>:
 
-=over 8
+=over 4
 
 =item * parent_registry
 
@@ -108,38 +106,36 @@ created.
 
 =back
 
-=item B<< $registry->get_parent_registry >>
+=head2 $registry->get_parent_registry
 
 Returns the registry's parent registry, if it has one.
 
-=item B<< $registry->has_parent_registry >>
+=head2 $registry->has_parent_registry
 
 Returns true if the registry has a parent.
 
-=item B<< $registry->set_parent_registry($registry) >>
+=head2 $registry->set_parent_registry($registry)
 
 Sets the parent registry.
 
-=item B<< $registry->get_type_constraint($type_name) >>
+=head2 $registry->get_type_constraint($type_name)
 
 This returns the L<Moose::Meta::TypeConstraint> object from the
 registry for the given name, if one exists.
 
-=item B<< $registry->has_type_constraint($type_name) >>
+=head2 $registry->has_type_constraint($type_name)
 
 Returns true if the registry has a type of the given name.
 
-=item B<< $registry->add_type_constraint($type) >>
+=head2 $registry->add_type_constraint($type)
 
 Adds a new L<Moose::Meta::TypeConstraint> object to the registry.
 
-=item B<< $registry->find_type_constraint($type_name) >>
+=head2 $registry->find_type_constraint($type_name)
 
 This method looks in the current registry for the named type. If the
 type is not found, then this method will look in the registry's
 parent, if it has one.
-
-=back
 
 =head1 BUGS
 

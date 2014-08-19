@@ -57,23 +57,19 @@ L<Moose::Meta::TypeConstraint::Union> objects.
 
 =head1 METHODS
 
-=over 4
-
-=item B<< $coercion->has_coercion_for_type >>
+=head2 $coercion->has_coercion_for_type
 
 This method always returns false.
 
-=item B<< $coercion->add_type_coercions >>
+=head2 $coercion->add_type_coercions
 
 This method always throws an error. You cannot add coercions to a
 union type coercion.
 
-=item B<< $coercion->coerce($value) >>
+=head2 $coercion->coerce($value)
 
 This method will coerce by trying the coercions for each type in the
 union.
-
-=back
 
 =head1 BUGS
 

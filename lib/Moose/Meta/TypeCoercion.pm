@@ -118,13 +118,11 @@ class directly, as it's part of the deep internals of Moose.
 
 =head1 METHODS
 
-=over 4
-
-=item B<< Moose::Meta::TypeCoercion->new(%options) >>
+=head2 Moose::Meta::TypeCoercion->new(%options)
 
 Creates a new type coercion object, based on the options provided.
 
-=over 8
+=over 4
 
 =item * type_constraint
 
@@ -133,7 +131,7 @@ being coerced I<to>.
 
 =back
 
-=item B<< $coercion->type_coercion_map >>
+=head2 $coercion->type_coercion_map
 
 This returns the map of type constraints to coercions as an array
 reference. The values of the array alternate between type names and
@@ -142,16 +140,16 @@ subroutine references which implement the coercion.
 The value is an array reference because coercions are tried in the
 order they are added.
 
-=item B<< $coercion->type_constraint >>
+=head2 $coercion->type_constraint
 
 This returns the L<Moose::Meta::TypeConstraint> that was passed to the
 constructor.
 
-=item B<< $coercion->has_coercion_for_type($type_name) >>
+=head2 $coercion->has_coercion_for_type($type_name)
 
 Returns true if the coercion can coerce the named type.
 
-=item B<< $coercion->add_type_coercions( $type_name => $sub, ... ) >>
+=head2 $coercion->add_type_coercions( $type_name => $sub, ... )
 
 This method takes a list of type names and subroutine references. If
 the coercion already has a mapping for a given type, it throws an
@@ -159,7 +157,7 @@ exception.
 
 Coercions are actually
 
-=item B<< $coercion->coerce($value) >>
+=head2 $coercion->coerce($value)
 
 This method takes a value and applies the first valid coercion it
 finds.
@@ -167,11 +165,9 @@ finds.
 This means that if the value could belong to more than type in the
 coercion object, the first coercion added is used.
 
-=item B<< Moose::Meta::TypeCoercion->meta >>
+=head2 Moose::Meta::TypeCoercion->meta
 
 This will return a L<Class::MOP::Class> instance for this class.
-
-=back
 
 =head1 BUGS
 

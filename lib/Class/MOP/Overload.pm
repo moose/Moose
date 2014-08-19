@@ -156,8 +156,6 @@ C<Class::MOP::Overload> is a subclass of L<Class::MOP::Object>.
 
 =head1 METHODS
 
-This class provides the following methods:
-
 =head2 Class::MOP::Overload->new(%options)
 
 This method creates a new C<Class::MOP::Overload> object. It accepts a number

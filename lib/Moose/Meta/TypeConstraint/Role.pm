@@ -127,9 +127,7 @@ L<Moose::Meta::TypeConstraint>.
 
 =head1 METHODS
 
-=over 4
-
-=item B<< Moose::Meta::TypeConstraint::Role->new(%options) >>
+=head2 Moose::Meta::TypeConstraint::Role->new(%options)
 
 This creates a new role type constraint based on the given
 C<%options>.
@@ -142,16 +140,16 @@ C<Object> type.
 The constructor also overrides the hand optimized type constraint with
 one it creates internally.
 
-=item B<< $constraint->role >>
+=head2 $constraint->role
 
 Returns the role name associated with the constraint.
 
-=item B<< $constraint->parents >>
+=head2 $constraint->parents
 
 Returns all the type's parent types, corresponding to the roles that
 its role does.
 
-=item B<< $constraint->is_subtype_of($type_name_or_object) >>
+=head2 $constraint->is_subtype_of($type_name_or_object)
 
 If the given type is also a role type, then this checks that the
 type's role does the other type's role.
@@ -159,15 +157,13 @@ type's role does the other type's role.
 Otherwise it falls back to the implementation in
 L<Moose::Meta::TypeConstraint>.
 
-=item B<< $constraint->create_child_type(%options) >>
+=head2 $constraint->create_child_type(%options)
 
 This returns a new L<Moose::Meta::TypeConstraint> object with the type
 as its parent.
 
 Note that it does I<not> return a C<Moose::Meta::TypeConstraint::Role>
 object!
-
-=back
 
 =head1 BUGS
 

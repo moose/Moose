@@ -554,19 +554,17 @@ some of them may be useful for use in your own code.
 
 =head1 EXPORTED FUNCTIONS
 
-=over 4
-
-=item B<find_meta($class_or_obj)>
+=head2 find_meta($class_or_obj)
 
 This method takes a class name or object and attempts to find a
 metaclass for the class, if one exists. It will B<not> create one if it
 does not yet exist.
 
-=item B<is_role($package_or_obj)>
+=head2 is_role($package_or_obj)
 
 Returns true if the provided package name or object is a L<Moose::Role>.
 
-=item B<does_role($class_or_obj, $role_or_obj)>
+=head2 does_role($class_or_obj, $role_or_obj)
 
 Returns true if C<$class_or_obj> does the given C<$role_or_obj>. The role can
 be provided as a name or a L<Moose::Meta::Role> object.
@@ -574,7 +572,7 @@ be provided as a name or a L<Moose::Meta::Role> object.
 The class must already have a metaclass for this to work. If it doesn't, this
 function simply returns false.
 
-=item B<search_class_by_role($class_or_obj, $role_or_obj)>
+=head2 search_class_by_role($class_or_obj, $role_or_obj)
 
 Returns the first class in the class's precedence list that does
 C<$role_or_obj>, if any. The role can be either a name or a
@@ -582,7 +580,7 @@ L<Moose::Meta::Role> object.
 
 The class must already have a metaclass for this to work.
 
-=item B<apply_all_roles($applicant, @roles)>
+=head2 apply_all_roles($applicant, @roles)
 
 This function applies one or more roles to the given C<$applicant>. The
 applicant can be a role name, class name, or object.
@@ -593,22 +591,22 @@ The list of C<@roles> should a list of names or L<Moose::Meta::Role> objects,
 each of which can be followed by an optional hash reference of options
 (C<-excludes> and C<-alias>).
 
-=item B<ensure_all_roles($applicant, @roles)>
+=head2 ensure_all_roles($applicant, @roles)
 
 This function is similar to C<apply_all_roles>, but only applies roles that
 C<$applicant> does not already consume.
 
-=item B<with_traits($class_name, @role_names)>
+=head2 with_traits($class_name, @role_names)
 
 This function creates a new class from C<$class_name> with each of
 C<@role_names> applied. It returns the name of the new class.
 
-=item B<get_all_attribute_values($meta, $instance)>
+=head2 get_all_attribute_values($meta, $instance)
 
 Returns a hash reference containing all of the C<$instance>'s
 attributes. The keys are attribute names.
 
-=item B<get_all_init_args($meta, $instance)>
+=head2 get_all_init_args($meta, $instance)
 
 Returns a hash reference containing all of the C<init_arg> values for
 the instance's attributes. The values are the associated attribute
@@ -617,9 +615,9 @@ skipped.
 
 This could be useful in cloning an object.
 
-=item B<resolve_metaclass_alias($category, $name, %options)>
+=head2 resolve_metaclass_alias($category, $name, %options)
 
-=item B<resolve_metatrait_alias($category, $name, %options)>
+=head2 resolve_metatrait_alias($category, $name, %options)
 
 Resolves a short name to a full class name. Short names are often used
 when specifying the C<metaclass> or C<traits> option for an attribute:
@@ -631,26 +629,24 @@ when specifying the C<metaclass> or C<traits> option for an attribute:
 The name resolution mechanism is covered in
 L<Moose/Metaclass and Trait Name Resolution>.
 
-=item B<meta_class_alias($to[, $from])>
+=head2 meta_class_alias($to[, $from])
 
-=item B<meta_attribute_alias($to[, $from])>
+=head2 meta_attribute_alias($to[, $from])
 
 Create an alias from the class C<$from> (or the current package, if
 C<$from> is unspecified), so that
 L<Moose/Metaclass and Trait Name Resolution> works properly.
 
-=item B<english_list(@items)>
+=head2 english_list(@items)
 
 Given a list of scalars, turns them into a proper list in English
 ("one and two", "one, two, three, and four"). This is used to help us
 make nicer error messages.
 
-=item B<throw_exception( $class_name, %arguments_to_exception)>
+=head2 throw_exception( $class_name, %arguments_to_exception)
 
 Calls die with an object of Moose::Exception::$class_name, with
 %arguments_to_exception passed as arguments.
-
-=back
 
 =head1 TODO
 

@@ -211,9 +211,9 @@ constraints is true.
 C<Moose::Meta::TypeConstraint::Union> is a subclass of
 L<Moose::Meta::TypeConstraint>.
 
-=over 4
+=head1 METHODS
 
-=item B<< Moose::Meta::TypeConstraint::Union->new(%options) >>
+=head2 Moose::Meta::TypeConstraint::Union->new(%options)
 
 This creates a new class type constraint based on the given
 C<%options>.
@@ -230,18 +230,18 @@ simply calls C<check> on the newly created object.
 Finally, the constructor also makes sure that the object's C<coercion>
 attribute is a L<Moose::Meta::TypeCoercion::Union> object.
 
-=item B<< $constraint->type_constraints >>
+=head2 $constraint->type_constraints
 
 This returns the array reference of C<type_constraints> provided to
 the constructor.
 
-=item B<< $constraint->parent >>
+=head2 $constraint->parent
 
 This returns the nearest common ancestor of all the components of the union.
 
-=item B<< $constraint->check($value) >>
+=head2 $constraint->check($value)
 
-=item B<< $constraint->validate($value) >>
+=head2 $constraint->validate($value)
 
 These two methods simply call the relevant method on each of the
 member type constraints in the union. If any type accepts the value,
@@ -250,33 +250,31 @@ the value is valid.
 With C<validate> the error message returned includes all of the error
 messages returned by the member type constraints.
 
-=item B<< $constraint->equals($type_name_or_object) >>
+=head2 $constraint->equals($type_name_or_object)
 
 A type is considered equal if it is also a union type, and the two
 unions have the same member types.
 
-=item B<< $constraint->find_type_for($value) >>
+=head2 $constraint->find_type_for($value)
 
 This returns the first member type constraint for which C<check($value)> is
 true, allowing you to determine which of the Union's member type constraints
 a given value matches.
 
-=item B<< $constraint->is_a_type_of($type_name_or_object) >>
+=head2 $constraint->is_a_type_of($type_name_or_object)
 
 This returns true if all of the member type constraints return true
 for the C<is_a_type_of> method.
 
-=item B<< $constraint->is_subtype_of >>
+=head2 $constraint->is_subtype_of
 
 This returns true if all of the member type constraints return true
 for the C<is_a_subtype_of> method.
 
-=item B<< $constraint->create_child_type(%options) >>
+=head2 $constraint->create_child_type(%options)
 
 This returns a new L<Moose::Meta::TypeConstraint> object with the type
 as its parent.
-
-=back
 
 =head1 BUGS
 

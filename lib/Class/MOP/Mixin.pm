@@ -31,18 +31,14 @@ This class provides a few methods which are useful in all metaclasses.
 
 =head1 METHODS
 
-=over 4
-
-=item B<< Class::MOP::Mixin->meta >>
+=head2 Class::MOP::Mixin->meta
 
 This returns a L<Class::MOP::Class> object for the mixin class.
 
-=item B<< Class::MOP::Mixin->_throw_exception >>
+=head2 Class::MOP::Mixin->_throw_exception
 
 Throws an exception in the L<Moose::Exception> family. This should ONLY be
 used internally -- any callers outside Class::MOP::* should be using the
 version in L<Moose::Util> instead.
-
-=back
 
 =cut

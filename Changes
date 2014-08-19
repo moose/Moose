@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [DOCUMENTATION]
+
+  - Made all docs use =head2 and =head3 for methods/functions so that they
+    appear as part of the table of contents on MetaCPAN.
+
 2.1501   2015-07-19 (TRIAL RELEASE)
 
   [DOCUMENTATION]

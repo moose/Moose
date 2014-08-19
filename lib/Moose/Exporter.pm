@@ -853,9 +853,7 @@ modules that use it.
 
 This module provides two public methods:
 
-=over 4
-
-=item  B<< Moose::Exporter->setup_import_methods(...) >>
+=head2 Moose::Exporter->setup_import_methods(...)
 
 When you call this method, C<Moose::Exporter> builds custom C<import> and
 C<unimport> methods for your module. The C<import> method
@@ -877,7 +875,7 @@ coderef that would be installed.
 
 This method accepts the following parameters:
 
-=over 8
+=over 4
 
 =item * with_meta => [ ... ]
 
@@ -941,7 +939,7 @@ You can also provide parameters for L<Moose::Util::MetaRole::apply_metaroles|Moo
 and L<Moose::Util::MetaRole::apply_base_class_roles|Moose::Util::MetaRole/apply_base_class_roles>. Specifically, valid parameters
 are "class_metaroles", "role_metaroles", and "base_class_roles".
 
-=item B<< Moose::Exporter->build_import_methods(...) >>
+=head2 Moose::Exporter->build_import_methods(...)
 
 Returns three code refs, one for C<import>, one for C<unimport> and one for
 C<init_meta>.
@@ -957,8 +955,6 @@ take a hashref of the form C<< { into => $package } >> to specify the package
 it operates on.
 
 Used by C<setup_import_methods>.
-
-=back
 
 =head1 IMPORTING AND init_meta
 
