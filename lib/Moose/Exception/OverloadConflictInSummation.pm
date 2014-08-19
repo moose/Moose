@@ -47,7 +47,7 @@ sub _build_message {
     if ( $op eq 'fallback' ) {
         return
               'We have encountered an overloading conflict for the fallback '
-            . 'during composition. This is fatal error.';
+            . 'during composition. This is a fatal error.';
     }
     else {
         return

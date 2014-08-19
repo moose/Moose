@@ -129,7 +129,7 @@ isnt( exception {
 
     like(
         $exception,
-        qr/\QRole 'Foo' has encountered an 'override' method conflict during composition (Two 'override' methods of the same name encountered). This is fatal error./,
+        qr/\QRole 'Foo' has encountered an 'override' method conflict during composition (Two 'override' methods of the same name encountered). This is a fatal error./,
         "Foo & Bar, both roles are overriding test method");
 }
 

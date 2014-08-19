@@ -26,7 +26,7 @@ sub _build_message {
     if ( $op eq 'fallback' ) {
         return
             'We have encountered an overloading conflict for the fallback setting '
-            . "when applying $applied to $consumer. This is fatal error.";
+            . "when applying $applied to $consumer. This is a fatal error.";
     }
     else {
         return
