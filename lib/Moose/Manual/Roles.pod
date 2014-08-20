@@ -263,6 +263,9 @@ A role can be a collection of other roles:
 
   with ('Breakable', 'Breakdancer');
 
+When a role consumes another a role, the I<consuming> role's methods silently
+win in any conflict, and the consumed role's methods are simply ignored.
+
 =head1 METHOD EXCLUSION AND ALIASING
 
 If we want our C<FragileDancer> class to be able to call the methods
@@ -312,11 +315,14 @@ role consumes another role, that other role's overloading settings are applied
 to the role.
 
 Just as with methods, there can be conflicts with overloading implementations
-between two roles. If two roles both implement overloading for a given
-operator, that is a conflict. If two roles both implement overloading and have
-different C<fallback> values, that is also considered a conflict. These
-conflicts are detected either when a role consumes another role or when
-multiple roles are being composed into a class together.
+between multiple roles when they are all consumed by a class. If two roles
+both provide different overloading implementations for a given operator, that
+is a conflict. If two roles both implement overloading and have different
+C<fallback> values, that is also considered a conflict. These conflicts are
+detected when multiple roles are being composed into a class together.
+
+When a role consumes another role, the consuming role's overloading fallback
+and operator implementations silently "win" the conflict.
 
 =head1 ROLE EXCLUSION
 

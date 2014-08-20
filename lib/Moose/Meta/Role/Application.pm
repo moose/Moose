@@ -86,24 +86,9 @@ sub apply_overloading {
     return unless $role->is_overloaded;
 
     if ( my $fallback = $role->get_overload_fallback_value ) {
-        if ( $other->is_overloaded ) {
-            my $other_fallback = $other->get_overload_fallback_value;
-            unless (
-                (
-                    ( all {defined} $fallback, $other_fallback )
-                    && $fallback eq $other_fallback
-                )
-                || ( all { !defined } $fallback, $other_fallback )
-                ) {
-
-                $self->_handle_overloading_fallback_conflict(
-                    $role,
-                    $other
-                );
-            }
+        unless ( $other->is_overloaded ) {
+            $other->set_overload_fallback_value($fallback);
         }
-
-        $other->set_overload_fallback_value($fallback);
     }
 
     for my $meth ( $role->get_all_overloaded_operators ) {
