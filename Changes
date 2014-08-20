@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.1302   2014-08-19 (TRIAL RELEASE)
+
   [BUG FIXES]
 
   - When a role consumes another role and they differ in their overloading
