@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package Moose;
 
-# AUTHORITY
+$Moose::AUTHORITY = 'cpan:STEVAN';
 
 use 5.008003;
 
