@@ -15,7 +15,7 @@ use Test::More;
     no Moose;
 }
 can_ok('Foo', 'meta');
-is(Foo->meta, Class::MOP::class_of('Foo'));
+is(Foo->meta, Class::MOP::class_of('Foo'), 'Foo is a class_of Foo, via Foo->meta');
 isa_ok(Foo->meta->get_method('meta'), 'Moose::Meta::Method::Meta');
 
 {
@@ -24,9 +24,9 @@ isa_ok(Foo->meta->get_method('meta'), 'Moose::Meta::Method::Meta');
     extends 'Base';
     no Moose;
 }
-ok(!Bar->can('meta'));
+ok(!Bar->can('meta'), 'Bar->cant(\'meta\')');
 can_ok('Bar', 'bar_meta');
-is(Bar->bar_meta, Class::MOP::class_of('Bar'));
+is(Bar->bar_meta, Class::MOP::class_of('Bar'), 'Bar is a class_of Bar, via Bar->bar_meta');
 isa_ok(Bar->bar_meta->get_method('bar_meta'), 'Moose::Meta::Method::Meta');
 
 {
@@ -35,11 +35,14 @@ isa_ok(Bar->bar_meta->get_method('bar_meta'), 'Moose::Meta::Method::Meta');
     extends 'Base';
     no Moose;
 }
-ok(!Baz->can('meta'));
+ok(!Baz->can('meta'), 'Baz->cant(\'meta\')');
 
 my $universal_method_count = scalar Class::MOP::class_of('UNIVERSAL')->get_all_methods;
 # 1 because of the dummy method we installed in Base
-is( ( scalar Class::MOP::class_of('Baz')->get_all_methods )
-    - $universal_method_count, 1 );
+is(
+    ( scalar Class::MOP::class_of('Baz')->get_all_methods ) - $universal_method_count,
+    1,
+    'Baz has one method',
+);
 
 done_testing;
