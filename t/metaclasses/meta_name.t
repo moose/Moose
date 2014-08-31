@@ -45,4 +45,17 @@ is(
     'Baz has one method',
 );
 
+TODO: {
+{
+    package Qux;
+    use Moose -meta_name => 'qux_meta';
+}
+
+#local $TODO = 'should be able to change the meta_name here too';
+ok(!Qux->can('meta'), 'Qux->cant(\'meta\')');
+can_ok('Qux', 'qux_meta');
+is(Qux->qux_meta, Class::MOP::class_of('Qux'), 'Qux is a class_of Qux, via Qux->qux_meta');
+isa_ok(Qux->qux_meta->get_method('qux_meta'), 'Moose::Meta::Method::Meta');
+}
+
 done_testing;
