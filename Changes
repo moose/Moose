@@ -3,6 +3,10 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [TEST FIXES]
+
+  - fix tests that fail on altered warning messages in perl 5.21.4 (RT#98987)
+
 2.1211   2014-08-11
 
   [DOCUMENTATION]
