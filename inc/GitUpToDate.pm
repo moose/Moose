@@ -33,6 +33,20 @@ sub before_build {
 
     die "Branch $branch is not up to date (origin: $origin, HEAD: $head)"
         if $origin ne $head;
+
+
+    # now also check that HEAD is current with the release branch
+    # that is, that the release branch is an ancestor commit of HEAD.
+    my $release_branch = $self->plugin_named('Git::CheckFor::CorrectBranch')->release_branch;
+    foreach $remote ('origin/', '')
+    {
+        my $release_commit = git "rev-parse ${remote}$release_branch";
+        my $common_ancestor = git "merge-base $head $release_commit";
+
+        die "Branch $branch does not contain all commits from the current release branch ",
+                "(common ancestor for ${remote}$release_branch: $common_ancestor)"
+            if $common_ancestor ne $release_commit;
+    }
 }
 
 1;
