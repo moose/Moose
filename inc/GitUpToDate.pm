@@ -37,7 +37,7 @@ sub before_build {
 
     # now also check that HEAD is current with the release branch
     # that is, that the release branch is an ancestor commit of HEAD.
-    my $release_branch = $self->plugin_named('Git::CheckFor::CorrectBranch')->release_branch;
+    my $release_branch = ($self->zilla->plugin_named('Git::CheckFor::CorrectBranch')->release_branch)[0];
     foreach my $remote ('origin/', '')
     {
         my $release_commit = git "rev-parse ${remote}$release_branch";
