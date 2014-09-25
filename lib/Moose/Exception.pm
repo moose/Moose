@@ -1,7 +1,7 @@
 package Moose::Exception;
 
 use Moose;
-use Devel::StackTrace;
+use Devel::StackTrace 1.33;
 
 has 'trace' => (
     is            => 'ro',
