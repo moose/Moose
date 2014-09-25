@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::LeakTrace 0.01;
+use Test::LeakTrace;
 use Test::Memory::Cycle;
 
 BEGIN {
