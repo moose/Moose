@@ -3,6 +3,12 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+   - closed a memory leak in Moose exception objects where captured stack
+     trace frames would contain circular references to the exception objects
+     themselves (Graham Knop, PR#81)
+
 2.1303   2014-09-19 (TRIAL RELEASE)
 
   [TEST FIXES]
@@ -50,6 +56,14 @@ for, noteworthy changes.
     "fallback" as an overloaded op. Instead, there are new
     get_overload_fallback_value() and set_overload_fallback_value() methods to
     deal with this explicitly. This is arguably a bug fix.
+
+2.1213   2014-09-25
+
+  [BUG FIXES]
+
+   - closed a memory leak in Moose exception objects where captured stack
+     trace frames would contain circular references to the exception objects
+     themselves (Graham Knop, PR#81)
 
 2.1212   2014-09-19
 
