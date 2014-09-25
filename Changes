@@ -3,6 +3,12 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+   - closed a memory leak in Moose exception objects where captured stack
+     trace frames would contain circular references to the exception objects
+     themselves (Graham Knop, PR#81)
+
 2.1212   2014-09-19
 
   [TEST FIXES]
