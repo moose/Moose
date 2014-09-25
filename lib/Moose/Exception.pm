@@ -31,9 +31,16 @@ use overload
 
 sub _build_trace {
     my $self = shift;
+    my $skip = 0;
+    while (my @c = caller(++$skip)) {
+        last if $c[3] =~ /^(.*)::new$/ && $self->isa($1);
+    }
+    $skip++;
+
     Devel::StackTrace->new(
         message => $self->message,
         indent  => 1,
+        skip_frames => $skip,
     );
 }
 
