@@ -3,7 +3,6 @@ use warnings;
 
 use Test::More;
 use Test::Fatal;
-use Scalar::Util 'blessed';
 
 
 {

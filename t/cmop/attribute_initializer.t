@@ -1,10 +1,8 @@
 use strict;
 use warnings;
 
-use Scalar::Util 'blessed', 'reftype';
-
+use Scalar::Util 'reftype';
 use Test::More;
-
 use Class::MOP;
 
 =pod
