@@ -21,13 +21,10 @@ has 'message' => (
                      "It is lazy and has a default value 'Error'."
 );
 
-use overload
-    '""' => sub {
-        my $self = shift;
-        return $self->trace->as_string,
-    },
+use overload(
+    q{""}    => 'as_string',
     fallback => 1,
-;
+);
 
 sub _build_trace {
     my $self = shift;
@@ -55,6 +52,39 @@ sub _build_message {
 sub BUILD {
     my $self = shift;
     $self->trace;
+}
+
+sub as_string {
+    my $self = shift;
+
+    if ( $ENV{MOOSE_FULL_EXCEPTION} ) {
+        return $self->trace->as_string;
+    }
+
+    my @frames;
+    my $last_frame;
+    my $in_moose = 1;
+    for my $frame ( $self->trace->frames ) {
+        if ($in_moose & $frame->package =~ /^(?:Moose|Class::MOP)(?::|$)/) {
+            $last_frame = $frame;
+            next;
+        }
+        elsif ($last_frame) {
+            push @frames, $last_frame;
+            undef $last_frame;
+        }
+
+        $in_moose = 0;
+        push @frames, $frame;
+    }
+
+    # This would be a somewhat pathological case, but who knows
+    return $self->trace->as_string unless @frames;
+
+    my $message = ( shift @frames )->as_string( 1, {} ) . "\n";
+    $message .= join q{}, map { $_->as_string( 0, {} ) . "\n" } @frames;
+
+    return $message;
 }
 
 1;

@@ -3,6 +3,14 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [ENHANCEMENTS]
+
+  - By default, exceptions thrown from inside Moose now remove most of the
+    Moose internals from their stack trace when stringifying. This makes for
+    much more readable error messages in most cases. Set the
+    MOOSE_FULL_EXCEPTION env var to true to get the complete stack trace.
+
+
 2.1304   2014-09-25 (TRIAL RELEASE)
 
   [BUG FIXES]
