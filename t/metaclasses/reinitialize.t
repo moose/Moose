@@ -159,7 +159,7 @@ like( exception {
         method_metaclass    => 'Bar::Meta::Method',
         attribute_metaclass => 'Bar::Meta::Attribute',
     );
-}, qr/compatible/ );
+}, qr/\QAttribute (class_name) is required/ );
 
 {
     package Baz::Meta::Class;
@@ -222,7 +222,7 @@ like( exception {
         method_metaclass    => 'Baz::Meta::Method',
         attribute_metaclass => 'Baz::Meta::Attribute',
     );
-}, qr/compatible/ );
+}, qr/\QAttribute (class_name) is required/ );
 
 {
     package Quux;
