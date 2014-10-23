@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.1305   2014-10-22 (TRIAL RELEASE)
+
   [ENHANCEMENTS]
 
   - By default, exceptions thrown from inside Moose now remove most of the
