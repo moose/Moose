@@ -5,7 +5,7 @@ use warnings;
 
 use Class::Load qw( is_class_loaded );
 use List::MoreUtils ();
-use Scalar::Util qw( blessed looks_like_number reftype );
+use Scalar::Util qw( blessed );
 
 sub type { goto &Moose::Util::TypeConstraints::type }
 sub subtype { goto &Moose::Util::TypeConstraints::subtype }

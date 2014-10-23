@@ -2,8 +2,8 @@ use strict;
 use warnings;
 package Moose::Role;
 
-use Scalar::Util 'blessed';
-use Carp         'croak';
+use Scalar::Util ();
+use Carp ();
 use Class::Load  'is_class_loaded';
 use Module::Runtime 'module_notional_filename';
 

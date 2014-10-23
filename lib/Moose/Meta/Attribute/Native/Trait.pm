@@ -2,12 +2,9 @@ package Moose::Meta::Attribute::Native::Trait;
 
 use Moose::Role;
 use Module::Runtime 'require_module';
-use List::MoreUtils qw( any uniq );
 use Moose::Deprecated;
-use Moose::Util;
-use Moose::Util::TypeConstraints;
-
 use Moose::Util 'throw_exception';
+use Moose::Util::TypeConstraints;
 
 requires '_helper_type';
 

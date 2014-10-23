@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use MRO::Compat;
-use Scalar::Util 'blessed', 'weaken';
 use Module::Runtime 'use_module';
 
 # the original class of the metaclass instance

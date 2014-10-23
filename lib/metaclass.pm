@@ -4,10 +4,6 @@ use strict;
 use warnings;
 
 use Module::Runtime 'use_package_optimistically', 'use_module';
-use Class::Load  'load_class';
-use Scalar::Util 'blessed';
-use Try::Tiny;
-
 use Class::MOP;
 
 sub import {

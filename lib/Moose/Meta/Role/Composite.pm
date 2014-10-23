@@ -5,12 +5,8 @@ use warnings;
 use metaclass;
 
 use Scalar::Util 'blessed';
-
-use Moose::Util;
-
-use parent 'Moose::Meta::Role';
-
 use Moose::Util 'throw_exception';
+use parent 'Moose::Meta::Role';
 
 # NOTE:
 # we need to override the ->name

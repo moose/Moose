@@ -7,9 +7,8 @@ use 5.008003;
 
 use MRO::Compat;
 use Class::Load 0.07 ();
-use Scalar::Util  'weaken', 'isweak', 'reftype', 'blessed';
+use Scalar::Util  'weaken', 'isweak', 'blessed';
 use Data::OptList;
-use Try::Tiny;
 
 use Class::MOP::Mixin::AttributeCore;
 use Class::MOP::Mixin::HasAttributes;

@@ -4,10 +4,9 @@ use strict;
 use warnings;
 
 use Class::MOP;
-use Carp qw( confess );
 use Data::OptList;
 use List::Util qw( first );
-use List::MoreUtils qw( any all uniq first_index );
+use List::MoreUtils qw( any uniq first_index );
 use Scalar::Util 'blessed';
 
 use Moose::Meta::Method::Overridden;

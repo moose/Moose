@@ -5,12 +5,10 @@ use warnings;
 use metaclass;
 
 use List::MoreUtils 'firstval';
-use Moose::Util  'english_list';
-use Scalar::Util 'weaken', 'blessed';
+use Moose::Util 'throw_exception';
+use Scalar::Util 'weaken';
 
 use parent 'Moose::Meta::Role::Application';
-
-use Moose::Util 'throw_exception';
 
 __PACKAGE__->meta->add_attribute('role' => (
     reader => 'role',

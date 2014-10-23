@@ -3,10 +3,7 @@ package Moose::Meta::Method::Constructor;
 use strict;
 use warnings;
 
-use Carp ();
-use List::MoreUtils 'any';
-use Scalar::Util 'blessed', 'weaken', 'looks_like_number', 'refaddr';
-use Try::Tiny;
+use Scalar::Util 'weaken';
 
 use parent 'Moose::Meta::Method',
          'Class::MOP::Method::Constructor';

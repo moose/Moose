@@ -5,7 +5,7 @@ use warnings;
 use metaclass;
 
 use B;
-use Scalar::Util 'blessed';
+use Scalar::Util ();
 use Moose::Util::TypeConstraints ();
 
 use parent 'Moose::Meta::TypeConstraint';

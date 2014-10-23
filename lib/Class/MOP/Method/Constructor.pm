@@ -3,7 +3,6 @@ package Class::MOP::Method::Constructor;
 use strict;
 use warnings;
 
-use Carp         'confess';
 use Scalar::Util 'blessed', 'weaken';
 use Try::Tiny;
 

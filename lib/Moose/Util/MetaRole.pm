@@ -7,8 +7,6 @@ use Scalar::Util 'blessed';
 use List::MoreUtils qw( all );
 use List::Util qw( first );
 use Moose::Deprecated;
-use Scalar::Util qw( blessed );
-
 use Moose::Util 'throw_exception';
 
 sub apply_metaroles {

@@ -3,8 +3,7 @@ package Class::MOP::Package;
 use strict;
 use warnings;
 
-use Scalar::Util 'blessed', 'reftype', 'weaken';
-use Carp         'confess';
+use Scalar::Util 'blessed', 'weaken';
 use Devel::GlobalDestruction 'in_global_destruction';
 use Module::Runtime 'module_notional_filename';
 use Package::Stash;

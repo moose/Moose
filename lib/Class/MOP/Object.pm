@@ -5,7 +5,7 @@ use warnings;
 
 use parent 'Class::MOP::Mixin';
 use Scalar::Util 'blessed';
-use Module::Runtime 'use_module';
+use Module::Runtime;
 
 # introspection
 

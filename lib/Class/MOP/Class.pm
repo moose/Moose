@@ -11,7 +11,7 @@ use Class::MOP::MiniTrait;
 
 use Carp         'confess';
 use Module::Runtime 'use_package_optimistically';
-use Scalar::Util 'blessed', 'reftype', 'weaken';
+use Scalar::Util 'blessed';
 use Sub::Name    'subname';
 use Try::Tiny;
 use List::MoreUtils 'all';

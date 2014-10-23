@@ -3,7 +3,6 @@
 use strict;
 use warnings;
 
-use Scalar::Util 'blessed';
 use Benchmark qw[cmpthese];
 
 use Moose::Util::TypeConstraints;

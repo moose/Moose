@@ -3,9 +3,6 @@ package Class::MOP::Module;
 use strict;
 use warnings;
 
-use Carp         'confess';
-use Scalar::Util 'blessed';
-
 use parent 'Class::MOP::Package';
 
 sub _new {

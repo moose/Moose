@@ -1,8 +1,7 @@
 package Moose::Util::TypeConstraints;
 
 use Carp ();
-use List::MoreUtils qw( all any );
-use Scalar::Util qw( blessed reftype );
+use Scalar::Util qw( blessed );
 use Moose::Exporter;
 use Moose::Deprecated;
 

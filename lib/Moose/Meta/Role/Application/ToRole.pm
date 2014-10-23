@@ -4,8 +4,6 @@ use strict;
 use warnings;
 use metaclass;
 
-use Scalar::Util    'blessed';
-
 use parent 'Moose::Meta::Role::Application';
 
 use Moose::Util 'throw_exception';

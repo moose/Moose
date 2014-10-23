@@ -5,8 +5,8 @@ use warnings;
 use metaclass;
 
 use B;
-use Scalar::Util 'blessed';
 use Moose::Util::TypeConstraints ();
+use Moose::Util ();
 
 use parent 'Moose::Meta::TypeConstraint';
 

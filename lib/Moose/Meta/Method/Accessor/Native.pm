@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Carp qw( confess );
-use Scalar::Util qw( blessed weaken );
+use Scalar::Util qw( blessed );
 
 use Moose::Role;
 

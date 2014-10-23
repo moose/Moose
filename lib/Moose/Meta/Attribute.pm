@@ -3,7 +3,7 @@ use warnings;
 package Moose::Meta::Attribute;
 
 use B ();
-use Scalar::Util 'blessed', 'weaken';
+use Scalar::Util 'blessed';
 use List::MoreUtils 'any';
 use Try::Tiny;
 use overload     ();

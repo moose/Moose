@@ -3,7 +3,7 @@ package Class::MOP::Method::Inlined;
 use strict;
 use warnings;
 
-use Scalar::Util 'blessed', 'weaken', 'looks_like_number', 'refaddr';
+use Scalar::Util 'refaddr';
 
 use parent 'Class::MOP::Method::Generated';
 
