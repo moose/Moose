@@ -65,7 +65,8 @@ sub as_string {
     my $last_frame;
     my $in_moose = 1;
     for my $frame ( $self->trace->frames ) {
-        if ($in_moose & $frame->package =~ /^(?:Moose|Class::MOP)(?::|$)/) {
+        if ( $in_moose && $frame->package =~ /^(?:Moose|Class::MOP)(?::|$)/ )
+        {
             $last_frame = $frame;
             next;
         }
