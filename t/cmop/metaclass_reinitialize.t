@@ -138,7 +138,7 @@ like( exception {
         attribute_metaclass => 'Baz::Meta::Attribute',
         method_metaclass    => 'Baz::Meta::Method',
     );
-}, qr/compatible/ );
+}, qr/\QAttribute (class_name) is required/ );
 
 {
     package Quuux::Meta::Attribute;
