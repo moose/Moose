@@ -119,7 +119,6 @@ XS_EXTERNAL(boot_Class__MOP__Mixin__AttributeCore);
 XS_EXTERNAL(boot_Class__MOP__Method);
 XS_EXTERNAL(boot_Class__MOP__Method__Inlined);
 XS_EXTERNAL(boot_Class__MOP__Method__Generated);
-XS_EXTERNAL(boot_Class__MOP__Method__Overload);
 XS_EXTERNAL(boot_Class__MOP__Class);
 XS_EXTERNAL(boot_Class__MOP__Attribute);
 XS_EXTERNAL(boot_Class__MOP__Instance);
@@ -140,7 +139,6 @@ BOOT:
     MOP_CALL_BOOT (boot_Class__MOP__Method);
     MOP_CALL_BOOT (boot_Class__MOP__Method__Inlined);
     MOP_CALL_BOOT (boot_Class__MOP__Method__Generated);
-    MOP_CALL_BOOT (boot_Class__MOP__Method__Overload);
     MOP_CALL_BOOT (boot_Class__MOP__Class);
     MOP_CALL_BOOT (boot_Class__MOP__Attribute);
     MOP_CALL_BOOT (boot_Class__MOP__Instance);

@@ -18,7 +18,8 @@ use Class::MOP::MiniTrait;
 
 use parent 'Class::MOP::Module',
          'Class::MOP::Mixin::HasAttributes',
-         'Class::MOP::Mixin::HasMethods';
+         'Class::MOP::Mixin::HasMethods',
+         'Class::MOP::Mixin::HasOverloads';
 
 Class::MOP::MiniTrait::apply(__PACKAGE__, 'Moose::Meta::Object::Trait');
 

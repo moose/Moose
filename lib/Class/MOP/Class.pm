@@ -18,7 +18,8 @@ use List::MoreUtils 'all';
 
 use parent 'Class::MOP::Module',
          'Class::MOP::Mixin::HasAttributes',
-         'Class::MOP::Mixin::HasMethods';
+         'Class::MOP::Mixin::HasMethods',
+         'Class::MOP::Mixin::HasOverloads';
 
 # Creation
 

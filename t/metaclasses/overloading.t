@@ -15,18 +15,10 @@ my $quote = qr/['`"]/;
 
     ok(!$meta->is_overloaded);
 
-    is_deeply(
-        [ sort $meta->overload_operators ],
-        [
-            sort grep { $_ ne 'fallback' }
-            map       { split /\s+/ } values %overload::ops
-        ]
-    );
-
     ok(!$meta->has_overloaded_operator('+'));
     ok(!$meta->has_overloaded_operator('-'));
 
-    is_deeply([$meta->get_overload_list], []);
+    is_deeply([$meta->overloaded_operators], []);
 
     is_deeply([$meta->get_all_overloaded_operators], []);
 
@@ -51,24 +43,24 @@ BEGIN { $plus_impl = sub { $plus = 1; "plus" } }
     ok($meta->has_overloaded_operator('+'));
     ok(!$meta->has_overloaded_operator('-'));
 
-    is_deeply([$meta->get_overload_list], ['+']);
+    is_deeply([$meta->overloaded_operators], ['+']);
 
     my @overloads = $meta->get_all_overloaded_operators;
     is(scalar(@overloads), 1);
-    my $plus_meth = $overloads[0];
-    isa_ok($plus_meth, 'Class::MOP::Method::Overload');
-    is($plus_meth->operator, '+');
-    is($plus_meth->name, '(+');
-    is($plus_meth->body, $plus_impl);
-    is($plus_meth->package_name, 'Foo::Overloaded');
-    is($plus_meth->associated_metaclass, $meta);
+    my $plus_overload = $overloads[0];
+    isa_ok($plus_overload, 'Class::MOP::Overload');
+    is($plus_overload->operator, '+');
+    is($plus_overload->coderef, $plus_impl);
+    is($plus_overload->coderef_package, 'main');
+    is($plus_overload->coderef_name, '__ANON__');
+    is($plus_overload->associated_metaclass, $meta);
 
-    my $plus_meth2 = $meta->get_overloaded_operator('+');
+    my $plus_overload2 = $meta->get_overloaded_operator('+');
     { local $TODO = "we don't cache these yet";
-    is($plus_meth2, $plus_meth);
+    is($plus_overload2, $plus_overload);
     }
-    is($plus_meth2->operator, '+');
-    is($plus_meth2->body, $plus_impl);
+    is($plus_overload2->operator, '+');
+    is($plus_overload2->coderef, $plus_impl);
     is($meta->get_overloaded_operator('-'), undef);
 
     is($plus, 0);
@@ -79,23 +71,22 @@ BEGIN { $plus_impl = sub { $plus = 1; "plus" } }
     my $minus_impl = sub { $minus = 1; "minus" };
 
     like(exception { Foo::Overloaded->new - Foo::Overloaded->new },
-         qr/Operation $quote-$quote: no method found/);
+         qr/Operation $quote-$quote: no .+ found/);
 
     $meta->add_overloaded_operator('-' => $minus_impl);
 
     ok($meta->has_overloaded_operator('-'));
 
-    is_deeply([sort $meta->get_overload_list], ['+', '-']);
+    is_deeply([sort $meta->overloaded_operators], ['+', '-']);
 
     is(scalar($meta->get_all_overloaded_operators), 2);
 
-    my $minus_meth = $meta->get_overloaded_operator('-');
-    isa_ok($minus_meth, 'Class::MOP::Method::Overload');
-    is($minus_meth->operator, '-');
-    is($minus_meth->name, '(-');
-    is($minus_meth->body, $minus_impl);
-    is($minus_meth->package_name, 'Foo::Overloaded');
-    is($minus_meth->associated_metaclass, $meta);
+    my $minus_overload = $meta->get_overloaded_operator('-');
+    isa_ok($minus_overload, 'Class::MOP::Overload');
+    is($minus_overload->operator, '-');
+    is($minus_overload->coderef, $minus_impl);
+    is($minus_overload->coderef_package, 'main');
+    is($minus_overload->associated_metaclass, $meta);
 
     is($minus, 0);
     is(Foo::Overloaded->new - Foo::Overloaded->new, "minus");
@@ -104,13 +95,13 @@ BEGIN { $plus_impl = sub { $plus = 1; "plus" } }
     $meta->remove_overloaded_operator('-');
 
     like(exception { Foo::Overloaded->new - Foo::Overloaded->new },
-         qr/Operation $quote-$quote: no method found/);
+         qr/Operation $quote-$quote: no .+ found/);
 }
 
 my $times = 0;
 my $divided = 0;
 {
-    package Foo::OverloadedMethod;
+    package Foo::OverloadWithMethod;
     use Moose;
     use overload '*' => 'times';
 
@@ -119,64 +110,63 @@ my $divided = 0;
 }
 
 {
-    my $meta = Foo::OverloadedMethod->meta;
+    my $meta = Foo::OverloadWithMethod->meta;
 
     ok($meta->is_overloaded);
 
     ok($meta->has_overloaded_operator('*'));
     ok(!$meta->has_overloaded_operator('/'));
 
-    is_deeply([$meta->get_overload_list], ['*']);
+    is_deeply([$meta->overloaded_operators], ['*']);
 
     my @overloads = $meta->get_all_overloaded_operators;
     is(scalar(@overloads), 1);
-    my $times_meth = $overloads[0];
-    isa_ok($times_meth, 'Class::MOP::Method::Overload');
-    is($times_meth->operator, '*');
-    is($times_meth->name, '(*');
-    is($times_meth->body, $meta->get_method('times')->body);
-    is($times_meth->package_name, 'Foo::OverloadedMethod');
-    is($times_meth->associated_metaclass, $meta);
+    my $times_overload = $overloads[0];
+    isa_ok($times_overload, 'Class::MOP::Overload');
+    is($times_overload->operator, '*');
+    is($times_overload->method_name, 'times');
+    is($times_overload->method, $meta->get_method('times'));
+    is($times_overload->associated_metaclass, $meta);
 
-    my $times_meth2 = $meta->get_overloaded_operator('*');
+    my $times_overload2 = $meta->get_overloaded_operator('*');
     { local $TODO = "we don't cache these yet";
-    is($times_meth2, $times_meth);
+    is($times_overload2, $times_overload);
     }
-    is($times_meth2->operator, '*');
-    is($times_meth2->body, $meta->get_method('times')->body);
+    is($times_overload2->operator, '*');
+    is($times_overload->method_name, 'times');
+    is($times_overload->method, $meta->get_method('times'));
     is($meta->get_overloaded_operator('/'), undef);
 
     is($times, 0);
-    is(Foo::OverloadedMethod->new * Foo::OverloadedMethod->new, "times");
+    is(Foo::OverloadWithMethod->new * Foo::OverloadWithMethod->new, "times");
     is($times, 1);
 
-    like(exception { Foo::OverloadedMethod->new / Foo::OverloadedMethod->new },
-         qr{Operation $quote/$quote: no method found});
+    like(exception { Foo::OverloadWithMethod->new / Foo::OverloadWithMethod->new },
+         qr{Operation $quote/$quote: no .+ found});
 
     $meta->add_overloaded_operator('/' => 'divided');
 
     ok($meta->has_overloaded_operator('/'));
 
-    is_deeply([sort $meta->get_overload_list], ['*', '/']);
+    is_deeply([sort $meta->overloaded_operators], ['*', '/']);
 
     is(scalar($meta->get_all_overloaded_operators), 2);
 
-    my $divided_meth = $meta->get_overloaded_operator('/');
-    isa_ok($divided_meth, 'Class::MOP::Method::Overload');
-    is($divided_meth->operator, '/');
-    is($divided_meth->name, '(/');
-    is($divided_meth->body, $meta->get_method('divided')->body);
-    is($divided_meth->package_name, 'Foo::OverloadedMethod');
-    is($divided_meth->associated_metaclass, $meta);
+    my $divided_overload = $meta->get_overloaded_operator('/');
+    isa_ok($divided_overload, 'Class::MOP::Overload');
+    is($divided_overload->operator, '/');
+    is($divided_overload->method_name, 'divided');
+    is($divided_overload->method, $meta->get_method('divided'));
+    is($divided_overload->associated_metaclass, $meta);
 
     is($divided, 0);
-    is(Foo::OverloadedMethod->new / Foo::OverloadedMethod->new, "divided");
+    is(Foo::OverloadWithMethod->new / Foo::OverloadWithMethod->new, "divided");
     is($divided, 1);
 
     $meta->remove_overloaded_operator('/');
 
-    like(exception { Foo::OverloadedMethod->new / Foo::OverloadedMethod->new },
-         qr{Operation $quote/$quote: no method found});
+    like(exception { Foo::OverloadWithMethod->new / Foo::OverloadWithMethod->new },
+         qr{Operation $quote/$quote: no .+ found});
 }
 
 done_testing;

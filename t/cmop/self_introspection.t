@@ -334,7 +334,7 @@ is(${$class_mop_class_meta->get_package_symbol('$VERSION')},
 
 is_deeply(
     [ $class_mop_class_meta->superclasses ],
-    [ qw/Class::MOP::Module Class::MOP::Mixin::HasAttributes Class::MOP::Mixin::HasMethods/ ],
+    [ qw/Class::MOP::Module Class::MOP::Mixin::HasAttributes Class::MOP::Mixin::HasMethods Class::MOP::Mixin::HasOverloads/ ],
     '... Class::MOP::Class->superclasses == [ Class::MOP::Module ]');
 
 is_deeply(
@@ -348,6 +348,8 @@ is_deeply(
         Class::MOP::Mixin::HasAttributes
         Class::MOP::Mixin
         Class::MOP::Mixin::HasMethods
+        Class::MOP::Mixin
+        Class::MOP::Mixin::HasOverloads
         Class::MOP::Mixin
     / ],
     '... Class::MOP::Class->class_precedence_list == [ Class::MOP::Class Class::MOP::Module Class::MOP::Package ]');

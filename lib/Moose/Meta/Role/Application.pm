@@ -78,25 +78,19 @@ sub apply_before_method_modifiers   { (shift)->apply_method_modifiers('before' =
 sub apply_around_method_modifiers   { (shift)->apply_method_modifiers('around' => @_) }
 sub apply_after_method_modifiers    { (shift)->apply_method_modifiers('after'  => @_) }
 
-my @overload_ops = map { split /\s+/ } values %overload::ops;
-
 sub apply_overloading {
     my ( $self, $role, $other ) = @_;
 
     return unless $role->is_overloaded;
 
-    if ( my $fallback = $role->get_overload_fallback_value ) {
-        unless ( $other->is_overloaded ) {
-            $other->set_overload_fallback_value($fallback);
-        }
+    unless ( $other->is_overloaded ) {
+        $other->set_overload_fallback_value(
+            $role->get_overload_fallback_value );
     }
 
-    for my $meth ( $role->get_all_overloaded_operators ) {
-        next
-            if $other->is_overloaded
-            && $other->has_overloaded_operator( $meth->operator );
-
-        $other->add_overloaded_operator( $meth->operator => $meth );
+    for my $overload ( $role->get_all_overloaded_operators ) {
+        next if $other->has_overloaded_operator( $overload->operator );
+        $other->add_overloaded_operator( $overload->operator => $overload );
     }
 }
 
