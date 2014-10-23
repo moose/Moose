@@ -56,6 +56,8 @@ keywords:
 
 =item blessed
 
+=item meta
+
 =back
 
 =head2 Moose::Util::TypeConstraints Keywords
