@@ -5,7 +5,7 @@ use warnings;
 use metaclass;
 
 use Scalar::Util 'blessed';
-use List::MoreUtils 'all';
+use List::Util 1.33 'all';
 
 use parent 'Moose::Meta::Role::Application';
 

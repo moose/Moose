@@ -6,7 +6,7 @@ use metaclass;
 
 use B;
 use Scalar::Util 'blessed';
-use List::MoreUtils qw(all);
+use List::Util 1.33 qw(all);
 use Moose::Util 'english_list';
 
 use Moose::Util::TypeConstraints ();
@@ -25,7 +25,7 @@ my $inliner = sub {
     return $self->parent->_inline_check($val)
          . ' && do {' . "\n"
              . 'my $val = ' . $val . ';' . "\n"
-             . '&List::MoreUtils::all(' . "\n"
+             . '&List::Util::all(' . "\n"
                  . 'sub { $val->can($_) },' . "\n"
                  . join(', ', map { B::perlstring($_) } @{ $self->methods })
              . ');' . "\n"

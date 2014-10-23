@@ -6,7 +6,7 @@ use warnings;
 use Sub::Exporter;
 use Test::Builder;
 
-use List::MoreUtils 'all';
+use List::Util 1.33 'all';
 use Moose::Util 'does_role', 'find_meta';
 
 my @exports = qw[

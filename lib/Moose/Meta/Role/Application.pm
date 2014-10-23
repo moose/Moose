@@ -5,7 +5,7 @@ use warnings;
 use metaclass;
 use overload ();
 
-use List::MoreUtils qw( all );
+use List::Util 1.33 qw( all );
 
 use Moose::Util 'throw_exception';
 

@@ -3,7 +3,7 @@ package Moose::Meta::Method::Accessor::Native::Writer;
 use strict;
 use warnings;
 
-use List::MoreUtils qw( any );
+use List::Util 1.33 qw( any );
 use Moose::Util;
 
 use Moose::Role;

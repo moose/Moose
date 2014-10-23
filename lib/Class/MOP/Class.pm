@@ -14,7 +14,7 @@ use Module::Runtime 'use_package_optimistically';
 use Scalar::Util 'blessed';
 use Sub::Name    'subname';
 use Try::Tiny;
-use List::MoreUtils 'all';
+use List::Util 1.33 'all';
 
 use parent 'Class::MOP::Module',
          'Class::MOP::Mixin::HasAttributes',

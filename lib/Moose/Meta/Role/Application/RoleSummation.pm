@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use metaclass;
 
-use List::MoreUtils qw( all );
+use List::Util 1.33 qw( all );
 use Scalar::Util 'blessed';
 
 use Moose::Meta::Role::Composite;

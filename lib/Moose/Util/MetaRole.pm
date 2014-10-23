@@ -4,8 +4,7 @@ use strict;
 use warnings;
 use Scalar::Util 'blessed';
 
-use List::MoreUtils qw( all );
-use List::Util qw( first );
+use List::Util 1.33 qw( first all );
 use Moose::Deprecated;
 use Moose::Util 'throw_exception';
 

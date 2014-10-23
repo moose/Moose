@@ -4,6 +4,7 @@ use warnings;
 use Test::Fatal;
 use Test::More;
 
+use List::Util 1.33 ();
 use Moose::Util::TypeConstraints;
 
 #<<<
@@ -55,7 +56,7 @@ my $not_inlinable = find_type_constraint('NotInlinable');
 
     is(
         $aofi->_inline_check('$foo'),
-        q{( do { do {my $check = $foo;ref($check) eq "ARRAY" && &List::MoreUtils::all(sub { ( do { defined $_ && ! ref $_ && $_ !~ /Q/ } ) }, @{$check})} } )},
+        q{( do { do {my $check = $foo;ref($check) eq "ARRAY" && &List::Util::all(sub { ( do { defined $_ && ! ref $_ && $_ !~ /Q/ } ) }, @{$check})} } )},
         'got expected inline code for ArrayRef[Inlinable] constraint'
     );
 
@@ -84,7 +85,7 @@ subtype 'ArrayOfNotInlinable',
 
     is(
         $aofi->_inline_check('$foo'),
-        q{( do { do {my $check = $foo;ref($check) eq "ARRAY" && &List::MoreUtils::all(sub { ( do { defined $_ && ! ref $_ && $_ !~ /Q/ } ) }, @{$check})} } )},
+        q{( do { do {my $check = $foo;ref($check) eq "ARRAY" && &List::Util::all(sub { ( do { defined $_ && ! ref $_ && $_ !~ /Q/ } ) }, @{$check})} } )},
         'got expected inline code for ArrayOfInlinable constraint'
     );
 
@@ -108,7 +109,7 @@ subtype 'ArrayOfNotInlinable',
 
     is(
         $hoaofi->_inline_check('$foo'),
-        q{( do { do {my $check = $foo;ref($check) eq "HASH" && &List::MoreUtils::all(sub { ( do { do {my $check = $_;ref($check) eq "ARRAY" && &List::MoreUtils::all(sub { ( do { defined $_ && ! ref $_ && $_ !~ /Q/ } ) }, @{$check})} } ) }, values %{$check})} } )},
+        q{( do { do {my $check = $foo;ref($check) eq "HASH" && &List::Util::all(sub { ( do { do {my $check = $_;ref($check) eq "ARRAY" && &List::Util::all(sub { ( do { defined $_ && ! ref $_ && $_ !~ /Q/ } ) }, @{$check})} } ) }, values %{$check})} } )},
         'got expected inline code for HashRef[ArrayRef[Inlinable]] constraint'
     );
 

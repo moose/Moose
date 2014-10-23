@@ -4,7 +4,7 @@ package Moose::Meta::Attribute;
 
 use B ();
 use Scalar::Util 'blessed';
-use List::MoreUtils 'any';
+use List::Util 1.33 'any';
 use Try::Tiny;
 use overload     ();
 

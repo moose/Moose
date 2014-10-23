@@ -6,8 +6,7 @@ use metaclass;
 
 use Moose::Meta::TypeCoercion::Union;
 
-use List::MoreUtils qw(all);
-use List::Util qw(first);
+use List::Util 1.33 qw(first all);
 
 use parent 'Moose::Meta::TypeConstraint';
 

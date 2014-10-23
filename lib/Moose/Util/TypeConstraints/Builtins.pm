@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Class::Load qw( is_class_loaded );
-use List::MoreUtils ();
+use List::Util 1.33 ();
 use Scalar::Util qw( blessed );
 
 sub type { goto &Moose::Util::TypeConstraints::type }
@@ -222,7 +222,7 @@ sub define_builtins {
                 'do {'
                     . 'my $check = ' . $val . ';'
                     . 'ref($check) eq "ARRAY" '
-                        . '&& &List::MoreUtils::all('
+                        . '&& &List::Util::all('
                             . 'sub { ' . $type_parameter->_inline_check('$_') . ' }, '
                             . '@{$check}'
                         . ')'
@@ -257,7 +257,7 @@ sub define_builtins {
                 'do {'
                     . 'my $check = ' . $val . ';'
                     . 'ref($check) eq "HASH" '
-                        . '&& &List::MoreUtils::all('
+                        . '&& &List::Util::all('
                             . 'sub { ' . $type_parameter->_inline_check('$_') . ' }, '
                             . 'values %{$check}'
                         . ')'
