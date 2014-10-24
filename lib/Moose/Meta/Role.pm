@@ -920,10 +920,8 @@ This is quite likely to change in the future.
 
 =head2 Overload introspection and creation
 
-The methods for dealing with a role's overloads are all identical in API
-and behavior to the same methods in L<Class::MOP::Class>. Note that these are
-not particularly useful (yet), because overloads do not participate in role
-composition.
+The methods for dealing with a role's overloads are all identical in API and
+behavior to the same methods in L<Class::MOP::Class>.
 
 =over 4
 
