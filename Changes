@@ -3,6 +3,18 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [ENHANCEMENTS]
+
+  - Rewrote overloading implementation to use a new Class::MOP::Overload
+    object. This object properly captures all overloading information. The
+    Class::MOP::Method::Overload class has been removed.
+
+  [BUG FIXES]
+
+  - If a role had method-based overloading but did not actually implement the
+    specified method, its overloading was simply ignored when applying
+    overloading to other roles or classes. Reported by rjbs. RT #98531.
+
 2.1305   2014-10-22 (TRIAL RELEASE)
 
   [ENHANCEMENTS]
