@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use overload ();
-use Scalar::Util qw( weaken );
+use Scalar::Util qw( blessed weaken );
 use Try::Tiny;
 
 use parent 'Class::MOP::Object';

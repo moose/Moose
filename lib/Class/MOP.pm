@@ -203,16 +203,6 @@ Class::MOP::Mixin::HasAttributes->meta->add_attribute(
 ## Class::MOP::Mixin::HasOverloads
 
 Class::MOP::Mixin::HasOverloads->meta->add_attribute(
-    Class::MOP::Attribute->new('_overload_info' => (
-        reader   => {
-            '_overload_info' => \&Class::MOP::Mixin::HasOverloads::_overload_info
-        },
-        clearer => '_clear_overload_info',
-        _definition_context(),
-    ))
-);
-
-Class::MOP::Mixin::HasOverloads->meta->add_attribute(
     Class::MOP::Attribute->new('_overload_map' => (
         reader   => {
             '_overload_map' => \&Class::MOP::Mixin::HasOverloads::_overload_map
@@ -221,10 +211,6 @@ Class::MOP::Mixin::HasOverloads->meta->add_attribute(
         default => sub { {} },
         _definition_context(),
     ))
-);
-
-Class::MOP::Mixin::HasOverloads->meta->add_after_method_modifier(
-    _clear_overload_info => sub { $_[0]->_clear_overload_map },
 );
 
 ## --------------------------------------------------------

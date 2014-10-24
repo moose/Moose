@@ -50,10 +50,13 @@ sub add_overloaded_operator {
     my $self = shift;
     my ($op, $overload) = @_;
 
+    my %p = ( associated_metaclass => $self );
     if ( !ref $overload ) {
-        my %p = (
-            operator    => $op,
-            method_name => $overload,
+        %p = (
+            %p,
+            operator             => $op,
+            method_name          => $overload,
+            associated_metaclass => $self,
         );
         $p{method} = $self->get_method($overload)
             if $self->has_method($overload);
@@ -65,10 +68,12 @@ sub add_overloaded_operator {
             coderef         => $overload,
             coderef_name    => sub_name($overload),
             coderef_package => stash_name($overload),
+            %p,
         );
     }
 
-    $self->_clear_overload_info;
+    $overload->attach_to_class($self);
+    $self->_overload_map->{$op} = $overload;
 
     $self->name->overload::OVERLOAD( $op => $overload->has_coderef
         ? $overload->coderef
@@ -79,7 +84,7 @@ sub remove_overloaded_operator {
     my $self = shift;
     my ($op) = @_;
 
-    $self->_clear_overload_info;
+    delete $self->_overload_map->{$op};
 
     # overload.pm provides no api for this - but the problem that makes this
     # necessary has been fixed in 5.18
@@ -98,14 +103,14 @@ sub set_overload_fallback_value {
     my $self  = shift;
     my $value = shift;
 
-    $self->_clear_overload_info;
-
     $self->name->overload::OVERLOAD( fallback => $value );
 }
 
+# We could cache this but we'd need some logic to clear it at all the right
+# times, which seems more tedious than it's worth.
 sub _overload_info {
     my $self = shift;
-    $self->{_overload_info} ||= overload_info( $self->name ) || {};
+    return overload_info( $self->name ) || {};
 }
 
 sub _overload_for {

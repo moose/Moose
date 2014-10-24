@@ -90,7 +90,8 @@ sub apply_overloading {
 
     for my $overload ( $role->get_all_overloaded_operators ) {
         next if $other->has_overloaded_operator( $overload->operator );
-        $other->add_overloaded_operator( $overload->operator => $overload );
+        $other->add_overloaded_operator(
+            $overload->operator => $overload->clone );
     }
 }
 
