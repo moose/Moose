@@ -15,6 +15,7 @@ BEGIN {
     use_ok('Class::MOP::Mixin::AttributeCore');
     use_ok('Class::MOP::Mixin::HasAttributes');
     use_ok('Class::MOP::Mixin::HasMethods');
+    use_ok('Class::MOP::Mixin::HasOverloads');
     use_ok('Class::MOP::Package');
     use_ok('Class::MOP::Module');
     use_ok('Class::MOP::Class');
@@ -27,9 +28,9 @@ BEGIN {
     use_ok('Class::MOP::Method::Accessor');
     use_ok('Class::MOP::Method::Constructor');
     use_ok('Class::MOP::Method::Meta');
-    use_ok('Class::MOP::Method::Overload');
     use_ok('Class::MOP::Instance');
     use_ok('Class::MOP::Object');
+    use_ok('Class::MOP::Overload');
 }
 
 # make sure we are tracking metaclasses correctly
@@ -41,11 +42,11 @@ my %METAS = (
     'Class::MOP::Method::Accessor'  => Class::MOP::Method::Accessor->meta,
     'Class::MOP::Method::Constructor' => Class::MOP::Method::Constructor->meta,
     'Class::MOP::Method::Meta' => Class::MOP::Method::Meta->meta,
-    'Class::MOP::Method::Overload' => Class::MOP::Method::Overload->meta,
     'Class::MOP::Mixin'   => Class::MOP::Mixin->meta,
-    'Class::MOP::Mixin::AttributeCore'   => Class::MOP::Mixin::AttributeCore->meta,
-    'Class::MOP::Mixin::HasAttributes'   => Class::MOP::Mixin::HasAttributes->meta,
-    'Class::MOP::Mixin::HasMethods'      => Class::MOP::Mixin::HasMethods->meta,
+    'Class::MOP::Mixin::AttributeCore' => Class::MOP::Mixin::AttributeCore->meta,
+    'Class::MOP::Mixin::HasAttributes' => Class::MOP::Mixin::HasAttributes->meta,
+    'Class::MOP::Mixin::HasMethods'    => Class::MOP::Mixin::HasMethods->meta,
+    'Class::MOP::Mixin::HasOverloads'  => Class::MOP::Mixin::HasOverloads->meta,
     'Class::MOP::Package'         => Class::MOP::Package->meta,
     'Class::MOP::Module'          => Class::MOP::Module->meta,
     'Class::MOP::Class'           => Class::MOP::Class->meta,
@@ -53,13 +54,14 @@ my %METAS = (
     'Class::MOP::Method::Wrapped' => Class::MOP::Method::Wrapped->meta,
     'Class::MOP::Instance'        => Class::MOP::Instance->meta,
     'Class::MOP::Object'          => Class::MOP::Object->meta,
+    'Class::MOP::Overload'        => Class::MOP::Overload->meta,
     'Class::MOP::Class::Immutable::Trait' => Class::MOP::class_of('Class::MOP::Class::Immutable::Trait'),
     'Class::MOP::Class::Immutable::Class::MOP::Class' => Class::MOP::Class::Immutable::Class::MOP::Class->meta,
     'UNIVERSAL' => Class::MOP::class_of('UNIVERSAL'),
 );
 
 ok( is_class_loaded($_), '... ' . $_ . ' is loaded' )
-    for keys %METAS;
+    for sort keys %METAS;
 
 # The trait shouldn't be made immutable, it doesn't actually do anything, and
 # it doesn't even matter because it's not a class that will be
@@ -100,14 +102,15 @@ SKIP: {
             Class::MOP::Method::Generated->meta,
             Class::MOP::Method::Inlined->meta,
             Class::MOP::Method::Meta->meta,
-            Class::MOP::Method::Overload->meta,
             Class::MOP::Method::Wrapped->meta,
             Class::MOP::Mixin->meta,
             Class::MOP::Mixin::AttributeCore->meta,
             Class::MOP::Mixin::HasAttributes->meta,
             Class::MOP::Mixin::HasMethods->meta,
+            Class::MOP::Mixin::HasOverloads->meta,
             Class::MOP::Module->meta,
             Class::MOP::Object->meta,
+            Class::MOP::Overload->meta,
             Class::MOP::Package->meta,
             Class::MOP::class_of('UNIVERSAL'),
         ],
@@ -126,6 +129,7 @@ SKIP: {
                 Class::MOP::Mixin::AttributeCore
                 Class::MOP::Mixin::HasAttributes
                 Class::MOP::Mixin::HasMethods
+                Class::MOP::Mixin::HasOverloads
                 Class::MOP::Instance
                 Class::MOP::Method
                 Class::MOP::Method::Accessor
@@ -134,9 +138,9 @@ SKIP: {
                 Class::MOP::Method::Inlined
                 Class::MOP::Method::Wrapped
                 Class::MOP::Method::Meta
-                Class::MOP::Method::Overload
                 Class::MOP::Module
                 Class::MOP::Object
+                Class::MOP::Overload
                 Class::MOP::Package
                 UNIVERSAL
                 /,

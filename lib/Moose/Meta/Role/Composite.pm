@@ -147,30 +147,16 @@ sub is_overloaded {
 }
 
 sub add_overloaded_operator {
-    my ( $self, $op_name, $method ) = @_;
+    my ( $self, $op_name, $overload ) = @_;
 
     unless ( defined $op_name && $op_name ) {
         throw_exception(
-            'MustDefineAMethodName',
+            'MustDefineAnOverloadOperator',
             instance => $self,
         );
     }
 
-    my $body;
-    if ( blessed($method) ) {
-        $body = $method->body;
-        if ( $method->package_name ne $self->name ) {
-            $method = $method->clone(
-                package_name => $self->name,
-                name         => $op_name
-            ) if $method->can('clone');
-        }
-    }
-    else {
-        $method = $self->_wrap_overload( $op_name, $method );
-    }
-
-    $self->_overload_map->{$op_name} = $method;
+    $self->_overload_map->{$op_name} = $overload;
 }
 
 sub get_overload_fallback_value {

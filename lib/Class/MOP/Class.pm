@@ -18,7 +18,8 @@ use List::MoreUtils 'all';
 
 use parent 'Class::MOP::Module',
          'Class::MOP::Mixin::HasAttributes',
-         'Class::MOP::Mixin::HasMethods';
+         'Class::MOP::Mixin::HasMethods',
+         'Class::MOP::Mixin::HasOverloads';
 
 # Creation
 
@@ -1995,8 +1996,8 @@ L<overload::Overloaded|overload/Public Functions>.
 
 =item B<< $metaclass->get_overloaded_operator($op) >>
 
-Returns the L<Class::MOP::Method::Overload> object corresponding to the
-operator named C<$op>, if one exists for this class.
+Returns the L<Class::MOP::Overload> object corresponding to the operator named
+C<$op>, if one exists for this class.
 
 =item B<< $metaclass->has_overloaded_operator($op) >>
 
@@ -2009,13 +2010,13 @@ L<overload/Overloadable Operations> for the list of valid operator names).
 
 =item B<< $metaclass->get_all_overloaded_operators >>
 
-Returns a list of L<Class::MOP::Method::Overload> objects corresponding to the
+Returns a list of L<Class::MOP::Overload> objects corresponding to the
 operators that have been overloaded.
 
 =item B<< $metaclass->add_overloaded_operator($op, $impl) >>
 
-Overloads the operator C<$op> for this class, with the implementation C<$impl>.
-C<$impl> can be either a coderef or a method name. Corresponds to
+Overloads the operator C<$op> for this class. The C<$impl> can be a coderef, a
+method name, or a L<Class::MOP::Overload> object. Corresponds to
 C<< use overload $op => $impl; >>
 
 =item B<< $metaclass->remove_overloaded_operator($op) >>

@@ -32,7 +32,8 @@ sub generate_docs {
             $exception = "Moose::Exception::".$file;
 
             load_class( $exception );
-            my $metaclass = Class::MOP::class_of( $exception );
+            my $metaclass = Class::MOP::class_of( $exception )
+                or die "No metaclass for $exception";
 
             my @super_classes = sort { $a->name cmp $b->name } $metaclass->superclasses;
             my @roles = sort { $a->name cmp $b->name } $metaclass->calculate_all_roles;
