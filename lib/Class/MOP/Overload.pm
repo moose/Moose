@@ -263,7 +263,7 @@ Returns true if the overloading is implemented by an anonymous coderef.
 =head2 $overload->associated_metaclass
 
 Returns the L<Class::MOP::Module> (class or role) that is associated with the
-overload objcet.
+overload object.
 
 =head2 $overload->clone
 
