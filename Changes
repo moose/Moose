@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.1306   2014-10-25 (TRIAL RELEASE)
+
   [ENHANCEMENTS]
 
   - Rewrote overloading implementation to use a new Class::MOP::Overload
