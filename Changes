@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.1307   2014-10-26 (TRIAL RELEASE)
+
   [ENHANCEMENTS]
 
   - Support added to Moose::Exporter for exporting subs by their fully
