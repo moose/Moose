@@ -46,9 +46,11 @@ sub get_overloaded_operator {
     return $self->_overload_map->{$op} ||= $self->_overload_for($op);
 }
 
+use constant _SET_FALLBACK_EACH_TIME => $] < 5.120;
+
 sub add_overloaded_operator {
     my $self = shift;
-    my ($op, $overload) = @_;
+    my ( $op, $overload ) = @_;
 
     my %p = ( associated_metaclass => $self );
     if ( !ref $overload ) {
@@ -75,9 +77,20 @@ sub add_overloaded_operator {
     $overload->attach_to_class($self);
     $self->_overload_map->{$op} = $overload;
 
-    $self->name->overload::OVERLOAD( $op => $overload->has_coderef
+    my %overload = (
+          $op => $overload->has_coderef
         ? $overload->coderef
-        : $overload->method_name );
+        : $overload->method_name
+    );
+
+    # Perl 5.10 and earlier appear to have a bug where setting a new
+    # overloading operator wipes out the fallback value unless we pass it each
+    # time.
+    if (_SET_FALLBACK_EACH_TIME) {
+        $overload{fallback} = $self->get_overload_fallback_value;
+    }
+
+    $self->name->overload::OVERLOAD(%overload);
 }
 
 sub remove_overloaded_operator {
