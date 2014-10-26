@@ -344,7 +344,7 @@ use Test::Requires 'Test::Output';  # skip all if not installed
         also        => ['Moose'],
         with_meta   => [ 'with_meta1', 'with_meta2' ],
         with_caller => [ 'with_caller1', 'with_caller2' ],
-        as_is       => ['as_is1'],
+        as_is       => ['as_is1', \&Foreign::Class::as_is2, 'Foreign::Class::as_is3'],
     );
 
     sub with_caller1 {
@@ -356,6 +356,9 @@ use Test::Requires 'Test::Output';  # skip all if not installed
     }
 
     sub as_is1 {2}
+
+    sub Foreign::Class::as_is2 { return 'as_is2' }
+    sub Foreign::Class::as_is3 { return 'as_is3' }
 
     sub with_meta1 {
         return @_;
@@ -374,7 +377,7 @@ use Test::Requires 'Test::Output';  # skip all if not installed
 
 {
     can_ok( 'UseAllOptions', $_ )
-        for qw( with_meta1 with_meta2 with_caller1 with_caller2 as_is1 );
+        for qw( with_meta1 with_meta2 with_caller1 with_caller2 as_is1 as_is2 as_is3 );
 
     {
         my ( $caller, $arg1 ) = UseAllOptions::with_caller1(42);
@@ -408,7 +411,7 @@ use Test::Requires 'Test::Output';  # skip all if not installed
 
 {
     ok( ! UseAllOptions->can($_), "UseAllOptions::$_ has been unimported" )
-        for qw( with_meta1 with_meta2 with_caller1 with_caller2 as_is1 );
+        for qw( with_meta1 with_meta2 with_caller1 with_caller2 as_is1 as_is2 as_is3 );
 }
 
 {

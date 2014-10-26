@@ -135,8 +135,8 @@ Moose::Exporter->setup_import_methods(
     ],
     as_is => [
         qw( super inner ),
-        \&Carp::confess,
-        \&Scalar::Util::blessed,
+        'Carp::confess',
+        'Scalar::Util::blessed',
     ],
 );
 
