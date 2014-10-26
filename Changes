@@ -3,6 +3,13 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [ENHANCEMENTS]
+
+  - Support added to Moose::Exporter for exporting subs by their fully
+    qualified name, as well as coderefs. This avoids internal breakage if some
+    other module has monkey-patched a sub to be exported and left it anonymous
+    (e.g. RT#88669). (Graham Knop, PR#84)
+
 2.1306   2014-10-25 (TRIAL RELEASE)
 
   [ENHANCEMENTS]
