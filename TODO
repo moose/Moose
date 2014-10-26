@@ -283,11 +283,6 @@ Special method types can't have method metaroles applied. Applying a method
 metarole to a class doesn't apply that role to things like constructors,
 accessors, etc.
 
-### `t/roles/compose_overloading.t`
-
-Overload methods aren't composed during role composition (this is detailed
-above - Add overloading support).
-
 ### `t/roles/method_modifiers.t`
 
 Method modifiers in roles don't support the regex form of method selection.
