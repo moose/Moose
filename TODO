@@ -170,12 +170,6 @@ There's a bunch of stuff that's duplicated, and other stuff that's not
 implemented as well as it could be (Class::MOP::Method::Wrapped should be a
 role, for instance).
 
-### Fix the error system
-
-oh god it's terrible
-
-More specifically, we really want exception objects.
-
 ### Moose::Util::TypeConstraints vs Moose::Meta::Type{Coercion,Constraint}
 
 The Util module has _way_ too much functionality. It needs to be
