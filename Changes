@@ -10,6 +10,11 @@ for, noteworthy changes.
     other module has monkey-patched a sub to be exported and left it anonymous
     (e.g. RT#88669). (Graham Knop, PR#84)
 
+  [BUG FIXES]
+
+  - Further refined the overloading fixes from 2.1306, fixing fallback
+    handling on older perl versions (Dave Rolsky, PR#85)
+
 2.1306   2014-10-25 (TRIAL RELEASE)
 
   [ENHANCEMENTS]
