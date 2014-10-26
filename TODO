@@ -91,20 +91,6 @@ this should be submitted to Sub::Identify first.
 
 These are things we think are good ideas, but they need more fleshing out.
 
-### Add overloading support
-
-or at least, don't break existing overloading support
-
-This shouldn't treat the overloading stuff as actual methods, since that's just
-an implementation detail, but we should provide an API for `add_overload`,
-`get_overload`, `get_overload_list`, etc. In particular, this would allow
-namespace::autoclean to not break things.
-
-Also, MooseX::Role::WithOverloading should probably be cored.
-
-This should probably also wait for the metarole unification fix, to avoid the
-::WithOverloading stuff being too insane.
-
 ### Actual API for metaclass extensions
 
 Right now, the only way to bundle multiple metaclass traits is via
