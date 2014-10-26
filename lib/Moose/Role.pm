@@ -96,8 +96,8 @@ Moose::Exporter->setup_import_methods(
     ],
     as_is => [
         qw( extends super inner augment ),
-        \&Carp::confess,
-        \&Scalar::Util::blessed,
+        'Carp::confess',
+        'Scalar::Util::blessed',
     ],
 );
 

@@ -294,6 +294,16 @@ sub _make_sub_exporter_params {
                     $is_reexport->{$coderef_name} = 1;
                 }
             }
+            elsif ( $name =~ /^(.*)::([^:]+)$/ ) {
+                $sub = $class->_sub_from_package( "$1", "$2" )
+                    or next;
+
+                $coderef_name = "$2";
+
+                if ( $1 ne $package ) {
+                    $is_reexport->{$coderef_name} = 1;
+                }
+            }
             else {
                 $sub = $class->_sub_from_package( $package, $name )
                     or next;
@@ -796,7 +806,7 @@ __END__
 
   Moose::Exporter->setup_import_methods(
       with_meta => [ 'has_rw', 'sugar2' ],
-      as_is     => [ 'sugar3', \&Some::Random::thing ],
+      as_is     => [ 'sugar3', \&Some::Random::thing, 'Other::Random::thing' ],
       also      => 'Moose',
   );
 
