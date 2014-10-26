@@ -21,7 +21,7 @@ for, noteworthy changes.
 
   - Rewrote overloading implementation to use a new Class::MOP::Overload
     object. This object properly captures all overloading information. The
-    Class::MOP::Method::Overload class has been removed.
+    Class::MOP::Method::Overload class has been removed. (Dave Rolsky, PR#83)
 
   [BUG FIXES]
 
