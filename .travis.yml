@@ -26,7 +26,7 @@ matrix:
       env: COVERAGE=1 TEST_PARTITION=4
 before_install:
   - git clone git://github.com/travis-perl/helpers ~/travis-perl-helpers
-  - source ~/travis-perl-helpers
+  - source ~/travis-perl-helpers/init
   - build-perl
   - perl -V
   - build-dist
