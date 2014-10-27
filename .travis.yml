@@ -1,5 +1,3 @@
-# for what versions are available, see:
-# https://github.com/travis-ci/travis-cookbooks/blob/master/ci_environment/perlbrew/attributes/multi.rb
 language: perl
 perl:
     #- dev
