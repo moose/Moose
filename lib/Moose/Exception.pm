@@ -42,6 +42,7 @@ sub _build_trace {
         message => $self->message,
         indent  => 1,
         skip_frames => $skip,
+        no_refs => 1,
     );
 }
 

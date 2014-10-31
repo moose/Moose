@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  - Moose exception classes now stringify all stack frames, to avoid issues
+    in global destruction (see RT#99811)
+
 2.1307   2014-10-26 (TRIAL RELEASE)
 
   [ENHANCEMENTS]
