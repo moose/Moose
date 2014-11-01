@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.1400   2014-10-31
+
   [BUG FIXES]
 
   - Moose exception classes now stringify all stack frames, to avoid issues
