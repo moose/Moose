@@ -3,6 +3,20 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  - The core overloading support interacted badly with
+    MooseX::MarkAsMethods. If you used MooseX::MarkAsMethods in a role that
+    provided overloading, then that overloading would not be properly applied
+    to consuming classes, leading to very weird errors of the form:
+
+        Can't resolve method "???" overloading """" in package "Class2" ...
+
+    Note that the problems that MooseX::MarkAsMethods fixes are no longer
+    present if you are using Moose 2.1400+ and namespace::autoclean 0.16+. We
+    encourage you to upgrade both of these modules and remove
+    MooseX::MarkAsMethods from your code base.
+
 2.1400   2014-10-31
 
   [BUG FIXES]

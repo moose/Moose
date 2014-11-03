@@ -54,9 +54,9 @@ sub apply {
     $self->check_required_methods(@_);
     $self->check_required_attributes(@_);
 
+    $self->apply_overloading(@_);
     $self->apply_attributes(@_);
     $self->apply_methods(@_);
-    $self->apply_overloading(@_);
 
     $self->apply_override_method_modifiers(@_);
 
