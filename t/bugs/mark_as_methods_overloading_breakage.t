@@ -6,7 +6,7 @@ use Moose ();
 BEGIN { $Moose::VERSION ||= 42 }
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 use Test::Requires {
     'MooseX::MarkAsMethods' => 0,
 };
@@ -25,14 +25,13 @@ use Test::Requires {
     with 'Role2';
 }
 
-lives_ok {
+ok(! exception {
     my $class2 = Class2->new;
     is(
         "$class2",
         'Class2',
         'Class2 got stringification overloading from Role2'
     );
-}
-'No error creating a Class2 object';
+}, 'No error creating a Class2 object');
 
 done_testing;
