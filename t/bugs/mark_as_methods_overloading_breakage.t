@@ -6,7 +6,7 @@ use Moose ();
 BEGIN { $Moose::VERSION ||= 42 }
 
 use Test::More;
-use Test::Exception;
+use Test::Fatal;
 use Test::Requires {
     'MooseX::MarkAsMethods' => 0,
 };
