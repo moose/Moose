@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.1402   2014-11-05
+
   [BUG FIXES]
 
   - Fix a test that was trying to load Test::Exception instead of Test::Fatal.
