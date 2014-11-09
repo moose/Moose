@@ -76,7 +76,7 @@ modifiers work, but may not be the most natural usage.
 
 Method modifiers can be used to add behavior to methods without modifying the definition of those methods.
 
-=head2 BEFORE and AFTER modifiers
+=head2 Before and after Modifiers
 
 Method modifiers can be used to add behavior to a method that Moose
 generates for you, such as an attribute accessor:
@@ -111,7 +111,7 @@ was taken.
 Note that the return values of both before and after modifiers are
 ignored.
 
-=head2 AROUND modifiers
+=head2 Around modifiers
 
 An around modifier is more powerful than either a before or
 after modifier. It can modify the arguments being passed to the
@@ -178,7 +178,6 @@ dangerous.  Bear in mind that if your regular expression matches certain Perl
 and Moose reserved method names with a special meaning to Moose or Perl, such
 as C<meta>, C<new>, C<BUILD>, C<DESTROY>, C<AUTOLOAD>, etc, this could cause
 unintended (and hard to debug) problems and is best avoided.
-
 
 =head1 INNER AND AUGMENT
 
