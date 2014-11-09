@@ -2,16 +2,25 @@ use strict;
 use warnings;
 
 BEGIN {
-    eval { require ExtUtils::MakeMaker::Dist::Zilla::Develop };
-    if ($@) {
-        warn
-            "You need to install ExtUtils::MakeMaker::Dist::Zilla::Develop to run this Makefile.PL\n";
-        exit 1;
+    my @modules = qw(
+        ExtUtils::MakeMaker::Dist::Zilla::Develop
+        File::Find::Rule
+        Test::Inline
+        Path::Tiny
+    );
+
+    my %missing;
+    for my $module (@modules) {
+        eval "require $module";
+        $missing{$module} = 1 if $@;
     }
 
-    eval { require Test::Inline };
-    if ($@) {
-        warn "You need to install Test::Inline to run this Makefile.PL\n";
+    if ( keys %missing ) {
+        warn
+            "You need to install the following modules to run this Makefile.PL:\n";
+        warn "    $_\n" for keys %missing;
+        warn "\nTry running this command:\n";
+        warn "    cpanm " . ( join q{ }, keys %missing ) . "\n";
         exit 1;
     }
 
