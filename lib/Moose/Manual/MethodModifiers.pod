@@ -179,6 +179,58 @@ and Moose reserved method names with a special meaning to Moose or Perl, such
 as C<meta>, C<new>, C<BUILD>, C<DESTROY>, C<AUTOLOAD>, etc, this could cause
 unintended (and hard to debug) problems and is best avoided.
 
+=head2 Execution order of method modifiers and inheritance
+
+When both a superclass and an inheriting class have the same method modifiers,
+the method modifiers of the inheriting class are wrapped around the method
+modifiers of the superclass, as the following example illustrates:
+
+Here is the parent class:
+
+  package Parent;
+  use Moose;
+  sub rant { printf "        RANTING!\n" }
+  before 'rant' => sub { printf "    In %s before\n", __PACKAGE__ };
+  after 'rant'  => sub { printf "    In %s after\n",  __PACKAGE__ };
+  around 'rant' => sub {
+      my $orig = shift;
+      my $self = shift;
+      printf "      In %s around before calling original\n", __PACKAGE__;
+      $self->$orig;
+      printf "      In %s around after calling original\n", __PACKAGE__;
+  };
+  1;
+
+And the child class:
+
+  package Child;
+  use Moose;
+  extends 'Parent';
+  before 'rant' => sub { printf "In %s before\n", __PACKAGE__ };
+  after 'rant'  => sub { printf "In %s after\n",  __PACKAGE__ };
+  around 'rant' => sub {
+      my $orig = shift;
+      my $self = shift;
+      printf "  In %s around before calling original\n", __PACKAGE__;
+      $self->$orig;
+      printf "  In %s around after calling original\n", __PACKAGE__;
+  };
+  1;
+
+And here's the output when we call the wrapped method (C<< Child->rant >>):
+
+  % perl -MChild -e 'Child->new->rant'
+
+  In Child before
+    In Child around before calling original
+      In Parent before
+        In Parent around before calling original
+          RANTING!
+        In Parent around after calling original
+      In Parent after
+    In Child around after calling original
+  In Child after
+
 =head1 INNER AND AUGMENT
 
 Augment and inner are two halves of the same feature. The augment

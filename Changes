@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [ENHANCEMENTS]
+
+  - Added a section to Moose::Manual::MethodModifiers illustrating how method
+    modifiers work with inheritance. (Andreas Koenig, RT #98940)
+
 2.1402   2014-11-05
 
   [BUG FIXES]
