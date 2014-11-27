@@ -24,7 +24,7 @@ isa_ok(Foo->meta->get_method('meta'), 'Moose::Meta::Method::Meta');
     extends 'Base';
     no Moose;
 }
-ok(!Bar->can('meta'), 'Bar->cant(\'meta\')');
+ok(!Bar->can('meta'), q{Bar->cant('meta')});
 can_ok('Bar', 'bar_meta');
 is(Bar->bar_meta, Class::MOP::class_of('Bar'), 'Bar is a class_of Bar, via Bar->bar_meta');
 isa_ok(Bar->bar_meta->get_method('bar_meta'), 'Moose::Meta::Method::Meta');
@@ -35,7 +35,7 @@ isa_ok(Bar->bar_meta->get_method('bar_meta'), 'Moose::Meta::Method::Meta');
     extends 'Base';
     no Moose;
 }
-ok(!Baz->can('meta'), 'Baz->cant(\'meta\')');
+ok(!Baz->can('meta'), q{Baz->cant('meta')});
 
 my $universal_method_count = scalar Class::MOP::class_of('UNIVERSAL')->get_all_methods;
 # 1 because of the dummy method we installed in Base
@@ -45,17 +45,29 @@ is(
     'Baz has one method',
 );
 
-TODO: {
 {
     package Qux;
     use Moose -meta_name => 'qux_meta';
 }
 
-local $TODO = 'should be able to change the meta_name here too';
-ok(!Qux->can('meta'), 'Qux->cant(\'meta\')');
 can_ok('Qux', 'qux_meta');
 is(Qux->qux_meta, Class::MOP::class_of('Qux'), 'Qux is a class_of Qux, via Qux->qux_meta');
 isa_ok(Qux->qux_meta->get_method('qux_meta'), 'Moose::Meta::Method::Meta');
+
+{
+    package FooBar;
+    sub meta { 42 }
+    use Moose -meta_name => 'foo_bar_meta';
 }
+
+is(FooBar->meta, 42, 'FooBar->meta returns 42, not metaclass object');
+
+{
+    package FooBar::Child;
+    use Moose -meta_name => 'foo_bar_child_meta';
+    extends 'FooBar';
+}
+
+is(FooBar::Child->meta, 42, 'FooBar::Child->meta returns 42, not metaclass object');
 
 done_testing;
