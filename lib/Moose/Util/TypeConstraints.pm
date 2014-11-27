@@ -554,7 +554,7 @@ sub _create_type_constraint ($$$;$) {
             if defined $type;
 
         if( $name !~ /^[\w:\.]+$/ ) {
-	    throw_exception( InvalidNameForType => name => $name );
+            throw_exception( InvalidNameForType => name => $name );
         }
     }
 
