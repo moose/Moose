@@ -169,11 +169,6 @@ sub _generate_reader_method_inline {
     };
 }
 
-sub _inline_throw_exception {
-    my ( $self, $exception_type, $throw_args ) = @_;
-    return 'die Module::Runtime::use_module("Moose::Exception::' . $exception_type . '")->new(' . ($throw_args || '') . ')';
-}
-
 sub _generate_writer_method {
     my $self = shift;
     my $attr = $self->associated_attribute;
