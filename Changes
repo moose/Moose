@@ -8,6 +8,11 @@ for, noteworthy changes.
   - Added a section to Moose::Manual::MethodModifiers illustrating how method
     modifiers work with inheritance. (Andreas Koenig, RT #98940)
 
+  [DOCUMENTATION]
+
+  - Added docs to Moose.pm on the -meta_name import option. This addresses RT
+    #98488.
+
 2.1402   2014-11-05
 
   [BUG FIXES]

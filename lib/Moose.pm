@@ -385,15 +385,27 @@ or coercion.
 =head1 PROVIDED METHODS
 
 Moose provides a number of methods to all your classes, mostly through the
-inheritance of L<Moose::Object>. There is however, one exception.
+inheritance of L<Moose::Object>. There is however, one exception. By default,
+Moose will install a method named C<meta> in any class which uses
+C<Moose>. This method returns the current class's metaclass.
 
-=over 4
+If you'd like to rename this method, you can do so by passing the
+C<-meta_name> option when using Moose:
 
-=item B<meta>
+    use Moose -meta_name => 'my_meta';
 
-This is a method which provides access to the current class's metaclass.
+However, the L<Moose::Object> class I<also> provides a method named C<meta>
+which does the same thing. If your class inherits from L<Moose::Object> (which
+is the default), then you will still have a C<meta> method. However, if your
+class inherits from a parent which provides a C<meta> method of its own, your
+class will inherit that instead.
 
-=back
+If you'd like for Moose to not install a meta method at all, you can pass
+C<undef> as the C<-meta_name> option:
+
+    use Moose -meta_name => undef;
+
+Again, you will still inherit C<meta> from L<Moose::Object> in this case.
 
 =head1 EXPORTED FUNCTIONS
 
