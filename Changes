@@ -3,6 +3,15 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [ENHANCEMENTS}
+
+  - Most delegations are inlined now. This is not done for speed but rather to
+    improve stack traces when the delegated-to method throws an exception or
+    when the delegated-to method simply does not exist in the
+    delegatee. Previously, this stack trace and associated error were less
+    helpful than they could have been. Requested by Tim Bunce, Olaf Alders,
+    and Van de Bugger. (RT#46614, RT#98402, and RT#109631).
+
 2.1806   2016-09-25
 
   [BUG FIXES]
