@@ -13,6 +13,10 @@ for, noteworthy changes.
   - Added docs to Moose.pm on the -meta_name import option. This addresses RT
     #98488.
 
+  [BUG FIXES]
+
+  - Fix a test that fails on MSWin32 systems using nmake
+
 2.1402   2014-11-05
 
   [BUG FIXES]
