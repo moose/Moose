@@ -57,7 +57,7 @@ sub const_cccmd {
     return q{} unless $ret;
 
     if ($Config{cc} =~ /^cl\b/i) {
-        warn 'you are using MSVC... my condolences.';
+        warn 'you are using MSVC... we may not have gotten some options quite right.';
         $ret .= ' /Fo$@';
     }
     else {
