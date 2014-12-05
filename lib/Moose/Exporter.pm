@@ -803,10 +803,11 @@ __END__
 
   use Moose ();
   use Moose::Exporter;
+  use Some::Random ();
 
   Moose::Exporter->setup_import_methods(
       with_meta => [ 'has_rw', 'sugar2' ],
-      as_is     => [ 'sugar3', \&Some::Random::thing, 'Other::Random::thing' ],
+      as_is     => [ 'sugar3', \&Some::Random::thing, 'Some::Random::other_thing' ],
       also      => 'Moose',
   );
 
@@ -827,6 +828,7 @@ __END__
   has 'name';
   has_rw 'size';
   thing;
+  other_thing;
 
   no MyApp::Moose;
 
