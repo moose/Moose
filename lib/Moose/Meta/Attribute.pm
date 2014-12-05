@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 package Moose::Meta::Attribute;
+our $VERSION = '2.1403';
 
 use B ();
 use Scalar::Util 'blessed';
@@ -1272,6 +1273,7 @@ sub verify_against_type_constraint {
 }
 
 package Moose::Meta::Attribute::Custom::Moose;
+our $VERSION = '2.1403';
 
 sub register_implementation { 'Moose::Meta::Attribute' }
 1;

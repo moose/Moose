@@ -1,4 +1,5 @@
 package Moose::Meta::Class::Immutable::Trait;
+our $VERSION = '2.1403';
 
 use strict;
 use warnings;

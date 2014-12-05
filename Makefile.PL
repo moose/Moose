@@ -40,6 +40,7 @@ $args{clean}{FILES} = join(' ', ($args{clean}{FILES} || ()),
 
 WriteMakefile(
     NAME => 'Moose',
+    VERSION_FROM => 'lib/Moose.pm',
     test => { TESTS => 't/*.t t/*/*.t' },
     CCFLAGS => MMHelper::ccflags_static('dev'),
     INSTALLMAN1DIR => 'none',

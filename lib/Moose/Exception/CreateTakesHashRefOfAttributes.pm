@@ -1,4 +1,5 @@
 package Moose::Exception::CreateTakesHashRefOfAttributes;
+our $VERSION = '2.1403';
 
 use Moose;
 extends 'Moose::Exception';

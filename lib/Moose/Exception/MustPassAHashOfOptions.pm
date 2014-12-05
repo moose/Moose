@@ -1,4 +1,5 @@
 package Moose::Exception::MustPassAHashOfOptions;
+our $VERSION = '2.1403';
 
 use Moose;
 extends 'Moose::Exception';

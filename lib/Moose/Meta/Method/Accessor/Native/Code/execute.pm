@@ -1,4 +1,5 @@
 package Moose::Meta::Method::Accessor::Native::Code::execute;
+our $VERSION = '2.1403';
 
 use strict;
 use warnings;

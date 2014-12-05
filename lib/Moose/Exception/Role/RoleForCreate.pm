@@ -1,4 +1,5 @@
 package Moose::Exception::Role::RoleForCreate;
+our $VERSION = '2.1403';
 
 use Moose::Role;
 with 'Moose::Exception::Role::ParamsHash';

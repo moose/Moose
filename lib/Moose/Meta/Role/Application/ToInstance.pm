@@ -1,4 +1,5 @@
 package Moose::Meta::Role::Application::ToInstance;
+our $VERSION = '2.1403';
 
 use strict;
 use warnings;

@@ -1,4 +1,5 @@
 package Moose::Meta::Method::Accessor;
+our $VERSION = '2.1403';
 
 use strict;
 use warnings;

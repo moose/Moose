@@ -1,4 +1,5 @@
 package Moose::Object;
+our $VERSION = '2.1403';
 
 use strict;
 use warnings;
