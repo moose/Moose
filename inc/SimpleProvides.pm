@@ -5,7 +5,7 @@ package inc::SimpleProvides;
 use Moose;
 with 'Dist::Zilla::Role::MetaProvider',
     'Dist::Zilla::Role::FileFinderUser' => {
-        default_finders => [ ':InstallModules' ],
+        default_finders => [ ':InstallModules' ],   # this is overridden in dist.ini!
     },
 ;
 
