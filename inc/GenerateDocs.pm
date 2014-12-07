@@ -18,9 +18,7 @@ sub gather_files {
         name    => $filename->stringify,
         # more to fill in later
         content => <<'END_POD',
-use strict;
-use warnings;
-package Moose::Manual::Exceptions::Manifest;
+# PODNAME: Moose::Manual::Exceptions::Manifest
 # ABSTRACT: Moose's Exception Types
 
 __END__
