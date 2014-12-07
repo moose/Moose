@@ -1,5 +1,5 @@
 package Moose::Exception::MustSpecifyAtleastOneRole;
-our $VERSION = '2.1403';
+our $VERSION = '2.1404';
 
 use Moose;
 extends 'Moose::Exception';
