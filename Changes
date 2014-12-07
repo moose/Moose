@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+2.1403   2014-12-07
+
   [ENHANCEMENTS]
 
   - Added a section to Moose::Manual::MethodModifiers illustrating how method
