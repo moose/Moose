@@ -16,6 +16,7 @@ for, noteworthy changes.
   [BUG FIXES]
 
   - Fix a test that fails on MSWin32 systems using nmake
+  - fix dev build compilation error when using MSVC (A. Sinan Unur)
 
 2.1402   2014-11-05
 
