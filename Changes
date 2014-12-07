@@ -18,6 +18,11 @@ for, noteworthy changes.
   - Fix a test that fails on MSWin32 systems using nmake
   - fix dev build compilation error when using MSVC (A. Sinan Unur)
 
+  [OTHER]
+
+  - the modules in the git repository now have a defined $VERSION, to make it
+    easier to test MooseX::* and other code under development.
+
 2.1402   2014-11-05
 
   [BUG FIXES]
