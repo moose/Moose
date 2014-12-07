@@ -5,6 +5,7 @@ with 'Dist::Zilla::Role::BeforeBuild',
     'Dist::Zilla::Role::AfterBuild';
 use Path::Tiny;
 use File::pushd 'pushd';
+use Config;
 
 sub before_build { shift->_clean('.') }
 
@@ -32,13 +33,16 @@ sub _clean {
 
     my $cwd = pushd $build_dir;
     if (-e 'Makefile') {
-        $self->log("Running make distclean in $build_dir to clear out build cruft");
+
+        my $make = $Config{make} || 'make';
+
+        $self->log("Running $make distclean in $build_dir to clear out build cruft");
         my $pid = fork;
         unless ($pid) {
             close(STDIN);
             close(STDOUT);
             close(STDERR);
-            { exec("$^X Makefile.PL && make distclean") }
+            { exec("$^X Makefile.PL && $make distclean") }
             die "couldn't exec: $!";
         }
         waitpid($pid, 0) if $pid;
