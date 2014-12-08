@@ -826,7 +826,7 @@ __END__
 
   use MyApp::Moose;
 
-  has 'name';
+  has 'name' => ( is => 'ro' );
   has_rw 'size';
   thing;
   other_thing;
