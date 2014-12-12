@@ -112,7 +112,6 @@ my %trustme = (
     'Class::MOP::Package' => [ 'get_method_map', 'wrap_method_body' ],
     'Moose'                  => [ 'init_meta', 'throw_error' ],
     'Moose::Error::Confess'  => ['new'],
-    'Moose::Error::Util'     => ['.+'],
     'Moose::Meta::Attribute' => [
         qw( interpolate_class
             throw_error
