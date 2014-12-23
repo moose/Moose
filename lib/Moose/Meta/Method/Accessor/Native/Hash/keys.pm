@@ -4,8 +4,6 @@ our $VERSION = '2.1404';
 use strict;
 use warnings;
 
-use Scalar::Util qw( looks_like_number );
-
 use Moose::Role;
 
 with 'Moose::Meta::Method::Accessor::Native::Reader';
