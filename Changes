@@ -184,8 +184,9 @@ for, noteworthy changes.
 
   [OTHER]
 
-  - tests have been removed for an alpha branch of Test::Builder that will
-    never see the light of day (Exodist)
+  - logic has been removed for an alpha branch of Test::Builder that will
+    never see the light of day, and will break with upcoming Test::Builder
+    changes (Exodist)
 
 2.1209   2014-06-04
 
