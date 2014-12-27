@@ -15,8 +15,7 @@ my @modules
 plan tests => scalar @modules;
 
 my %trustme = (
-    'Moose::Exception' => ['BUILD'],
-    'Class::MOP'       => [
+    'Class::MOP' => [
         'DEBUG_NO_META',
         'HAVE_ISAREV',
         'IS_RUNNING_ON_5_10',
@@ -112,6 +111,7 @@ my %trustme = (
     'Class::MOP::Package' => [ 'get_method_map', 'wrap_method_body' ],
     'Moose'                  => [ 'init_meta', 'throw_error' ],
     'Moose::Error::Confess'  => ['new'],
+    'Moose::Exception'       => ['BUILD'],
     'Moose::Meta::Attribute' => [
         qw( interpolate_class
             throw_error
