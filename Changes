@@ -3,6 +3,13 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [DOCUMENTATION]
+
+  - For all Moose::Meta::* modules which subclass a corresponding
+    Class::MOP::* class, the docs the Class::MOP::* portion have been merged
+    into the Moose::Meta::* module. This should make it easier to find the
+    documentation for methods on meta objects.
+
 2.2005   2017-05-03
 
   [OTHER]
