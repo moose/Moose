@@ -214,13 +214,8 @@ use Class::MOP::Method;
     extends 'Parent';
 
     after 'something' => sub {
-        my $self = shift;
-        $self->boom;
-    };
-
-    sub boom {
         confess 'boom';
-    }
+    };
 }
 {
     my @errors;
