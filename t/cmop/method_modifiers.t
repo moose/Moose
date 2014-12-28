@@ -200,4 +200,38 @@ use Class::MOP::Method;
                'check around_modifiers' );
 }
 
+# test stringification of modifiers
+{
+    package Parent;
+    use Moose;
+
+    sub something {
+    }
+}
+{
+    package Child;
+    use Moose;
+    extends 'Parent';
+
+    after 'something' => sub {
+        my $self = shift;
+        $self->boom;
+    };
+
+    sub boom {
+        confess 'boom';
+    }
+}
+{
+    my @errors;
+    local $SIG{__DIE__} = sub { push @errors, @_ };
+    eval { Child->new->something() };
+    my $msg = join "\n", @errors;
+    ::like($msg, qr/^boom at /, 'correct exception');
+    ::like($msg, qr/:::after/, 'stacktrace contains :after');
+    ::like($msg, qr/Child::_wrapped_something/, 'stacktrace contains wrapped method name');
+    ::unlike($msg, qr/__ANON__/, 'stacktrace does not contain __ANON__');
+    ::note($msg);
+}
+
 done_testing;
