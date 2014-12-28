@@ -5,6 +5,7 @@ use strict;
 use warnings;
 
 use Scalar::Util 'blessed';
+use Sub::Name 'subname';
 
 use parent 'Class::MOP::Method';
 
@@ -83,15 +84,20 @@ sub wrap {
         },
     };
     $_build_wrapped_method->($modifier_table);
-    return $class->SUPER::wrap(
-        sub { $modifier_table->{cache}->(@_) },
-        # get these from the original
-        # unless explicitly overridden
-        package_name   => $params{package_name} || $code->package_name,
-        name           => $params{name}         || $code->name,
-        original_method => $code,
 
-        modifier_table => $modifier_table,
+    # get these from the original unless explicitly overridden
+    my $pkg_name    = $params{package_name} || $code->package_name;
+    my $method_name = $params{name}         || $code->name;
+
+    return $class->SUPER::wrap(
+        sub {
+            my $wrapped = subname "${pkg_name}::_wrapped_${method_name}" => $modifier_table->{cache};
+            return $wrapped->(@_) ;
+        },
+        package_name    => $pkg_name,
+        name            => $method_name,
+        original_method => $code,
+        modifier_table  => $modifier_table,
     );
 }
 
