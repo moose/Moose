@@ -2,13 +2,12 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::LeakTrace;
-use Test::Memory::Cycle;
-
 BEGIN {
     plan skip_all => 'Leak tests fail under Devel::Cover' if $INC{'Devel/Cover.pm'};
 }
 
+use Test::LeakTrace;
+use Test::Memory::Cycle;
 use Moose ();
 use Moose::Util qw( apply_all_roles );
 use Moose::Util::TypeConstraints;
