@@ -19,15 +19,14 @@ has 'type' => (
 
 sub _build_message {
     my $self = shift;
-    my $error_message = $self->type->get_message($self->value);
 
-    if( $self->is_attribute_set )
-    {
-        my $attribute_name = $self->attribute->name;
-        return "Attribute ($attribute_name) does not pass the type constraint because: $error_message";
-    }
+    my $error = $self->type->get_message( $self->value );
 
-    return $error_message;
+    return $error unless $self->is_attribute_set;
+
+    my $attribute_name = $self->attribute->name;
+    return
+        "Attribute ($attribute_name) does not pass the type constraint because: $error";
 }
 
 1;
