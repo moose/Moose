@@ -169,8 +169,8 @@ This work was funded as part of the GNOME Outreach Program for Women.
 The C<Num> type used to accept anything that fits Perl's notion of a number,
 which included Inf, NaN, and strings like C<" 1234 \n">.  We believe that the
 type constraint should indicate "this is a number", not "this coerces to a
-number".  Therefore, now Num accepts only integers, floating point numbers
-(both in decimal notation and exponential notation), 0, .0, 0.0 etc.
+number".  Therefore, Num now only accepts integers, floating point numbers
+(both in decimal notation and exponential notation), 0, .0, 0.0, etc.
 
 If you want the old behavior you can use the C<LaxNum> type in
 L<MooseX::Types::LaxNum>.
