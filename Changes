@@ -3,6 +3,10 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  - Add Sub::Identify to prereqs. (RT #101661)
+
 2.1403   2014-12-07
 
   [DOCUMENTATION]
