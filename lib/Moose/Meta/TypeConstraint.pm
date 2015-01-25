@@ -206,15 +206,15 @@ sub inline_environment {
 }
 
 sub assert_valid {
-    my ($self, $value) = @_;
+    my ( $self, $value ) = @_;
 
-    my $error = $self->validate($value);
-    return 1 if ! defined $error;
+    return 1 if $self->check($value);
 
-    throw_exception( ValidationFailedForTypeConstraint => type          => $self,
-                                                          error_message => $error,
-                                                          value         => $value
-                   );
+    throw_exception(
+        'ValidationFailedForTypeConstraint',
+        type  => $self,
+        value => $value
+    );
 }
 
 sub get_message {
