@@ -3,8 +3,8 @@ use warnings;
 
 use Test::More;
 BEGIN {
-    plan skip_all => 'Leak tests fail under perl 5.21.[678]'
-        if $] >= '5.021006' and $] <= '5.021008';
+    plan skip_all => 'Leak tests fail under perl 5.21.[6-9]'
+        if $] >= '5.021006' and $] <= '5.021009';
     plan skip_all => 'Leak tests fail under Devel::Cover' if $INC{'Devel/Cover.pm'};
 }
 
