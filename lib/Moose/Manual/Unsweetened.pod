@@ -48,7 +48,7 @@ First, we define two very small classes the Moose way.
       handles => { birth_year => 'year' },
   );
 
-  enum 'ShirtSize' => qw( s m l xl xxl );
+  enum 'ShirtSize' => [qw( s m l xl xxl )];
 
   has shirt_size => (
       is      => 'rw',
