@@ -1,11 +1,6 @@
 use strict;
 use warnings;
 
-# Prevent namespace::autoclean from dying when we run tests from git checkout.
-use Class::MOP ();
-use Moose      ();
-BEGIN { $Class::MOP::VERSION ||= $Moose::VERSION ||= 3 }
-
 use Test::Fatal;
 use Test::Moose qw( with_immutable );
 use Test::More;

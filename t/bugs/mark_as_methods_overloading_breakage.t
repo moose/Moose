@@ -1,10 +1,6 @@
 use strict;
 use warnings;
 
-use Moose ();
-# Needed to load MarkAsMethods if we're running from a git checkout
-BEGIN { $Moose::VERSION ||= 42 }
-
 use Test::More;
 use Test::Fatal;
 use Test::Requires {
