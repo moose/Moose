@@ -63,7 +63,7 @@ silently ignored.
 =head1 L<MooseX::Params::Validate>
 
 We have high hopes for the future of L<MooseX::Method::Signatures> and
-L<MooseX::Declare>. However, these modules, while used regularly in
+L<Moops>. However, these modules, while used regularly in
 production by some of the more insane members of the community, are
 still marked alpha just in case backwards incompatible changes need to
 be made.
@@ -150,16 +150,18 @@ endorse just yet.
 
 =head2 L<MooseX::Declare>
 
-Extends Perl with Moose-based keywords using C<Devel::Declare>. Very
-cool, but still new and experimental.
+MooseX::Declare is based on L<Devel::Declare>, a giant bag of crack
+originally implemented by mst with the goal of upsetting the perl core
+developers so much by its very existence that they implemented proper
+keyword handling in the core.
 
-  class User {
+As of perl5 version 14, this goal has been achieved, and modules such
+as L<Devel::CallParser>, L<Function::Parameters>, and L<Keyword::Simple> provide
+mechanisms to mangle perl syntax that don't require hallucinogenic
+drugs to interpret the error messages they produce.
 
-      has 'name'  => ( ... );
-      has 'email' => ( ... );
-
-      method login (Str $password) { ... }
-  }
+If you want to use declarative syntax in new code, please for the love
+of kittens get yourself a recent perl and look at L<Moops> instead.
 
 =head2 L<MooseX::Types>
 
