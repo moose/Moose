@@ -148,7 +148,7 @@ sub _follow_also {
 
     _die_if_cycle_found_in_also_list_for_package($exporting_package);
 
-    return uniq( _follow_also_real($exporting_package) );
+    return uniq( my @tmp = _follow_also_real($exporting_package) );
 }
 
 sub _follow_also_real {
