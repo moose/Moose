@@ -584,7 +584,7 @@ The class must already have a metaclass for this to work.
 
 =item B<apply_all_roles($applicant, @roles)>
 
-This function applies one or more roles to the given C<$applicant> The
+This function applies one or more roles to the given C<$applicant>. The
 applicant can be a role name, class name, or object.
 
 The C<$applicant> must already have a metaclass object.
