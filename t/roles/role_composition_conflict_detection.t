@@ -2,8 +2,6 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
-
 use Moose::Util qw( find_meta );
 
 {

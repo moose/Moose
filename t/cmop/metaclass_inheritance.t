@@ -2,8 +2,6 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
-
 use Class::MOP;
 
 =pod

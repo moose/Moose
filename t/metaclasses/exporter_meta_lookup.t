@@ -2,7 +2,6 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Fatal;
 
 {
     package Class::Vacuum::Innards;
