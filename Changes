@@ -6,6 +6,7 @@ for, noteworthy changes.
   [BUG FIXES]
 
   - Add Sub::Identify to prereqs. (RT #101661)
+  - bump List::Util prereq to avoid a memory leak (RT#101124)
 
 2.1403   2014-12-07
 
