@@ -6,6 +6,10 @@ for, noteworthy changes.
   [BUG FIXES]
 
   - Add Sub::Identify to prereqs. (RT #101661)
+  
+  [DOCUMENTATION]
+  
+  - Added section Moose::Manual::Resources to list external links related to Moose (RT #101993)
 
 2.1403   2014-12-07
 
