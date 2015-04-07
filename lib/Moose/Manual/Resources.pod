@@ -98,18 +98,8 @@ L<http://blog.woobling.org/2009/10/roles-and-delegates-and-refactoring.html>
 
 =item
 
-A discussion of the Moose Ecosystem on our blog
-L<http://blog.moose.perl.org/2011/01/the-moose-ecosystem.html>
-
-=item
-
 Dave Rolsky reviews Perl Best Practices, Chapter 15, Objects 7 years later
 L<http://blog.urth.org/2011/03/reviewing-perl-best-practices-chapter-15-objects.html>
-
-=item
-
-Marc Simpson starts a series of posts following his experiments with Moose
-L<http://blog.0branch.com/moose-and-type-constraints-0>
 
 =item
 
@@ -169,11 +159,6 @@ L<http://perlgeek.de/blog-en/perl-tips/what-is-modern-perl.html>
 
 =item
 
-Stuart Watt talks about how Perl and LISP are both "language survivors"
-L<http://www.morungos.com/node/90>
-
-=item
-
 Yuval Kogman declares "Moose has won".
 L<http://blog.woobling.org/2010/09/moose-has-won.html>
 
@@ -215,11 +200,6 @@ L<http://chris.prather.org/a-little-bit-of-history.md.html>
 
 =item
 
-Chris Prather justifies each of Moose's dependencies
-L<http://chris.prather.org/perl/moose-dependencies-a-lurid-tale/>
-
-=item
-
 Chris Prather rationalizes Moose's "post modern" label
 L<http://chris.prather.org/why-moose-is-post-modern.html>
 
@@ -235,61 +215,6 @@ L<http://www.dmclaughlin.com/2009/05/15/chained-accessors-in-moose/>
 
 =item
 
-Florian Ragwitz uses parameterized roles with MooseX::Declare
-L<http://perldition.org/articles/Parameterized%20Roles%20with%20MooseX::Declare.pod>
-
-=item
-
-Florian Ragwitz walks through the marriage of MooseX::Types with Lexical::Types
-L<http://perldition.org/articles/Implementing%20Typed%20Lexical%20Variables.pod>
-
-=item
-
-Jay Shirley dotes on MooseX::MultiMethods
-L<http://our.coldhardcode.com/jshirley/2009/05/another-reason-i-love-perl.html>
-
-=item
-
-John Napiorkowski lists ten great things about Moose
-L<http://jjnapiorkowski.vox.com/library/post/top-ten-great-things-about-perl-moose-postmodern-object-system.html?_c=feed-atom>
-
-=item
-
-John Napiorkowski on why he uses Moose
-L<http://jjnapiorkowski.vox.com/library/post/why-i-use-moose-perls-post-modern-object-system.html?_c=feed-atom>
-
-=item
-
-Léon Brocard summarizes London.pm's "What is Moose and why is it the future?" meeting
-L<http://use.perl.org/~acme/journal/38554?from=rss>
-
-=item
-
-Ovid discusses role problems and possible solutions
-L<http://use.perl.org/~Ovid/journal/38885>
-
-=item
-
-Ovid eschews inheritance in favor of roles
-L<http://use.perl.org/~Ovid/journal/38862>
-
-=item
-
-Ovid lists some best practices for role-based refactoring
-L<http://use.perl.org/~Ovid/journal/38880>
-
-=item
-
-Ovid praises role-based refactoring
-L<http://use.perl.org/~Ovid/journal/38785>
-
-=item
-
-Ovid praises roles and their happy acceptance at the BBC
-L<http://use.perl.org/~Ovid/journal/38863>
-
-=item
-
 Sam Crawley summarizes his experience with roles
 L<http://samcrawley.wordpress.com/2009/05/03/getting-the-hang-of-moose-roles/>
 
@@ -297,16 +222,6 @@ L<http://samcrawley.wordpress.com/2009/05/03/getting-the-hang-of-moose-roles/>
 
 Shawn M Moore discusses Perl::Critic for Moose and linting with the MOP
 L<http://blog.sartak.org/2009/05/perl-critic-dynamic-moose.html>
-
-=item
-
-Shawn M Moore explains parameterized roles
-L<http://blog.sartak.org/2009/05/parameterized-roles.html>
-
-=item
-
-Shawn M Moore explains role composition and some bumps in the Moose design process
-L<http://blog.sartak.org/2009/04/new-moose-warning-and-new-moose-critic.html>
 
 =item
 
@@ -322,11 +237,6 @@ L<http://stevan-little.blogspot.com/2009/06/why-makeimmutable-is-recommended-for
 
 Tomas Doran interview about the new Moose-based Catalyst
 L<http://www.catalyzed.org/2009/04/catalyst-58-released.html>
-
-=item
-
-Yanick Champoux meddles with extending Moose attributes
-L<http://babyl.dyndns.org/techblog/2009/05/moose-attribute-meta-meddling.html>
 
 =item
 
@@ -356,11 +266,6 @@ L<http://draegtun.wordpress.com/2008/03/12/doodling-with-moose-part-1/>
 
 =item
 
-Marcel (hanekomu) Grünauer explores Moose in a series of articles
-L<http://hanekomu.at/blog/articles/20080924-1137-dissecting_the_moose.html>
-
-=item
-
 Tim Bunce's excellent Perl Myths talk gives a shout out to Moose
 L<http://www.slideshare.net/Tim.Bunce/perl-myths-200802-with-notes/>
 
@@ -368,11 +273,6 @@ L<http://www.slideshare.net/Tim.Bunce/perl-myths-200802-with-notes/>
 
 chromatic suggests Moose and Mouse in his Beginners Introduction to Object-Oriented Programming with Perl article
 L<http://broadcast.oreilly.com/2008/11/beginners-introduction-to-obje.html>
-
-=item
-
-trombik writes an introduction to Moose in Japanese
-L<http://trombik.mine.nu/~cherry/w/index.php/2008/03/22/1202/oop-with-moose>
 
 =back
 
@@ -411,16 +311,6 @@ L<http://www.oreillynet.com/onlamp/blog/2006/06/cpan_module_review_classmop.html
 
 =item
 
-Ben Hengst's Moose talk at PDX.pm
-L<http://iinteractive.com/moose/hosted-presentations/2008/notbenh-PDX.xul>
-
-=item
-
-Chris Prather's An Intro to Moose at Minneapolis Perl Mongers
-L<http://chris.prather.org/talks/moose-intro-mpls/>
-
-=item
-
 Doug Treder's Moose talk at Seattle Perl Users Group
 L<http://www.slideshare.net/dtreder/moose-527243>
 
@@ -428,11 +318,6 @@ L<http://www.slideshare.net/dtreder/moose-527243>
 
 Hans Dieter Pearcey's Meta-Moose at PDX.pm
 L<http://www.weftsoar.net/~hdp/talk/meta-moose/slides/start.html>
-
-=item
-
-Ovid's Refactoring with Roles at London.pm
-L<http://www.slideshare.net/Ovid/refactoring-with-roles-1298185>
 
 =item
 
@@ -483,16 +368,6 @@ L<http://sartak.org/talks/osdc.tw-2010/nonhierarchical-oop/nonhierarchical-oop.p
 
 =item
 
-Stevan Little's keynote at YAPC::NA 2010
-L<http://www.iinteractive.com/yapc/slides.html>
-
-=item
-
-Stevan Little's talk at OPW
-L<http://iinteractive.com/moose/hosted-presentations/2010/stevan_OPW/index.html>
-
-=item
-
 Ynon Perek's Perl Object Oriented Programming slides
 L<http://prezi.com/fgdoyw0smyqo/perl-object-oriented-programming/>
 
@@ -501,16 +376,6 @@ L<http://prezi.com/fgdoyw0smyqo/perl-object-oriented-programming/>
 =head3 2009
 
 =over 4
-
-=item
-
-Cory Watson's Moose for Managers at YAPC::NA 2009
-L<http://www.onemogin.com/blog/stuff/talks/moose/MooseForManagers.pdf>
-
-=item
-
-Cory Watson's Moose for Managers at the Perl Oasis
-L<http://perloasis.org/opw2009/talk/1702>
 
 =item
 
@@ -526,11 +391,6 @@ L<http://yapc10.org/yn2009/talk/1967>
 
 Hans Dieter Pearcey's Code Reuse with Moose at YAPC::NA 2009
 L<http://yapc10.org/yn2009/talk/1984>
-
-=item
-
-Mike Whitaker's Building a Moose Class at the Perl Oasis
-L<http://perloasis.org/opw2009/talk/1701>
 
 =item
 
@@ -559,33 +419,8 @@ L<http://conferences.yapcasia.org/ya2009/talk/2192>
 
 =item
 
-Stevan Little's To Moose or Not To Moose at YAPC::NA 2009
-L<http://iinteractive.com/moose/hosted-presentations/2009/YAPC-NA/moose.xul>
-
-=item
-
-Stevan Little's talk at Nashville E-Lamp
-L<http://iinteractive.com/moose/hosted-presentations/2009/e-lamp/perl-great-lannguages.xul>
-
-=item
-
-Yuval Kogman's Meta Moose at YAPC::EU 2009
-L<http://yapceurope2009.org/ye2009/talk/2096>
-
-=item
-
-Yuval Kogman's Moose Workshop at YAPC::EU 2009
-L<http://yapceurope2009.org/ye2009/talk/2273>
-
-=item
-
 Yuval Kogman's Why Moose at the Nordic Perl Workshop
 L<http://www.perlworkshop.no/npw2009/talk/1901>
-
-=item
-
-franck cuny's Introduction to Moose at the France OSDC
-L<http://lumberjaph.net/~franck/stuff/Introduction_a_Moose.pdf>
 
 =back
 
@@ -598,67 +433,6 @@ L<http://lumberjaph.net/~franck/stuff/Introduction_a_Moose.pdf>
 Mike Whitaker's Intro to Moose at the London Perl Workshop
 L<http://yapc.tv/2008/lpw/mike-whitaker-intro-moose/>
 
-=item
-
-Stevan Little's Manager's Guide to Moose at Pittsburgh Perl Workshop
-L<http://iinteractive.com/moose/hosted-presentations/2008/stevan-PPW/moose-manager.xul>
-
-=item
-
-Stevan Little's Moose talk at OSCON
-L<http://iinteractive.com/moose/hosted-presentations/2008/stevan-OSCON/moose.xul>
-
-=item
-
-Stevan Little's Moose talk at YAPC::NA
-L<http://iinteractive.com/moose/hosted-presentations/2008/stevan-YAPC-NA.pdf>
-
-=item
-
-Stevan Little's Moose talk at Pittsburgh Perl Workshop
-L<http://iinteractive.com/moose/hosted-presentations/2008/stevan-PPW/moose.xul>
-
-=item
-
-Yuval Kogman's Practical Moose at YAPC::Asia
-L<http://iinteractive.com/moose/hosted-presentations/2008/nothingmuch-YAPC-Asia/practical_moose.html>
-
-=item
-
-Yuval Kogman's Practical Moose at Nordic Perl Workshop
-L<http://iinteractive.com/moose/hosted-presentations/2008/nothingmuch-NPW/practical_moose.html>
-
-=item
-
-Yuval Kogman's Practical Moose at Portuguese Perl Workshop
-L<http://iinteractive.com/moose/hosted-presentations/2008/nothingmuch-PTPW/practical_moose.html>
-
-=item
-
-sunnavy's Moose talk at Beijing Perl Workshop
-L<http://iinteractive.com/moose/hosted-presentations/2008/sunnavy-Beijing-Perl-Workshop.pdf>
-
-=back
-
-=head3 2007
-
-=over 4
-
-=item
-
-Stevan Little's Horizontal Reuse with Moose::Role at Pittsburgh Perl Workshop
-L<http://iinteractive.com/moose/hosted-presentations/2007/stevan-PPW/roles/roles.xul>
-
-=item
-
-Stevan Little's Moose talk at Pittsburgh Perl Workshop
-L<http://iinteractive.com/moose/hosted-presentations/2007/stevan-PPW/moose/start.html>
-
-=item
-
-Yuval Kogman's Object Meta Programming at YAPC::EU
-L<http://iinteractive.com/moose/hosted-presentations/2007/nothingmuch-YAPC-EU/slides/start.html>
-
 =back
 
 =head3 2006
@@ -669,16 +443,6 @@ L<http://iinteractive.com/moose/hosted-presentations/2007/nothingmuch-YAPC-EU/sl
 
 Sam Vilain gives the very first Moose talk at YAPC::EU
 L<http://www.yapceurope.org/2006/talk/item/63.html>
-
-=item
-
-Sam Vilain's Moose talk at OSDC Melbourne
-L<http://utsl.gen.nz/talks/moose/start.htm>
-
-=item
-
-Stevan Little's Moose talk at YAPC::NA
-L<http://iinteractive.com/moose/hosted-presentations/2006/stevan_YAPC/start.html>
 
 =back
 
