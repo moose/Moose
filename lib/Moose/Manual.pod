@@ -190,6 +190,10 @@ and using them consistently makes everyone's life easier.
 
 Frequently asked questions about Moose.
 
+=item L<Moose::Manual::Resources>
+
+Links to various tutorials, videos, blogs, presentations, interviews, etc...
+
 =item L<Moose::Manual::Contributing>
 
 Interested in hacking on Moose? Read this.
