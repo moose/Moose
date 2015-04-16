@@ -7,10 +7,11 @@ for, noteworthy changes.
 
   - Add Sub::Identify to prereqs. (RT #101661)
   - bump List::Util prereq to avoid a memory leak (RT#101124)
-  
+
   [DOCUMENTATION]
-  
-  - Added section Moose::Manual::Resources to list external links related to Moose (RT #101993)
+
+  - Added section to Moose::Manual::Resources to list external links related
+    to Moose (RT #101993, Michael LaGrasta)
 
 2.1403   2014-12-07
 
