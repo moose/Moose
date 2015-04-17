@@ -176,6 +176,7 @@ ValidationFailedForTypeConstraint
 API
 APIs
 Baz
+Bugzilla
 Changelog
 Coercions
 DUCKTYPE
@@ -206,6 +207,7 @@ URI
 Unported
 Whitelist
 Whitepaper
+Wikipedia
 # from the Support manual talking about version numbers
 YY
 YYZZ
@@ -269,6 +271,7 @@ namespacing
 natatime
 # as in required-ness
 ness
+online
 optimizations
 overridable
 parameterizable
