@@ -31,7 +31,7 @@ really equivalent to a method, so the former implementation didn't work
 properly for various cases.
 
 All of the overloading-related methods for classes and roles have the same
-names, but now returns L<Class::MOP::Overload> objects.
+names, but those methods now return L<Class::MOP::Overload> objects.
 
 =item Core support for overloading in roles
 
