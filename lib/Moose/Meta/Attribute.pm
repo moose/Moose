@@ -693,7 +693,8 @@ sub _inline_check_constraint {
                                                 'type_constraint_message => $msg , '.
                                                 'class_name              => $class_name, '.
                                                 'attribute_name          => "'.$attr_name.'",'.
-                                                'value                   => '.$value
+                                                'value                   => '.$value,
+                                                $value
                 ).';',
             '}',
         );
@@ -708,7 +709,8 @@ sub _inline_check_constraint {
                                                 'type_constraint_message => $msg , '.
                                                 'class_name              => $class_name, '.
                                                 'attribute_name          => "'.$attr_name.'",'.
-                                                'value                   => '.$value
+                                                'value                   => '.$value,
+                                                $value
                 ).';',
             '}',
         );
