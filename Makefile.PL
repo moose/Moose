@@ -15,10 +15,11 @@ BEGIN {
     my %missing;
     for my $module (@modules) {
         eval "require $module";
-        $missing{$module} = 1 if $@;
+        $missing{$module} = $@ if $@;
     }
 
     if ( keys %missing ) {
+        warn values %missing, "\n";
         warn
             "You need to install the following modules to run this Makefile.PL:\n";
         warn "    $_\n" for keys %missing;
