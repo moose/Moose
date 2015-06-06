@@ -60,6 +60,7 @@ SL
 SawyerX
 Sedlacek
 Shlomi
+Signes
 Simula
 Stevan
 Stratman
@@ -194,6 +195,7 @@ O'Caml
 OO
 OOP
 ORM
+OSCON
 Overengineered
 ROLETYPE
 SUBCLASSES
