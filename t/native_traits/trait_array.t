@@ -405,20 +405,14 @@ sub run_tests {
             'sort returns sorted values'
         );
 
-        TODO: {
-            local $TODO = 'the documentation implies that we just "return a list", so scalar() should return the number of elements';
-            is(scalar($obj->sort), 5, 'sort accessor in scalar context returns the number of elements in the list');
-        }
+        is(scalar($obj->sort), 5, 'sort accessor in scalar context returns the number of elements in the list');
 
         is_deeply(
             [ $obj->sort( sub { $_[0] <=> $_[1] } ) ], [ 3, 5, 9, 11, 22 ],
             'sort returns values sorted by provided function'
         );
 
-        TODO: {
-            local $TODO = 'the documentation implies that we just "return a list", so scalar() should return the number of elements';
-            is(scalar($obj->sort( sub { $_[0] <=> $_[1] } )), 5, 'sort accessor with sort sub in scalar context returns the number of elements in the list');
-        }
+        is(scalar($obj->sort( sub { $_[0] <=> $_[1] } )), 5, 'sort accessor with sort sub in scalar context returns the number of elements in the list');
 
         like( exception { $obj->sort(1) }, qr/The argument passed to sort must be a code reference/, 'throws an error when passing a non coderef to sort' );
 

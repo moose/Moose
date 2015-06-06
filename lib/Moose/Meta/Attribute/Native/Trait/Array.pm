@@ -193,7 +193,8 @@ This method requires a single argument.
 
 =item * B<sort( sub { ... } )>
 
-Returns the elements of the array in sorted order.
+Returns the elements of the array (not an array reference) in sorted order,
+or, like C<elements>, returns the number of elements in the array in scalar context.
 
 You can provide an optional subroutine reference to sort with (as you can with
 Perl's core C<sort> function). However, instead of using C<$a> and C<$b> in

@@ -3,6 +3,12 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  - The native 'Array' trait 'sort' accessor now returns the number of
+    elements in scalar context, instead of the undefined value (or a
+    different, seemingly-random, value under 5.23.x).
+
 2.1404   2015-04-16
 
   [BUG FIXES]
