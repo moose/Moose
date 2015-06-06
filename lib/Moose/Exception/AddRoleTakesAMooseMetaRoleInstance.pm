@@ -1,5 +1,5 @@
 package Moose::Exception::AddRoleTakesAMooseMetaRoleInstance;
-our $VERSION = '2.1405';
+our $VERSION = '2.1406';
 
 use Moose;
 extends 'Moose::Exception';
