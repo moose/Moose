@@ -4,6 +4,9 @@ use warnings;
 use Test::CleanNamespaces;
 use Test::More;
 
+diag "ALERT!!!!!! List::MoreUtils 0.407 is incompatible with Moose! You must upgrade or downgrade!"
+    if do { require List::MoreUtils; List::MoreUtils->VERSION eq '0.407' };
+
 {
     package Metarole;
     use Moose::Role;
