@@ -1224,7 +1224,7 @@ additional subroutine reference as the final argument to C<match_on_type>.
 
 You can define coercions for type constraints, which allow you to
 automatically transform values to something valid for the type
-constraint. If you ask your accessor to coerce, then Moose will run
+constraint. If you ask your accessor to coerce by adding the option C<< coerce => 1 >>, then Moose will run
 the type-coercion code first, followed by the type constraint
 check. This feature should be used carefully as it is very powerful
 and could easily take off a limb if you are not careful.
