@@ -228,6 +228,25 @@ sub calculate_all_roles_with_inheritance {
              $self->linearized_isa;
 }
 
+sub does_via_delegation {
+    my ($self, $role_name) = @_;
+
+    (defined $role_name)
+        || throw_exception( RoleNameRequired => class_name => $self->name );
+
+    # liberally borrowed from TOBYINK's MooseX::Does::Delegated
+    for my $attr ($self->get_all_attributes) {
+        next unless $attr->can('handles') && $attr->can('has_handles') && $attr->has_handles;
+        my $handles = $attr->handles;
+        next if ref $handles;
+        next unless $attr->has_value($self) || $attr->is_lazy;
+        return 1 if $role_name eq $handles;
+        return 1 if Class::MOP::class_of($handles)->does_role($role_name);
+    }
+
+    return 0;
+}
+
 sub does_role {
     my ($self, $role_name) = @_;
 
