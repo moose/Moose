@@ -924,6 +924,12 @@ adds it to the class's list of role applications. This I<does not>
 actually apply any role to the class; it is only for tracking role
 applications.
 
+=item B<< $metaclass->does_via_delegation($role) >>
+
+This returns a boolean indicating whether or not the class does the specified
+role via a delegated attribute. The role provided can be either a role name or
+a L<Moose::Meta::Role> object. This tests both delegation to roles and classes.
+
 =item B<< $metaclass->does_role($role) >>
 
 This returns a boolean indicating whether or not the class does the specified
