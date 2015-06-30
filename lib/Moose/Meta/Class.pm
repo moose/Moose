@@ -228,6 +228,33 @@ sub calculate_all_roles_with_inheritance {
              $self->linearized_isa;
 }
 
+sub does_via_delegation {
+    my ($self, $role_name) = @_;
+
+    (defined $role_name)
+        || throw_exception( RoleNameRequired => class_name => $self->name );
+
+    # liberally borrowed from TOBYINK's MooseX::Does::Delegated
+    for my $attr ($self->get_all_attributes) {
+        # Skip things unless we're actually delegating
+        next unless $attr->can('handles') && $attr->can('has_handles') && $attr->has_handles;
+
+        # Empty attribute non-lazy attributes can't have delegation
+        next unless $attr->has_value($self) || $attr->is_lazy;
+
+        # Now delegation comes in several forms but they basically boil down to references
+        # and non-references (i.e. Class and Role names). We only care about the latter.
+        # If it matches either the role name, or the handles is a metaobject that does the
+        # role in question ... we're good
+        my $handles = $attr->handles;
+        next if ref $handles;
+        return 1 if $role_name eq $handles;
+        return 1 if Class::MOP::class_of($handles)->does_role($role_name);
+    }
+
+    return 0;
+}
+
 sub does_role {
     my ($self, $role_name) = @_;
 
@@ -904,6 +931,12 @@ This takes a L<Moose::Meta::Role::Application::ToClass> object, and
 adds it to the class's list of role applications. This I<does not>
 actually apply any role to the class; it is only for tracking role
 applications.
+
+=item B<< $metaclass->does_via_delegation($role) >>
+
+This returns a boolean indicating whether or not the class does the specified
+role via a delegated attribute. The role provided can be either a role name or
+a L<Moose::Meta::Role> object. This tests both delegation to roles and classes.
 
 =item B<< $metaclass->does_role($role) >>
 

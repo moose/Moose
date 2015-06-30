@@ -121,6 +121,7 @@ sub does {
     (defined $role_name)
         || Moose::Util::throw_exception( DoesRequiresRoleName => class_name => $meta->name );
     return 1 if $meta->can('does_role') && $meta->does_role($role_name);
+    return 1 if $meta->can('does_via_delegation') && $meta->does_via_delegation($role_name);
     return 0;
 }
 
