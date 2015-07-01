@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [ENHANCEMENTS]
+
+  - An object's DOES method now also checks roles composed by delegated
+    objects (Chris Prather, PR#104)
+
 2.1405   2015-06-06
 
   [BUG FIXES]
