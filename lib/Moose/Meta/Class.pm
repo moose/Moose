@@ -229,7 +229,9 @@ sub calculate_all_roles_with_inheritance {
 }
 
 sub does_via_delegation {
-    my ($self, $role_name) = @_;
+    my ($self, $role_name, $instance) = @_;
+
+    return 0 if not blessed($instance);
 
     (defined $role_name)
         || throw_exception( RoleNameRequired => class_name => $self->name );
@@ -240,7 +242,7 @@ sub does_via_delegation {
         next unless $attr->can('handles') && $attr->can('has_handles') && $attr->has_handles;
 
         # uninitialized/non-lazy attributes have no value to be delegated to
-        next unless $attr->has_value($self) || $attr->is_lazy;
+        next unless $attr->has_value($instance) || $attr->is_lazy;
 
         # Now delegation comes in several forms but they basically boil down to references
         # and non-references (i.e. Class and Role names). We only care about the latter.
@@ -932,7 +934,7 @@ adds it to the class's list of role applications. This I<does not>
 actually apply any role to the class; it is only for tracking role
 applications.
 
-=item B<< $metaclass->does_via_delegation($role) >>
+=item B<< $metaclass->does_via_delegation($role, $object_instance) >>
 
 This returns a boolean indicating whether or not the class does the specified
 role via a delegated attribute. The role provided can be either a role name or

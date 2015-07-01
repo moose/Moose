@@ -66,4 +66,23 @@ ok(
     'class can do this method via delegation',
 );
 
+ok(
+    Spider->new(logger => UberLogger->new)->DOES('HasLogger'),
+    'object DOES a role composed by its (non-lazy) instantiated attribute that has full delegation',
+);
+
+ok(
+    !Spider->new->DOES('HasLogger'),
+    "object DOESn't do a role if the delegating attribute is not instantiated",
+);
+
+ok(
+    Spider->DOES('Spider'),
+    'class DOES itself',
+);
+ok(
+    !Spider->DOES('HttpGet'),
+    "class DOESn't do anything via delegations - nothing is instantiated to delegate to",
+);
+
 done_testing;
