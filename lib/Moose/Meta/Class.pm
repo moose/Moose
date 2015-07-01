@@ -239,12 +239,12 @@ sub does_via_delegation {
         # Skip things unless we're actually delegating
         next unless $attr->can('handles') && $attr->can('has_handles') && $attr->has_handles;
 
-        # Empty attribute non-lazy attributes can't have delegation
+        # uninitialized/non-lazy attributes have no value to be delegated to
         next unless $attr->has_value($self) || $attr->is_lazy;
 
         # Now delegation comes in several forms but they basically boil down to references
         # and non-references (i.e. Class and Role names). We only care about the latter.
-        # If it matches either the role name, or the handles is a metaobject that does the
+        # If the role name matches exactly, or if it's something that does the
         # role in question ... we're good
         my $handles = $attr->handles;
         next if ref $handles;
