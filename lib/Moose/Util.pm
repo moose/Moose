@@ -1,5 +1,5 @@
 package Moose::Util;
-our $VERSION = '2.1406';
+our $VERSION = '2.1501'; # TRIAL
 
 use strict;
 use warnings;

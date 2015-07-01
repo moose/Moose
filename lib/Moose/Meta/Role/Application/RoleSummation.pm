@@ -1,5 +1,5 @@
 package Moose::Meta::Role::Application::RoleSummation;
-our $VERSION = '2.1406';
+our $VERSION = '2.1501'; # TRIAL
 
 use strict;
 use warnings;

@@ -1,5 +1,5 @@
 package Moose::Exception;
-our $VERSION = '2.1406';
+our $VERSION = '2.1501'; # TRIAL
 
 use Moose;
 use Devel::StackTrace 1.33;
