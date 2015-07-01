@@ -11,7 +11,12 @@ use Test::More;
 {
     package HasLogger;  # role describing an interface
     use Moose::Role;
-    requires qw(warning debug);
+    requires qw(warning debug scream);
+}
+{
+    package HasScreamer; # role describing an interface
+    use Moose::Role;
+    requires qw(scream);
 }
 
 {
@@ -24,9 +29,21 @@ use Test::More;
 {
     package UberLogger;
     use Moose;
-    with qw( HasLogger ); # declare that we implement this interface
     sub warning { 1 };
     sub debug { 1 };
+    has screamer => (
+        does    => 'HasScreamer',
+        handles => 'HasScreamer',
+        default => sub { Screamer->new },
+    );
+    with qw( HasLogger ); # declare that we implement this interface
+}
+
+{
+    package Screamer;
+    use Moose;
+    with qw( HasScreamer ); # declare that we implement this interface
+    sub scream { die @_ };
 }
 
 {
@@ -84,5 +101,18 @@ ok(
     !Spider->DOES('HttpGet'),
     "class DOESn't do anything via delegations - nothing is instantiated to delegate to",
 );
+
+ok(
+    Spider->can('scream'),
+    'class has this method via double delegation',
+);
+
+TODO: {
+    local $TODO = 'if we did $handles->DOES($role_name), this would work';
+ok(
+    Spider->new(logger => UberLogger->new)->DOES('HasScreamer'),
+    'object DOES a role delegated to through two attributes',
+);
+}
 
 done_testing;
