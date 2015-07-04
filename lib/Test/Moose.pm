@@ -8,7 +8,8 @@ use Sub::Exporter;
 use Test::Builder;
 
 use List::Util 1.33 'all';
-use Moose::Util 'does_role', 'find_meta';
+use Moose::Util 'does_role', 'english_list', 'find_meta';
+use Test::More;
 
 my @exports = qw[
     meta_ok
@@ -73,9 +74,22 @@ sub with_immutable (&@) {
     my $block = shift;
     my $before = $Test->current_test;
 
-    $block->(0);
+    my $classes = english_list(@_);
+    my $verb = @_ > 1 ? 'are' : 'is';
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+    $Test->subtest(
+        "$classes $verb not immutable",
+        sub {
+            $block->(0);
+        }
+    );
     Class::MOP::class_of($_)->make_immutable for @_;
-    $block->(1);
+    $Test->subtest(
+        "$classes $verb immutable",
+        sub {
+            $block->(1);
+        }
+    );
 
     my $num_tests = $Test->current_test - $before;
     my $all_passed = all { $_ } ($Test->summary)[-$num_tests..-1];
@@ -126,6 +140,9 @@ does for the methods.
 
 Runs B<CODE> (which should contain normal tests) twice, and make each
 class in C<@class_names> immutable in between the two runs.
+
+Each run of the B<CODE> block is run in its own subtest, and the subtests
+names indicate whether or not the classes are immutable or not.
 
 The B<CODE> block is called with a single boolean argument indicating whether
 or not the classes have been made immutable yet.
