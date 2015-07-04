@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [ENHANCEMENTS]
+
+  - Test::Moose::with_immutable now runs each iteration of the test block in a
+    Test::More::subtest().
+
 2.1500   2015-06-30 (TRIAL RELEASE)
 
   [ENHANCEMENTS]
