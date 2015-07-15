@@ -292,6 +292,12 @@ use Moose();
             init_arg => 'sugars'
         ));
 
+        CupOfTea->meta->add_attribute('milk' => (
+            reader   => 'milk',
+            writer   => '_set_milk',
+            init_arg => 'milk'
+        ));
+
         sub new {
             my $class = shift;
             bless $class->meta->new_object(@_) => $class;
@@ -299,7 +305,8 @@ use Moose();
     }
 
     my $cup = CupOfTea->new();
-    _test_sugar($cup, "tea");
+    _test_sugars($cup);
+    _test_milk($cup);
 }
 
 {
@@ -311,43 +318,62 @@ use Moose();
             is       => 'rw',
             writer   => 'set_sugars',
         );
+
+        has 'milk' => (
+            is       => 'rw',
+            writer   => '_set_milk',
+        );
     }
 
     my $cup = CupOfCoffee->new();
-    _test_sugar($cup, "coffee");
+    _test_sugars($cup);
+    _test_milk($cup);
 }
 
-sub _test_sugar {
+sub _test_sugars {
     my $cup = shift;
-    my $name = shift;
 
     my $exception = exception { $cup->sugars(2) };
+    _test_cup_exception($exception, "sugars", ref($cup), "'set_sugars'");
+}
+
+sub _test_milk {
+    my $cup = shift;
+
+    my $exception = exception { $cup->milk(2) };
+    _test_cup_exception($exception, "milk", ref($cup), "private");
+}
+
+sub _test_cup_exception {
+    my $exception = shift;
+    my $name = shift;
+    my $class_name = shift;
+    my $writer = shift;
 
     like(
         $exception,
-        qr/\QCannot assign a value to a read-only accessor (did you mean to call the 'set_sugars' writer?)\E/,
-        "$name: sugar is read only");
+        qr/\QCannot assign a value to a read-only accessor (did you mean to call the $writer writer?)\E/,
+        "$class_name: $name read only");
 
     isa_ok(
         $exception,
         "Moose::Exception::CannotAssignValueToReadOnlyAccessor",
-        "$name: sugar is read only");
+        "$class_name: $name is read only");
 
     is(
         $exception->class_name,
-        ref $cup,
-        "$name: sugar is read only");
+        $class_name,
+        "$class_name: $name is read only");
 
     is(
         $exception->attribute_name,
-        "sugars",
-        "$name: sugar is read only");
+        $name,
+        "$class_name: $name is read only");
 
     is(
         $exception->value,
         2,
-        "$name: sugar is read only");
+        "$class_name: $name is read only");
 }
-
 
 done_testing;

@@ -17,11 +17,14 @@ has 'suggested_writer' => (
     predicate => 'has_suggested_writer',
 );
 
+my $MESSAGE = "Cannot assign a value to a read-only accessor";
+
 sub _build_message {
     my $self = shift;
-    return "Cannot assign a value to a read-only accessor"
-        unless $self->has_suggested_writer;
-    return "Cannot assign a value to a read-only accessor (did you mean to call the '".$self->suggested_writer."' writer?)";
+    return $MESSAGE unless $self->has_suggested_writer;
+    return "$MESSAGE (did you mean to call the private writer?)"
+        if $self->suggested_writer =~ /\A_/;
+    return "$MESSAGE (did you mean to call the '".$self->suggested_writer."' writer?)";
 }
 
 1;
