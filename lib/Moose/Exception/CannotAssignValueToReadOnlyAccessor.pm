@@ -1,5 +1,5 @@
 package Moose::Exception::CannotAssignValueToReadOnlyAccessor;
-our $VERSION = '2.1501'; # TRIAL
+our $VERSION = '2.1501';
 
 use Moose;
 extends 'Moose::Exception';
@@ -11,9 +11,17 @@ has 'value' => (
     required => 1
 );
 
+has 'suggested_writer' => (
+    is        => 'ro',
+    isa       => 'Str',
+    predicate => 'has_suggested_writer',
+);
+
 sub _build_message {
     my $self = shift;
-    "Cannot assign a value to a read-only accessor";
+    return "Cannot assign a value to a read-only accessor"
+        unless $self->has_suggested_writer;
+    return "Cannot assign a value to a read-only accessor (did you mean to call the '".$self->suggested_writer."' writer?)";
 }
 
 1;

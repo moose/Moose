@@ -276,4 +276,54 @@ use Moose();
         120,
         "x is read only");
 }
+
+{
+    {
+        package CupOfTea;
+        use metaclass;
+
+        CupOfTea->meta->add_attribute('sugars' => (
+            reader   => 'sugars',
+            writer   => 'set_sugars',
+            init_arg => 'sugars'
+        ));
+
+        sub new {
+            my $class = shift;
+            bless $class->meta->new_object(@_) => $class;
+        }
+    }
+
+    my $cup_of_tea = CupOfTea->new();
+
+    my $exception = exception {
+        $cup_of_tea->sugars(2);
+    };
+
+    like(
+        $exception,
+        qr/\QCannot assign a value to a read-only accessor (did you mean to call the 'set_sugars' writer?)\E/,
+        "sugars is read only");
+
+    isa_ok(
+        $exception,
+        "Moose::Exception::CannotAssignValueToReadOnlyAccessor",
+        "sugars is read only");
+
+    is(
+        $exception->class_name,
+        "CupOfTea",
+        "sugars is read only");
+
+    is(
+        $exception->attribute_name,
+        "sugars",
+        "sugars is read only");
+
+    is(
+        $exception->value,
+        2,
+        "sugars is read only");
+}
+
 done_testing;
