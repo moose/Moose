@@ -2,6 +2,7 @@ use strict;
 use warnings;
 
 use Test::More;
+use Test::Moose;
 use Test::Fatal;
 
 use Moose();
@@ -277,6 +278,9 @@ use Moose();
         "x is read only");
 }
 
+# we need to do this test as well as the moose one before so we can
+# test the non-inlined accessors (since if we test with moose straight
+# away we'll only test non-inlined accessors)
 {
     {
         package CupOfTea;
@@ -294,36 +298,56 @@ use Moose();
         }
     }
 
-    my $cup_of_tea = CupOfTea->new();
+    my $cup = CupOfTea->new();
+    _test_sugar($cup, "tea");
+}
 
-    my $exception = exception {
-        $cup_of_tea->sugars(2);
-    };
+{
+    {
+        package CupOfCoffee;
+        use Moose;
+
+        has 'sugars' => (
+            is       => 'rw',
+            writer   => 'set_sugars',
+        );
+    }
+
+    my $cup = CupOfCoffee->new();
+    _test_sugar($cup, "coffee");
+}
+
+sub _test_sugar {
+    my $cup = shift;
+    my $name = shift;
+
+    my $exception = exception { $cup->sugars(2) };
 
     like(
         $exception,
         qr/\QCannot assign a value to a read-only accessor (did you mean to call the 'set_sugars' writer?)\E/,
-        "sugars is read only");
+        "$name: sugar is read only");
 
     isa_ok(
         $exception,
         "Moose::Exception::CannotAssignValueToReadOnlyAccessor",
-        "sugars is read only");
+        "$name: sugar is read only");
 
     is(
         $exception->class_name,
-        "CupOfTea",
-        "sugars is read only");
+        ref $cup,
+        "$name: sugar is read only");
 
     is(
         $exception->attribute_name,
         "sugars",
-        "sugars is read only");
+        "$name: sugar is read only");
 
     is(
         $exception->value,
         2,
-        "sugars is read only");
+        "$name: sugar is read only");
 }
+
 
 done_testing;
