@@ -278,9 +278,10 @@ use Moose();
         "x is read only");
 }
 
-# we need to do this test as well as the moose one before so we can
-# test the non-inlined accessors (since if we test with moose straight
-# away we'll only test non-inlined accessors)
+# we need to test both with and without moose to get full test coverage
+# so we can test both the inlined and non inlined version of the generated
+# accessor.  This is because Moose always uses the inlined accessor code
+
 {
     {
         package CupOfTea;
