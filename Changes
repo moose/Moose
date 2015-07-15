@@ -3,6 +3,14 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [ENHANCEMENTS]
+
+  - When attempting to erroneously set an attribute with a read-only accessor
+    the Moose::Exception::CannotAssignValueToReadOnlyAccessor error raised now
+    is more informative if a writer accessor exists, suggesting that that writer
+    be used and supplying the name of the writer if it is non private (i.e.
+    doesn't start with an underscore).
+
 2.1500   2015-06-30 (TRIAL RELEASE)
 
   [ENHANCEMENTS]

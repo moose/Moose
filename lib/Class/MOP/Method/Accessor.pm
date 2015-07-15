@@ -132,10 +132,14 @@ sub _generate_reader_method {
     my $attr = $self->associated_attribute;
     my $class = $attr->associated_class;
 
+    my @suggested_writer;
+    @suggested_writer = (suggested_writer => $attr->writer) if $attr->has_writer;
+
     return sub {
         $self->_throw_exception( CannotAssignValueToReadOnlyAccessor => class_name => $class->name,
                                                                 value      => $_[1],
-                                                                attribute  => $attr
+                                                                attribute  => $attr,
+                                                                @suggested_writer
                        )
             if @_ > 1;
         $attr->get_value($_[0]);
@@ -147,6 +151,9 @@ sub _generate_reader_method_inline {
     my $attr = $self->associated_attribute;
     my $attr_name = $attr->name;
 
+    my $writer_string = '';
+    $writer_string = "suggested_writer => '" . $attr->writer . "'" if $attr->has_writer;
+
     return try {
         $self->_compile_code([
             'sub {',
@@ -154,7 +161,8 @@ sub _generate_reader_method_inline {
                     $self->_inline_throw_exception( CannotAssignValueToReadOnlyAccessor =>
                                                     'class_name                          => ref $_[0],'.
                                                     'value                               => $_[1],'.
-                                                    "attribute_name                      => '".$attr_name."'",
+                                                    "attribute_name                      => '".$attr_name."',".
+                                                    $writer_string
                     ) . ';',
                 '}',
                 $attr->_inline_get_value('$_[0]'),
