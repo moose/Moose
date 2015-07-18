@@ -8,6 +8,12 @@ for, noteworthy changes.
   - Added a new slideshow by Shawn M. Moore (sartak) to
     Moose::Manual::Resources
 
+  [REVERSIONS]
+
+  - The change in 2.1500 to allow DOES to check delegated options has been
+    reverted. This turned out to have a variety of issues both in concept and
+    implementation.
+
 2.1500   2015-06-30 (TRIAL RELEASE)
 
   [ENHANCEMENTS]
