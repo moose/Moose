@@ -57,6 +57,17 @@ L<https://www.youtube.com/watch?v=LKXvG6VKew4>
 
 =back
 
+=head2 Slide Shows
+
+=over 4
+
+=item
+
+Use Moose to create abstractions in the domain, Shawn M. Moore (sartak)
+L<https://speakerdeck.com/sartak/lifting-moose>
+
+=back
+
 =head2 Articles
 
 =over 4

@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [DOCUMENTATION]
+
+  - Added a new slideshow by Shawn M. Moore (sartak) to
+    Moose::Manual::Resources
+
 2.1500   2015-06-30 (TRIAL RELEASE)
 
   [ENHANCEMENTS]
