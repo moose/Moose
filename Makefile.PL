@@ -19,6 +19,7 @@ BEGIN {
     }
 
     if ( keys %missing ) {
+        warn "Errors encountered while checking for developer Makefile.PL dependencies:\n\n";
         warn values %missing, "\n";
         warn
             "You need to install the following modules to run this Makefile.PL:\n";
