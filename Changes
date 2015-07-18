@@ -12,7 +12,7 @@ for, noteworthy changes.
 
   - The change in 2.1500 to allow DOES to check delegated options has been
     reverted. This turned out to have a variety of issues both in concept and
-    implementation.
+    implementation; it will be refined further in MooseX::Does::Delegated.
 
 2.1500   2015-06-30 (TRIAL RELEASE)
 
