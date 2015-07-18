@@ -36,6 +36,7 @@ sub after_build {
     unless ( -d 'blib' ) {
         my @builders = @{ $self->zilla->plugins_with( -BuildRunner ) };
         die "no BuildRunner plugins specified" unless @builders;
+        $self->log('building the distribution in order to generate documentation for exception classes...');
         $_->build for @builders;
         die "no blib; failed to build properly?" unless -d 'blib';
     }
