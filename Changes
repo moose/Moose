@@ -7,6 +7,9 @@ for, noteworthy changes.
 
   - Added a new slideshow by Shawn M. Moore (sartak) to
     Moose::Manual::Resources
+  - documentation for exception classes has been rewritten, with
+    Moose::Manual::Exceptions::Manifest changing how it describes each class's
+    attributes and methods. (Dave Rolsky, PR#95)
 
   [REVERSIONS]
 
