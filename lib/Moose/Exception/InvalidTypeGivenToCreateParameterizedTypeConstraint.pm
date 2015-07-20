@@ -1,5 +1,5 @@
 package Moose::Exception::InvalidTypeGivenToCreateParameterizedTypeConstraint;
-our $VERSION = '2.1501'; # TRIAL
+our $VERSION = '2.1502';
 
 use Moose;
 extends 'Moose::Exception';

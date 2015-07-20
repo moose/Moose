@@ -1,5 +1,5 @@
 package Moose::Meta::Method::Accessor::Native::String::substr;
-our $VERSION = '2.1501'; # TRIAL
+our $VERSION = '2.1502';
 
 use strict;
 use warnings;

@@ -1,5 +1,5 @@
 package Moose::Meta::Attribute::Native::Trait;
-our $VERSION = '2.1501'; # TRIAL
+our $VERSION = '2.1502';
 
 use Moose::Role;
 use Module::Runtime 'require_module';
