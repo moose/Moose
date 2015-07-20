@@ -14,7 +14,7 @@ for, noteworthy changes.
 
   - Added a new slideshow by Shawn M. Moore (sartak) to
     Moose::Manual::Resources
-  - documentation for exception classes has been rewritten, with
+  - Documentation for exception classes has been rewritten, with
     Moose::Manual::Exceptions::Manifest changing how it describes each class's
     attributes and methods. (Dave Rolsky, PR#95)
 
@@ -26,7 +26,7 @@ for, noteworthy changes.
 
   [CHANGED]
 
-  - the name for an anonymous sub that is used in method modifiers (that shows
+  - The name for an anonymous sub that is used in method modifiers (that shows
     up in stack traces etc) now identifies the package and method being
     modified. (mephinet, PR#94)
 
