@@ -28,7 +28,7 @@ for, noteworthy changes.
 
   - The name for an anonymous sub that is used in method modifiers (that shows
     up in stack traces etc) now identifies the package and method being
-    modified. (mephinet, PR#94)
+    modified. (Philipp Gortan, PR#94)
 
 2.1500   2015-07-01 (TRIAL RELEASE)
 
