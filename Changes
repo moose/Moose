@@ -14,6 +14,12 @@ for, noteworthy changes.
     reverted. This turned out to have a variety of issues both in concept and
     implementation; it will be refined further in MooseX::Does::Delegated.
 
+  [CHANGED]
+
+  - the name for an anonymous sub that is used in method modifiers (that shows
+    up in stack traces etc) now identifies the package and method being
+    modified. (mephinet, PR#94)
+
 2.1500   2015-06-30 (TRIAL RELEASE)
 
   [ENHANCEMENTS]
