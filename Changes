@@ -8,7 +8,7 @@ for, noteworthy changes.
   - Made all docs use =head2 and =head3 for methods/functions so that they
     appear as part of the table of contents on MetaCPAN.
 
-2.1501   2015-07-19 (TRIAL RELEASE)
+2.1501   2015-07-20 (TRIAL RELEASE)
 
   [DOCUMENTATION]
 
@@ -30,7 +30,7 @@ for, noteworthy changes.
     up in stack traces etc) now identifies the package and method being
     modified. (mephinet, PR#94)
 
-2.1500   2015-06-30 (TRIAL RELEASE)
+2.1500   2015-07-01 (TRIAL RELEASE)
 
   [ENHANCEMENTS]
 
@@ -45,7 +45,7 @@ for, noteworthy changes.
     elements in scalar context, instead of the undefined value (or a
     different, seemingly-random, value under 5.23.x).
 
-2.1404   2015-04-16
+2.1404   2015-04-17
 
   [BUG FIXES]
 
@@ -99,7 +99,7 @@ for, noteworthy changes.
     encourage you to upgrade both of these modules and remove
     MooseX::MarkAsMethods from your code base.
 
-2.1400   2014-10-31
+2.1400   2014-11-01
 
   [BUG FIXES]
 
@@ -134,7 +134,7 @@ for, noteworthy changes.
     specified method, its overloading was simply ignored when applying
     overloading to other roles or classes. Reported by rjbs. RT #98531.
 
-2.1305   2014-10-22 (TRIAL RELEASE)
+2.1305   2014-10-23 (TRIAL RELEASE)
 
   [ENHANCEMENTS]
 
@@ -151,13 +151,13 @@ for, noteworthy changes.
      trace frames would contain circular references to the exception objects
      themselves (Graham Knop, PR#81)
 
-2.1303   2014-09-19 (TRIAL RELEASE)
+2.1303   2014-09-20 (TRIAL RELEASE)
 
   [TEST FIXES]
 
   - fix tests that fail on altered warning messages in perl 5.21.4 (RT#98987)
 
-2.1302   2014-08-19 (TRIAL RELEASE)
+2.1302   2014-08-20 (TRIAL RELEASE)
 
   [BUG FIXES]
 
@@ -213,7 +213,7 @@ for, noteworthy changes.
 
   - fix tests that fail on altered warning messages in perl 5.21.4 (RT#98987)
 
-2.1211   2014-08-11
+2.1211   2014-08-12
 
   [DOCUMENTATION]
 
@@ -242,7 +242,7 @@ for, noteworthy changes.
     never see the light of day, and will break with upcoming Test::Builder
     changes (Exodist)
 
-2.1209   2014-06-04
+2.1209   2014-06-05
 
   [OTHER]
 
@@ -285,7 +285,7 @@ for, noteworthy changes.
   - removed instances of metaobjects in exception classes where they're not
     really required
 
-2.1205   2014-04-15
+2.1205   2014-04-16
 
   [ENHANCEMENTS]
 
@@ -302,7 +302,7 @@ for, noteworthy changes.
     more visible mechanism to provide important information to the user
     (re RT#92780)
 
-2.1204   2014-02-06
+2.1204   2014-02-07
 
   [BUG FIXES]
 
@@ -310,7 +310,7 @@ for, noteworthy changes.
     broke with new Module::Runtime, see 2.1203), so users can install Moose
     and pass tests before updating MooseX::NonMoose.
 
-2.1203   2014-02-06
+2.1203   2014-02-07
 
   [BUG FIXES]
 
@@ -322,7 +322,7 @@ for, noteworthy changes.
  - line numbers in shipped code are now almost the same (within 3) as the
    repository source, for easier debugging
 
-2.1202   2014-01-19
+2.1202   2014-01-20
 
   [BUG FIXES]
 
@@ -340,7 +340,7 @@ for, noteworthy changes.
 
   - Releasing 2.1108 as stable (last stable release was 2.1005).
 
-2.1108   2014-01-04 (TRIAL RELEASE)
+2.1108   2014-01-05 (TRIAL RELEASE)
 
   [OTHER]
     - fixed distribution manifest
@@ -363,21 +363,21 @@ for, noteworthy changes.
   - resolved new circular load issue between Moose::Util and Class::MOP (Kent
     Fredric, RT#89713 and PR#42)
 
-2.1105   2013-10-30 (TRIAL RELEASE)
+2.1105   2013-10-31 (TRIAL RELEASE)
 
   [BUG FIXES]
 
   - legacy throw_error now takes multiple arguments, like confess does
     (Karen Etheridge)
 
-2.1104   2013-10-29 (TRIAL RELEASE)
+2.1104   2013-10-30 (TRIAL RELEASE)
 
   [BUG FIXES]
 
   - Class::MOP::Object::_inline_throw_error is back, used by some MooseX
     modules (Upasana)
 
-2.1103   2013-10-25 (TRIAL RELEASE)
+2.1103   2013-10-26 (TRIAL RELEASE)
 
   [BUG FIXES]
 
@@ -433,7 +433,7 @@ for, noteworthy changes.
     Moose::Manual::Delta for more details. This is also slightly
     backwards-incompatible in some edge cases.
 
-2.1005   2013-08-06
+2.1005   2013-08-07
 
   [ENHANCEMENTS]
 
@@ -476,7 +476,7 @@ for, noteworthy changes.
     MooseX::Types. However, this support is still experimental (as is Specio),
     so use it with care. (Dave Rolsky)
 
-2.0900   2013-05-26 (TRIAL RELEASE)
+2.0900   2013-05-27 (TRIAL RELEASE)
 
   [API CHANGES]
 
@@ -499,7 +499,7 @@ for, noteworthy changes.
   - properly apply traits at compile time (error introduced in 2.0800,
     RT#77974). (doy)
 
-2.0800   2013-03-27
+2.0800   2013-03-28
 
   [ENHANCEMENTS]
 
