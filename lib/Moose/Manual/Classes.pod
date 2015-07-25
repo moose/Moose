@@ -1,8 +1,6 @@
 # PODNAME: Moose::Manual::Classes
 # ABSTRACT: Making your classes use Moose (and subclassing)
 
-__END__
-
 =pod
 
 =head1 USING MOOSE

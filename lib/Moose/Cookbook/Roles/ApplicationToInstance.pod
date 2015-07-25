@@ -1,8 +1,6 @@
 # PODNAME: Moose::Cookbook::Roles::ApplicationToInstance
 # ABSTRACT: Applying a role to an object instance
 
-__END__
-
 =pod
 
 =begin testing-SETUP

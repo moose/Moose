@@ -1,8 +1,6 @@
 # PODNAME: Moose::Cookbook::Snack::Types
 # ABSTRACT: Snippets of code for using Types and Type Constraints
 
-__END__
-
 =pod
 
 =head1 SYNOPSIS

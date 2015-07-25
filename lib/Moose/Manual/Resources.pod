@@ -1,8 +1,6 @@
 # PODNAME: Moose::Manual::Resources
 # ABSTRACT: Links to various tutorials, videos, blogs, presentations, interviews, etc...
 
-__END__
-
 =pod
 
 =encoding utf8

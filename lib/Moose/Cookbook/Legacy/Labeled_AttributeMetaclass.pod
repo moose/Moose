@@ -1,8 +1,6 @@
 # PODNAME: Moose::Cookbook::Legacy::Labeled_AttributeMetaclass
 # ABSTRACT: A meta-attribute, attributes with labels
 
-__END__
-
 =pod
 
 =head1 SYNOPSIS

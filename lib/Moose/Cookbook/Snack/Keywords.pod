@@ -1,8 +1,6 @@
 # PODNAME: Moose::Cookbook::Snack::Keywords
 # ABSTRACT: Restricted "keywords" in Moose
 
-__END__
-
 =pod
 
 =head1 DESCRIPTION

@@ -1,8 +1,6 @@
 # PODNAME: Moose::Manual::Roles
 # ABSTRACT: Roles, an alternative to deep hierarchies and base classes
 
-__END__
-
 =pod
 
 =head1 WHAT IS A ROLE?

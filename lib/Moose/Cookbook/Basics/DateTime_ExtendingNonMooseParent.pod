@@ -1,8 +1,6 @@
 # PODNAME: Moose::Cookbook::Basics::DateTime_ExtendingNonMooseParent
 # ABSTRACT: Extending a non-Moose parent class
 
-__END__
-
 =pod
 
 =begin testing-SETUP

@@ -1,8 +1,6 @@
 # PODNAME: Moose::Cookbook::Basics::Point_AttributesAndSubclassing
 # ABSTRACT: Point and Point3D classes, showing basic attributes and subclassing.
 
-__END__
-
 =pod
 
 =head1 SYNOPSIS

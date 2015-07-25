@@ -1,8 +1,6 @@
 # PODNAME: Moose::Cookbook::Extending::ExtensionOverview
 # ABSTRACT: Moose extension overview
 
-__END__
-
 =pod
 
 =head1 DESCRIPTION

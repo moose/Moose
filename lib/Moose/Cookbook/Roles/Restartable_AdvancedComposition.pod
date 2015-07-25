@@ -1,8 +1,6 @@
 # PODNAME: Moose::Cookbook::Roles::Restartable_AdvancedComposition
 # ABSTRACT: Advanced Role Composition - method exclusion and aliasing
 
-__END__
-
 =pod
 
 =head1 SYNOPSIS

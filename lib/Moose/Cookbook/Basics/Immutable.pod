@@ -1,8 +1,6 @@
 # PODNAME: Moose::Cookbook::Basics::Immutable
 # ABSTRACT: Making Moose fast by making your class immutable
 
-__END__
-
 =pod
 
 =head1 SYNOPSIS

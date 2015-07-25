@@ -1,8 +1,6 @@
 # PODNAME: Moose::Manual::Attributes
 # ABSTRACT: Object attributes with Moose
 
-__END__
-
 =pod
 
 =head1 INTRODUCTION

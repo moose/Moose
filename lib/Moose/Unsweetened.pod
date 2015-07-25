@@ -1,8 +1,6 @@
 # PODNAME: Moose::Unsweetened
 # ABSTRACT: Moved to Moose::Manual::Unsweetened, so go read that
 
-__END__
-
 =pod
 
 =head1 DESCRIPTION

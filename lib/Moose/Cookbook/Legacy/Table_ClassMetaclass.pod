@@ -1,8 +1,6 @@
 # PODNAME: Moose::Cookbook::Legacy::Table_ClassMetaclass
 # ABSTRACT: Adding a "table" attribute to the metaclass
 
-__END__
-
 =pod
 
 =head1 SYNOPSIS

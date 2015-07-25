@@ -1,8 +1,6 @@
 # PODNAME: Moose::Cookbook::Meta::WhyMeta
 # ABSTRACT: Welcome to the meta world (Why Go Meta?)
 
-__END__
-
 =pod
 
 =head1 SUMMARY

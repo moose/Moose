@@ -1,8 +1,6 @@
 # PODNAME: Moose::Cookbook::Meta::GlobRef_InstanceMetaclass
 # ABSTRACT: Creating a glob reference meta-instance class
 
-__END__
-
 =pod
 
 =head1 SYNOPSIS
@@ -238,5 +236,4 @@ for my $x ( 0 .. 1 ) {
 }
 
 =end testing
-
 =pod

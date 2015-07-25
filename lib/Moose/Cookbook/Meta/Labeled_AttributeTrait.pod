@@ -1,8 +1,6 @@
 # PODNAME: Moose::Cookbook::Meta::Labeled_AttributeTrait
 # ABSTRACT: Labels implemented via attribute traits
 
-__END__
-
 =pod
 
 =head1 SYNOPSIS

@@ -1,8 +1,6 @@
 # PODNAME: Moose::Manual
 # ABSTRACT: What is Moose, and how do I use it?
 
-__END__
-
 =pod
 
 =head1 WHAT IS MOOSE?

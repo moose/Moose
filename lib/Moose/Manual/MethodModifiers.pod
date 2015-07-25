@@ -1,8 +1,6 @@
 # PODNAME: Moose::Manual::MethodModifiers
 # ABSTRACT: Moose's method modifiers
 
-__END__
-
 =pod
 
 =head1 WHAT IS A METHOD MODIFIER?

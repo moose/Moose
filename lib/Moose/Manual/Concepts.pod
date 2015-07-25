@@ -1,8 +1,6 @@
 # PODNAME: Moose::Manual::Concepts
 # ABSTRACT: Moose OO concepts
 
-__END__
-
 =pod
 
 =head1 MOOSE CONCEPTS (VS "OLD SCHOOL" Perl)

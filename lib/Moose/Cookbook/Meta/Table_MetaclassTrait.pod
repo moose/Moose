@@ -1,8 +1,6 @@
 # PODNAME: Moose::Cookbook::Meta::Table_MetaclassTrait
 # ABSTRACT: Adding a "table" attribute as a metaclass trait
 
-__END__
-
 =pod
 
 =begin testing-SETUP
@@ -86,7 +84,6 @@ When the two packages are separate files, this just works.
 
 L<Moose::Cookbook::Meta::Labeled_AttributeTrait> - Labels implemented via
 attribute traits
-
 =pod
 
 =begin testing

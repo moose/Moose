@@ -1,8 +1,6 @@
 # PODNAME: Moose::Cookbook::Basics::Company_Subtypes
 # ABSTRACT: Demonstrates the use of subtypes and how to model classes related to companies, people, employees, etc.
 
-__END__
-
 =pod
 
 =begin testing-SETUP

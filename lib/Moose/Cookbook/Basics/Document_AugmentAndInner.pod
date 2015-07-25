@@ -1,8 +1,6 @@
 # PODNAME: Moose::Cookbook::Basics::Document_AugmentAndInner
 # ABSTRACT: The augment modifier, which turns normal method overriding "inside-out"
 
-__END__
-
 =pod
 
 =head1 SYNOPSIS

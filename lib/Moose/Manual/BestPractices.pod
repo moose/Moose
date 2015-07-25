@@ -1,8 +1,6 @@
 # PODNAME: Moose::Manual::BestPractices
 # ABSTRACT: Get the most out of Moose
 
-__END__
-
 =pod
 
 =head1 RECOMMENDATIONS

@@ -1,8 +1,6 @@
 # PODNAME: Moose::Spec::Role
 # ABSTRACT: Formal spec for Role behavior
 
-__END__
-
 =pod
 
 =head1 DESCRIPTION

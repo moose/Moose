@@ -1,8 +1,6 @@
 # PODNAME: Moose::Manual::Delta
 # ABSTRACT: Important Changes in Moose
 
-__END__
-
 =pod
 
 =head1 DESCRIPTION

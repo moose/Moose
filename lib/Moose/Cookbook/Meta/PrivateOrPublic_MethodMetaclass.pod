@@ -1,8 +1,6 @@
 # PODNAME: Moose::Cookbook::Meta::PrivateOrPublic_MethodMetaclass
 # ABSTRACT: A method metaclass for marking methods public or private
 
-__END__
-
 =pod
 
 =head1 SYNOPSIS

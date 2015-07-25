@@ -1,8 +1,6 @@
 # PODNAME: Moose::Manual::Types
 # ABSTRACT: Moose's type system
 
-__END__
-
 =pod
 
 =head1 TYPES IN PERL?

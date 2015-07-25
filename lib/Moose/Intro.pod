@@ -1,6 +1,5 @@
 # PODNAME: Moose::Intro
 # ABSTRACT: Expanded into Moose::Manual, so go read that
-
 =pod
 
 =head1 DESCRIPTION

@@ -1,8 +1,6 @@
 # PODNAME: Moose::Cookbook::Basics::Person_BUILDARGSAndBUILD
 # ABSTRACT: Using BUILDARGS and BUILD to hook into object construction
 
-__END__
-
 =pod
 
 =head1 SYNOPSIS

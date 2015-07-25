@@ -1,8 +1,6 @@
 # PODNAME: Moose::Cookbook::Style
 # ABSTRACT: Expanded into Moose::Manual::BestPractices, so go read that
 
-__END__
-
 =pod
 
 =head1 DESCRIPTION

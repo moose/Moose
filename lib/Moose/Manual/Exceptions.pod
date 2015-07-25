@@ -1,8 +1,6 @@
 # PODNAME: Moose::Manual::Exceptions
 # ABSTRACT: Moose's exceptions
 
-__END__
-
 =pod
 
 =head1 EXCEPTIONS IN MOOSE

@@ -1,8 +1,6 @@
 # PODNAME: Moose::Cookbook::Basics::Genome_OverloadingSubtypesAndCoercion
 # ABSTRACT: Operator overloading, subtypes, and coercion
 
-__END__
-
 =pod
 
 =head1 SYNOPSIS

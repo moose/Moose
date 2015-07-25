@@ -1,8 +1,6 @@
 # PODNAME: Moose::Cookbook
 # ABSTRACT: How to cook a Moose
 
-__END__
-
 =pod
 
 =head1 DESCRIPTION

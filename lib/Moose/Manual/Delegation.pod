@@ -1,8 +1,6 @@
 # PODNAME: Moose::Manual::Delegation
 # ABSTRACT: Attribute delegation
 
-__END__
-
 =pod
 
 =head1 WHAT IS DELEGATION?

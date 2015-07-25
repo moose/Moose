@@ -1,8 +1,6 @@
 # PODNAME: Moose::Cookbook::Extending::Debugging_BaseClassRole
 # ABSTRACT: Providing a role for the base object class
 
-__END__
-
 =pod
 
 =begin testing-SETUP

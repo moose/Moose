@@ -1,8 +1,6 @@
 # PODNAME: Moose::Manual::Unsweetened
 # ABSTRACT: Moose idioms in plain old Perl 5 without the sugar
 
-__END__
-
 =pod
 
 =head1 DESCRIPTION

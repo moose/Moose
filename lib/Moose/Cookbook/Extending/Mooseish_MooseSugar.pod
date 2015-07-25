@@ -1,8 +1,6 @@
 # PODNAME: Moose::Cookbook::Extending::Mooseish_MooseSugar
 # ABSTRACT: Acting like Moose.pm and providing sugar Moose-style
 
-__END__
-
 =pod
 
 =head1 SYNOPSIS
@@ -94,5 +92,4 @@ ok( MyApp::User->can('username'),
     'MyApp::User has username method' );
 
 =end testing
-
 =pod
