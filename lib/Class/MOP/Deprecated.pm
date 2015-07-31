@@ -1,5 +1,5 @@
 package Class::MOP::Deprecated;
-our $VERSION = '2.1502';
+our $VERSION = '2.1601';
 
 use strict;
 use warnings;
