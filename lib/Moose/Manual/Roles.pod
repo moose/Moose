@@ -355,4 +355,45 @@ normal Moose role combination system. We recommend using this function to
 apply roles to an object. This is what Moose uses internally when you call
 C<with>.
 
+=head2 Handling required attributes for roles.
+
+Application of some roles will require additional parameters being specified to
+satisfy them, for example:
+
+    {
+        package Car;
+        use Moose;
+    }
+    {
+        package Breakable;
+        use Moose::Role;
+
+        has 'breakable_parts' => ( is => 'ro', required => 1 );
+    }
+
+    my $car = Car->new;
+
+    # next line dies with: Attribute (breakable_parts) is required
+    apply_all_roles( $car, 'Breakable' );
+
+This will require passing the additional parameters at application time as
+follows:
+
+    apply_all_roles( $car, 'Breakable' => {
+            rebless_params => {
+                # Parameters to 'Breakable'
+                breakable_parts => [qw( tires wheels windscreen )],
+            }
+    });
+
+Obviously, this interface is better simplified as a method on C<Car>:
+
+    sub make_breakable {
+        my ( $self, %params ) = @_;
+        apply_all_roles($self, 'Breakable', { rebless_params => \%params });
+    }
+
+    my $car = Car->new();
+    $car->make_breakable( breakable_parts => [qw( tires wheels windscreen )] );
+
 =cut
