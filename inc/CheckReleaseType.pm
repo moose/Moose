@@ -16,9 +16,14 @@ sub before_release
     my $digit = substr($version, 3, 1);
     if ($self->zilla->is_trial)
     {
-        $digit % 2 == 1
-            #or $self->log_fatal('-TRIAL releases must be numbered 2.x{ODD}xx!');
-            or $self->log('you\'re doing a -TRIAL release using an even number? okay, I\'ll assume you know what you\'re doing...');
+        if ($digit % 2 != 1)
+        {
+            if ($ENV{MOOSE_EVEN_TRIAL_OK}) {
+                $self->log('you\'re doing a -TRIAL release using an even number? okay, I\'ll assume you know what you\'re doing, since you set MOOSE_EVEN_TRIAL_OK...');
+            } else {
+                $self->log_fatal('-TRIAL releases must be numbered 2.x{ODD}xx! set MOOSE_EVEN_TRIAL_OK to release anyway (you better know what you\'re doing)');
+            }
+        }
     }
     else
     {
