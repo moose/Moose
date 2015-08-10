@@ -1,5 +1,5 @@
 package Class::MOP::Method::Constructor;
-our $VERSION = '2.1601';
+our $VERSION = '2.1602';
 
 use strict;
 use warnings;
