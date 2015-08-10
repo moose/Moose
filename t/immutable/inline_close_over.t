@@ -2,7 +2,10 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Requires qw(Data::Visitor PadWalker);
+use Test::Requires {
+  'Data::Visitor' => '0.26',
+  'PadWalker'     => undef,
+};
 
 use Class::Load 'load_class';
 use Try::Tiny;
