@@ -17,7 +17,8 @@ sub before_release
     if ($self->zilla->is_trial)
     {
         $digit % 2 == 1
-            or $self->log_fatal('-TRIAL releases must be numbered 2.x{ODD}xx!');
+            #or $self->log_fatal('-TRIAL releases must be numbered 2.x{ODD}xx!');
+            or $self->log('you\'re doing a -TRIAL release using an even number? okay, I\'ll assume you know what you\'re doing...');
     }
     else
     {
