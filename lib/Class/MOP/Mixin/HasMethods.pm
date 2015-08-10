@@ -96,8 +96,8 @@ sub has_method {
     ( defined $method_name && length $method_name )
         || $self->_throw_exception( MustDefineAMethodName => instance => $self );
 
-    my $method = $self->_get_maybe_raw_method($method_name)
-        or return;
+    my $method = $self->_get_maybe_raw_method($method_name);
+    return if not $method;
 
     return defined($self->_method_map->{$method_name} = $method);
 }
@@ -108,8 +108,8 @@ sub get_method {
     ( defined $method_name && length $method_name )
         || $self->_throw_exception( MustDefineAMethodName => instance => $self );
 
-    my $method = $self->_get_maybe_raw_method($method_name)
-        or return;
+    my $method = $self->_get_maybe_raw_method($method_name);
+    return if not $method;
 
     return $method if blessed($method) && $method->isa('Class::MOP::Method');
 

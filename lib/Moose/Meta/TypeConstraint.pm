@@ -231,7 +231,8 @@ sub get_message {
 sub equals {
     my ( $self, $type_or_name ) = @_;
 
-    my $other = Moose::Util::TypeConstraints::find_type_constraint($type_or_name) or return;
+    my $other = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
+    return if not $other;
 
     return 1 if $self == $other;
 
@@ -250,7 +251,8 @@ sub equals {
 sub is_a_type_of {
     my ($self, $type_or_name) = @_;
 
-    my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name) or return;
+    my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
+    return if not $type;
 
     ($self->equals($type) || $self->is_subtype_of($type));
 }
@@ -258,7 +260,8 @@ sub is_a_type_of {
 sub is_subtype_of {
     my ($self, $type_or_name) = @_;
 
-    my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name) or return;
+    my $type = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
+    return if not $type;
 
     my $current = $self;
 
