@@ -11,7 +11,11 @@ use parent 'Class::MOP::Object';
 # NOTE:
 # if poked in the right way,
 # they should act like CODE refs.
-use overload '&{}' => sub { $_[0]->body }, fallback => 1;
+use overload
+    '&{}' => sub { $_[0]->body },
+    'bool' => sub { 1 },
+    '""' => sub { overload::StrVal($_[0]) },
+    fallback => 1;
 
 # construction
 

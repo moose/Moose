@@ -5,8 +5,10 @@ use strict;
 use warnings;
 use metaclass;
 
-use overload '""'     => sub { shift->name },   # stringify to method name
-             fallback => 1;
+use overload
+    '""' => sub { shift->name },   # stringify to method name
+    'bool' => sub { 1 },
+    fallback => 1;
 
 use parent 'Class::MOP::Object';
 

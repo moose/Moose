@@ -3,6 +3,13 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  - explicit boolean overload handling has been added to Class::MOP::Method
+    and Moose::Meta::Role::Method::Required, to work around a bug with the
+    handling of overload fallbacks on perl 5.8.x.  In particular this fixes
+    issues observed in MooseX::MethodAttributes.
+
 2.1600   2015-07-31
 
   [DOCUMENTATION]
