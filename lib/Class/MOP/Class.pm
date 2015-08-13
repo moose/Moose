@@ -1993,7 +1993,7 @@ These methods provide an API to the core L<overload> functionality.
 =item B<< $metaclass->is_overloaded >>
 
 Returns true if overloading is enabled for this class. Corresponds to
-L<overload::Overloaded|overload/Public Functions>.
+L<Devel::OverloadInfo/is_overloaded>.
 
 =item B<< $metaclass->get_overloaded_operator($op) >>
 
