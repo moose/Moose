@@ -6,7 +6,7 @@ use warnings;
 
 use Class::MOP::Overload;
 
-use Devel::OverloadInfo 0.004; # for is_overloaded
+use Devel::OverloadInfo 0.004 'overload_info';
 use Scalar::Util 'blessed';
 use Sub::Identify 'sub_name', 'stash_name';
 
