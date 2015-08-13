@@ -6,7 +6,7 @@ use warnings;
 
 use Class::MOP::Overload;
 
-use Devel::OverloadInfo 'overload_info';
+use Devel::OverloadInfo 0.004 'overload_info';
 use Scalar::Util 'blessed';
 use Sub::Identify 'sub_name', 'stash_name';
 
@@ -16,7 +16,7 @@ use parent 'Class::MOP::Mixin';
 
 sub is_overloaded {
     my $self = shift;
-    return overload::Overloaded($self->name);
+    Devel::OverloadInfo::is_overloaded($self->name);
 }
 
 sub get_overload_list {

@@ -3,6 +3,12 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  - Replaced uses of overload::Overloaded with the new
+    Devel::OverloadInfo::is_overloaded (thanks, ilmari!) to work around more
+    issues with overload handling in older versions of perl.
+
 2.1601   2015-08-10 (TRIAL RELEASE)
 
   [BUG FIXES]
