@@ -1,5 +1,5 @@
 package oose;
-our $VERSION = '2.1602';
+our $VERSION = '2.1603';
 
 use strict;
 use warnings;

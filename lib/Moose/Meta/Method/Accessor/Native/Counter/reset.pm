@@ -1,5 +1,5 @@
 package Moose::Meta::Method::Accessor::Native::Counter::reset;
-our $VERSION = '2.1602';
+our $VERSION = '2.1603';
 
 use strict;
 use warnings;
