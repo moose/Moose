@@ -186,6 +186,7 @@ As mentioned before, a role's required method may also be satisfied by an
 attribute accessor. However, the call to C<has> which defines an attribute
 happens at runtime. This means that you must define the attribute I<before>
 consuming the role, or else the role will not see the generated accessor.
+These attributes are L<Moose Attributes|Moose::Manual::Attributes>
 
   package Breakable;
 
