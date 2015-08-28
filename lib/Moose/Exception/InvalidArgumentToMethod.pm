@@ -1,5 +1,5 @@
 package Moose::Exception::InvalidArgumentToMethod;
-our $VERSION = '2.1603';
+our $VERSION = '2.1604';
 
 use Moose;
 extends 'Moose::Exception';

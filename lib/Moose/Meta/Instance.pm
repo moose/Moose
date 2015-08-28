@@ -1,5 +1,5 @@
 package Moose::Meta::Instance;
-our $VERSION = '2.1603';
+our $VERSION = '2.1604';
 
 use strict;
 use warnings;
