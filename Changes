@@ -3,6 +3,12 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  - The Num builtin type now accepts floating-point numbers with no digits
+    after the decimal point (e.g. "4."). (This is a regression since release
+    2.0900.)
+
 2.1603   2015-08-28
 
   - No changes from 2.1602-TRIAL (other than a minor documentation tweak).

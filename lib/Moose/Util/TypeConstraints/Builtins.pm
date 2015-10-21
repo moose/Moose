@@ -85,7 +85,7 @@ sub define_builtins {
         ( $val =~ /\A(?:[+-]?)              # matches optional +- in the beginning
         (?=[0-9]|\.[0-9])                   # matches previous +- only if there is something like 3 or .3
         [0-9]*                              # matches 0-9 zero or more times
-        (?:\.[0-9]+)?                       # matches optional .89 or nothing
+        (?:\.[0-9]*)?                       # matches optional . and optional digits
         (?:[Ee](?:[+-]?[0-9]+))?            # matches E1 or e1 or e-1 or e+1 etc
         \z/x );
            }
@@ -100,7 +100,7 @@ sub define_builtins {
         . '$val =~ /\A(?:[+-]?)             # matches optional +- in the beginning
                 (?=[0-9]|\.[0-9])           # matches previous +- only if there is something like 3 or .3
                 [0-9]*                      # matches 0-9 zero or more times
-                (?:\.[0-9]+)?               # matches optional .89 or nothing
+                (?:\.[0-9]*)?               # matches optional . and optional digits
                 (?:[Ee](?:[+-]?[0-9]+))?    # matches E1 or e1 or e-1 or e+1 etc
                 \z/x ); '
         };
