@@ -504,7 +504,7 @@ for, noteworthy changes.
   [API CHANGES]
 
   - Fixed the Num builtin type to reject NaN, Inf, numbers with whitespace,
-    and other questionable strings. The MooseX::Types::LaxNum distro
+    and other questionable strings. The MooseX::Types::LaxNum distribution
     implements the old behavior. RT#70539 (Upasana)
 
 2.0802   2013-05-07
