@@ -39,7 +39,7 @@ sub BUILDARGS {
         return { @_, undef };
     }
     else {
-        return {@_};
+        return { @_ };
     }
 }
 
