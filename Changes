@@ -3,6 +3,12 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [OTHER]
+
+  - minimum perl requirement is now set in configure-requires, as well as
+    runtime-requires, to ensure that smokers bail out early enough to declare
+    the installation N/A rather than FAIL.
+
 2.1603   2015-08-28
 
   - No changes from 2.1602-TRIAL (other than a minor documentation tweak).
