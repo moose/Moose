@@ -188,7 +188,7 @@ for, noteworthy changes.
     fallback settings, the consuming role now silently wins instead of
     throwing an exception. This is consistent with how other
     role-consumes-role conflicts are handled.
-  - Fixed the docs for overloading conflicts to match reality.  
+  - Fixed the docs for overloading conflicts to match reality.
 
 2.1301   2014-08-19 (TRIAL RELEASE)
 
@@ -366,6 +366,7 @@ for, noteworthy changes.
 2.1108   2014-01-05 (TRIAL RELEASE)
 
   [OTHER]
+
     - fixed distribution manifest
     - minor documentation and metadata updates
 
