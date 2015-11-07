@@ -8,7 +8,7 @@ Moose::Manual::Contributing - How to get involved in Moose
 
 =head1 VERSION
 
-version 2.1603
+version 2.1604
 
 =head1 GETTING INVOLVED
 
