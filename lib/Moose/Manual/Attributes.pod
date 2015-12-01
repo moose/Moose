@@ -543,8 +543,8 @@ as-is. However, you can change most aspects of the inherited attribute in the
 child class. You cannot change any of its associated method names (reader,
 writer, predicate, etc).
 
-To override an attribute, you simply prepend its name with a plus sign
-(C<+>):
+To change some aspects of an attribute, you simply prepend a plus sign (C<+>)
+to its name:
 
   package LazyPerson;
 
