@@ -1070,7 +1070,7 @@ sub install_delegation {
     # Here we canonicalize the 'handles' option
     # this will sort out any details and always
     # return an hash of methods which we want
-    # to delagate to, see that method for details
+    # to delegate to, see that method for details
     my %handles = $self->_canonicalize_handles;
 
     # install the delegation ...
