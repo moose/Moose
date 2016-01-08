@@ -28,9 +28,9 @@ sub apply {
 }
 
 # We can't load this with use, since it may be loaded and used from Class::MOP
-# (via CMOP::Class, etc). However, if for some reason this module is loaded
+# (via Class::MOP::Class, etc). However, if for some reason this module is loaded
 # _without_ first loading Class::MOP we need to require Class::MOP so we can
-# use it and CMOP::Class.
+# use it and Class::MOP::Class.
 require Class::MOP;
 
 1;
