@@ -189,7 +189,7 @@ C<UNIVERSAL::DOES>.
 
 =head2 $object->dump($maxdepth)
 
-This is a handy utility for C<Data::Dumper>ing an object. By default,
+This is a handy utility for L<Data::Dumper>ing an object. By default,
 the maximum depth is 1, to avoid making a mess.
 
 =head2 $object->DESTROY
