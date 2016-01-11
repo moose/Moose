@@ -497,7 +497,7 @@ is expected to have consumed.
 
 This marks the attribute as being required. This means a value must be
 supplied during class construction, I<or> the attribute must be lazy
-and have either a default or a builder. Note that c<required> does not
+and have either a default or a builder. Note that C<required> does not
 say anything about the attribute's value, which can be C<undef>.
 
 =item I<weak_ref =E<gt> (1|0)>
