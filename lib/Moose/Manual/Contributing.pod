@@ -315,7 +315,7 @@ the guidelines. Do not be surprised if a new feature is rejected for the core.
 New features for Moose internals are less restrictive than user facing
 features, but still require approval by B<at least one> cabal member.
 
-Ideally you will have run the F<test-my-dependents.t> script to be sure you
+Ideally you will have run the F<xt/author/test-my-dependents.t> script to be sure you
 are not breaking any MooseX module or causing any other unforeseen havoc. If
 you do this (rather than make us do it), it will only help to hasten your
 branch's approval.
