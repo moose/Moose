@@ -155,7 +155,7 @@ method, which accepts named parameters.
   );
 
 And as with the first recipe, a more in-depth example can be found in
-the F<t/recipes/moose_cookbook_basics_recipe2.t> test file.
+the F<t/recipes/basics_bankaccount_methodmodifiersandsubclassing.t> test file.
 
 =head1 CONCLUSION
 

@@ -231,7 +231,7 @@ If you'd like to learn more about overloading, please read the
 documentation for the L<overload> pragma.
 
 To see all the code we created together, take a look at
-F<t/recipes/basics_recipe9.t>.
+F<t/recipes/basics_genome_overloadingsubtypesandcoercion.t>.
 
 =head1 NEXT STEPS
 

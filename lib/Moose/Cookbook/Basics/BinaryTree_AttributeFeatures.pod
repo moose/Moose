@@ -180,7 +180,7 @@ ensure that is has the correct value for its C<parent> attribute.
 
 As with all the other recipes, B<BinaryTree> can be used just like any
 other Perl 5 class. A more detailed example of its usage can be found
-in F<t/recipes/moose_cookbook_basics_recipe3.t>.
+in F<t/recipes/basics_binarytree_attributefeatures.t>.
 
 =head1 CONCLUSION
 
