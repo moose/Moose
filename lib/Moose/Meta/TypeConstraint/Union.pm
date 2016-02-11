@@ -269,7 +269,7 @@ for the C<is_a_type_of> method.
 =head2 $constraint->is_subtype_of
 
 This returns true if all of the member type constraints return true
-for the C<is_a_subtype_of> method.
+for the C<is_subtype_of> method.
 
 =head2 $constraint->create_child_type(%options)
 

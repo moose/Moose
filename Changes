@@ -2774,7 +2774,7 @@ for, noteworthy changes.
         Rolsky)
       - Test firing behavior of triggers in relation to builder/default/
         lazy_build. (t0m)
-      - Test behavior of equals/is_a_type_of/is_a_subtype_of for all
+      - Test behavior of equals/is_a_type_of/is_subtype_of for all
         kinds of supported type. (t0m)
 
     - Moose::Meta::Class
@@ -2784,7 +2784,7 @@ for, noteworthy changes.
 
     - Moose::Meta::TypeConstraint::Class
     - Moose::Meta::TypeConstraint::Role
-      - Unify behavior of equals/is_a_type_of/is_a_subtype_of with
+      - Unify behavior of equals/is_a_type_of/is_subtype_of with
         other types (as per change in 0.55_02). (t0m)
 
     - Moose::Meta::TypeConstraint::Registry

@@ -198,7 +198,7 @@ my %trustme = (
     'Moose::Meta::TypeCoercion::Union' => ['compile_type_coercion'],
     'Moose::Meta::TypeConstraint' => [qw( compile_type_constraint inlined )],
     'Moose::Meta::TypeConstraint::Class' =>
-        [qw( equals is_a_type_of is_a_subtype_of )],
+        [qw( equals is_a_type_of )],
     'Moose::Meta::TypeConstraint::Enum' => [qw( constraint equals )],
     'Moose::Meta::TypeConstraint::DuckType' =>
         [qw( constraint equals get_message )],
