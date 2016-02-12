@@ -192,7 +192,7 @@ C<UNIVERSAL::DOES>.
 =for stopwords ing
 
 This is a handy utility for L<Data::Dumper>ing an object. By default,
-the maximum depth is 1, to avoid making a mess.
+there is no maximum depth.
 
 =head2 $object->DESTROY
 
