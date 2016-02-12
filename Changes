@@ -7,6 +7,7 @@ for, noteworthy changes.
 
   - Fixed references to test files that were renamed when their associated
     documentation files were renamed in 2.0500 (RT#111898)
+  - a few other, very minor, documentation fixes
 
 2.1604   2015-11-07
 
