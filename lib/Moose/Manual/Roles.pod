@@ -18,7 +18,9 @@ consumes the role. These attributes and methods then appear as if they
 were defined in the class itself. A subclass of the consuming class
 will inherit all of these methods and attributes.
 
-Moose roles are similar to mixins or interfaces in other languages.
+Moose roles are similar to mixins or interfaces in other languages and are
+based on the L<original concept of Traits|http://scg.unibe.ch/research/traits/>
+for the Smalltalk-80 dialect Squeak.
 
 Besides defining their own methods and attributes, roles can also
 require that the consuming class define certain methods of its
