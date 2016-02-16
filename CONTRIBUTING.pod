@@ -8,7 +8,7 @@ Moose::Manual::Contributing - How to get involved in Moose
 
 =head1 VERSION
 
-version 2.1604
+version 2.1605
 
 =head1 GETTING INVOLVED
 
@@ -322,7 +322,7 @@ the guidelines. Do not be surprised if a new feature is rejected for the core.
 New features for Moose internals are less restrictive than user facing
 features, but still require approval by B<at least one> cabal member.
 
-Ideally you will have run the F<test-my-dependents.t> script to be sure you
+Ideally you will have run the F<xt/author/test-my-dependents.t> script to be sure you
 are not breaking any MooseX module or causing any other unforeseen havoc. If
 you do this (rather than make us do it), it will only help to hasten your
 branch's approval.
@@ -533,7 +533,7 @@ Matt S Trout <mst@shadowcat.co.uk>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2006 by Infinity Interactive, Inc..
+This software is copyright (c) 2006 by Infinity Interactive, Inc.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
