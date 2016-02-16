@@ -1,5 +1,5 @@
 package Moose::Meta::Attribute::Native::Trait::Number;
-our $VERSION = '2.1605';
+our $VERSION = '2.1606';
 
 use Moose::Role;
 with 'Moose::Meta::Attribute::Native::Trait';

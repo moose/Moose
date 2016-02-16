@@ -1,5 +1,5 @@
 package Moose::Meta::Method::Accessor::Native::Hash::shallow_clone;
-our $VERSION = '2.1605';
+our $VERSION = '2.1606';
 
 use strict;
 use warnings;

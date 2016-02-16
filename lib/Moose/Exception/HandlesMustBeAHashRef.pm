@@ -1,5 +1,5 @@
 package Moose::Exception::HandlesMustBeAHashRef;
-our $VERSION = '2.1605';
+our $VERSION = '2.1606';
 
 use Moose;
 extends 'Moose::Exception';
