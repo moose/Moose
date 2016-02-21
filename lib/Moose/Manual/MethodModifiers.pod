@@ -357,6 +357,23 @@ semi-colon:
 
   after 'foo' => sub { };
 
+=head1 EXCEPTIONS AND STACK TRACES
+
+An exception thrown in a C<before> modifier will prevent the method it
+modifies from being called at all. An exception in an C<around> modifier may
+prevent the modified method from being called, depending on how the C<around>
+modifier is structured. An exception in an C<after> modifier obviously cannot
+prevent the method it wraps from being called.
+
+Both C<override> and C<augment> are similar to C<around> in that they can
+decide whether or not to call the method they modify before or after throwing
+an exception.
+
+From the caller's perspective, an exception in a method modifier will look
+like the method it called threw an exception. However, method modifiers are
+just standard Perl subroutines. This means that they end up on the stack in
+stack traces as an additional frame.
+
 =head1 CAVEATS
 
 These method modification features do not work well with multiple inheritance,
