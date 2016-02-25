@@ -24,6 +24,7 @@ has 'message' => (
 
 use overload(
     q{""}    => 'as_string',
+    bool     => sub () { 1 },
     fallback => 1,
 );
 
