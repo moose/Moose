@@ -3,6 +3,13 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  - Passing roles as a mix of role names and role objects to
+    Moose::Meta::class->create_anon_class could throw a bogus exception about
+    'Roles with parameters cannot be cached ...'. Fixed by Olivier
+    Mengué. Based on PR #117.
+
 2.2005   2017-05-03
 
   [OTHER]
