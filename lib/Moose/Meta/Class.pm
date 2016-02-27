@@ -7,7 +7,7 @@ use warnings;
 use Class::MOP;
 use Data::OptList;
 use List::Util 1.33 qw( any first );
-use List::MoreUtils qw( uniq first_index );
+use List::SomeUtils qw( uniq first_index );
 use Scalar::Util 'blessed';
 
 use Moose::Meta::Method::Overridden;

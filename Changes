@@ -3,6 +3,10 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [OTHER]
+
+  - Replaces List::MoreUtils with List::SomeUtils.
+
 2.1605   2016-02-16
 
   [DOCUMENTATION]

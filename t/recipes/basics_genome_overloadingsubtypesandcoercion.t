@@ -41,7 +41,7 @@ use Test::More;
         );
     }
 
-    use List::MoreUtils qw( zip );
+    use List::SomeUtils qw( zip );
 
     coerce 'Human::EyeColor'
         => from 'ArrayRef'

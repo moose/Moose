@@ -4,7 +4,7 @@ our $VERSION = '2.1606';
 use strict;
 use warnings;
 
-use List::MoreUtils ();
+use List::SomeUtils ();
 use Moose::Role;
 
 with 'Moose::Meta::Method::Accessor::Native::Hash::Writer';
@@ -65,7 +65,7 @@ sub _inline_coerce_new_values {
 
     # Is there a simpler way to do this?
     return (
-        'my $iter = List::MoreUtils::natatime(2, @_);',
+        'my $iter = List::SomeUtils::natatime(2, @_);',
         '@_ = ();',
         'while (my ($key, $val) = $iter->()) {',
             'push @_, $key, $member_coercion->($val);',
