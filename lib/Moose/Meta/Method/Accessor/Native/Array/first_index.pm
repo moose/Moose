@@ -4,7 +4,7 @@ our $VERSION = '2.1606';
 use strict;
 use warnings;
 
-use List::MoreUtils ();
+use List::SomeUtils ();
 use Params::Util ();
 
 use Moose::Role;
@@ -34,7 +34,7 @@ sub _return_value {
     my $self = shift;
     my ($slot_access) = @_;
 
-    return '&List::MoreUtils::first_index($_[0], @{ (' . $slot_access . ') })';
+    return '&List::SomeUtils::first_index($_[0], @{ (' . $slot_access . ') })';
 }
 
 no Moose::Role;

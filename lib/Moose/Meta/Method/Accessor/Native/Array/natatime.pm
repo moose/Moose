@@ -4,7 +4,7 @@ our $VERSION = '2.1606';
 use strict;
 use warnings;
 
-use List::MoreUtils ();
+use List::SomeUtils ();
 use Params::Util ();
 
 use Moose::Role;
@@ -45,7 +45,7 @@ sub _inline_return_value {
     my ($slot_access) = @_;
 
     return (
-        'my $iter = List::MoreUtils::natatime($_[0], @{ (' . $slot_access . ') });',
+        'my $iter = List::SomeUtils::natatime($_[0], @{ (' . $slot_access . ') });',
         'if ($_[1]) {',
             'while (my @vals = $iter->()) {',
                 '$_[1]->(@vals);',
