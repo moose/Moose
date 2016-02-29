@@ -3,6 +3,10 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [OTHER]
+
+  - Moose::Exception now has a boolean overload. (Graham Knop, PR#119)
+
 2.1605   2016-02-16
 
   [DOCUMENTATION]
