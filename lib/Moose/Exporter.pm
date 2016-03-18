@@ -7,7 +7,6 @@ use warnings;
 use Class::Load qw(is_class_loaded);
 use Class::MOP;
 use List::Util 1.44 qw( uniq );
-use List::MoreUtils qw( first_index );
 use Moose::Util::MetaRole;
 use Scalar::Util 1.11 qw(reftype);
 use Sub::Exporter 0.980;
@@ -529,42 +528,30 @@ sub _make_import_sub {
     };
 }
 
+sub _strip_option {
+    my $option_name = shift;
+    my $default = shift;
+    for my $i ( 0 .. $#_ - 1 ) {
+        if (($_[$i] || '') eq $option_name) {
+            (undef, my $value) = splice @_, $i, 2;
+            return ( $value, @_ );
+        }
+    }
+    return ( $default, @_ );
+}
+
 sub _strip_traits {
-    my $idx = first_index { ( $_ || '' ) eq '-traits' } @_;
-
-    return ( [], @_ ) unless $idx >= 0 && $#_ >= $idx + 1;
-
-    my $traits = $_[ $idx + 1 ];
-
-    splice @_, $idx, 2;
-
-    $traits = [$traits] unless ref $traits;
-
-    return ( $traits, @_ );
+    my ($traits, @other) = _strip_option('-traits', [], @_);
+    $traits = ref $traits ? $traits : [ $traits ];
+    return ( $traits, @other );
 }
 
 sub _strip_metaclass {
-    my $idx = first_index { ( $_ || '' ) eq '-metaclass' } @_;
-
-    return ( undef, @_ ) unless $idx >= 0 && $#_ >= $idx + 1;
-
-    my $metaclass = $_[ $idx + 1 ];
-
-    splice @_, $idx, 2;
-
-    return ( $metaclass, @_ );
+    _strip_option('-metaclass', undef, @_);
 }
 
 sub _strip_meta_name {
-    my $idx = first_index { ( $_ || '' ) eq '-meta_name' } @_;
-
-    return ( 'meta', @_ ) unless $idx >= 0 && $#_ >= $idx + 1;
-
-    my $meta_name = $_[ $idx + 1 ];
-
-    splice @_, $idx, 2;
-
-    return ( $meta_name, @_ );
+    _strip_option('-meta_name', 'meta', @_);
 }
 
 sub _apply_metaroles {
