@@ -6,7 +6,8 @@ use warnings;
 
 use Class::Load qw(is_class_loaded);
 use Class::MOP;
-use List::MoreUtils qw( first_index uniq );
+use List::Util 1.44 qw( uniq );
+use List::MoreUtils qw( first_index );
 use Moose::Util::MetaRole;
 use Scalar::Util 1.11 qw(reftype);
 use Sub::Exporter 0.980;
