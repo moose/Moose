@@ -251,7 +251,7 @@ Had this been a real project we'd probably want:
 
 =back
 
-=head1 LICENSE
+=head1 COPYRIGHT AND LICENSE
 
 This work is licensed under a Creative Commons Attribution 3.0 Unported License.
 
