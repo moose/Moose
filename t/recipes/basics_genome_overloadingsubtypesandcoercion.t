@@ -3,7 +3,8 @@ use warnings;
 
 use Test::More;
 
-
+# TODO: use inc::ExtractInlineTests and inc::MyInline to inline this test into the pod,
+# so we do not need special handling for it in the build.
 {
     package Human;
 
