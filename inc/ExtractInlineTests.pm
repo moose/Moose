@@ -5,7 +5,7 @@ use Moose;
 with 'Dist::Zilla::Role::FileGatherer';
 
 use File::Find::Rule;
-use inc::MyInline;
+use inc::MyInline;  # contains My::Extract
 use Test::Inline;
 
 sub gather_files {
@@ -19,8 +19,7 @@ sub gather_files {
         OutputHandler  => My::Output->new($self),
     );
 
-    for my $pod (
-        File::Find::Rule->file->name(qr/\.pod$/)->in('lib/Moose/Cookbook') ) {
+    for my $pod ( File::Find::Rule->file->name(qr/\.pod$/)->in('lib/Moose/Cookbook') ) {
         $inline->add($pod);
     }
 
