@@ -7,6 +7,9 @@ for, noteworthy changes.
 
   - Moose::Exception now has a boolean overload. (Graham Knop, PR#119)
 
+  - All uses of List::MoreUtils have been removed, replaced by inlined forms
+    or equivalents in List::Util. (Graham Knop, PR#120)
+
 2.1605   2016-02-16
 
   [DOCUMENTATION]
