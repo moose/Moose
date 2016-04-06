@@ -4,7 +4,7 @@ our $VERSION = '2.1606';
 use strict;
 use warnings;
 
-use List::MoreUtils ();
+use List::Util 1.44 ();
 
 use Moose::Role;
 
@@ -16,7 +16,7 @@ sub _return_value {
     my $self = shift;
     my ($slot_access) = @_;
 
-    return 'List::MoreUtils::uniq @{ (' . $slot_access . ') }';
+    return 'List::Util::uniq @{ (' . $slot_access . ') }';
 }
 
 no Moose::Role;
