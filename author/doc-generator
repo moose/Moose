@@ -4,13 +4,13 @@ use strict;
 use warnings;
 use autodie;
 
-use Module::Runtime qw( use_module );
-use Moose::Util qw( english_list find_meta );
-use Path::Tiny qw( path );
-
 # We want to make sure that when we load an exception class we're getting the
 # version for the release-to-be, not the installed version.
 use blib;
+
+use Module::Runtime qw( use_module );
+use Moose::Util qw( english_list find_meta );
+use Path::Tiny qw( path );
 
 sub main {
     my $exception_dir = path(qw( lib Moose Exception ));
