@@ -6,7 +6,7 @@ use warnings;
 
 use Class::Load qw(is_class_loaded);
 use Class::MOP;
-use List::Util 1.44 qw( uniq );
+use List::Util 1.45 qw( uniq );
 use Moose::Util::MetaRole;
 use Scalar::Util 1.11 qw(reftype);
 use Sub::Exporter 0.980;

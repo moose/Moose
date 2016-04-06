@@ -4,7 +4,7 @@ our $VERSION = '2.1606';
 use strict;
 use warnings;
 
-use List::Util 1.44 ();
+use List::Util 1.45 ();
 
 use Moose::Role;
 
