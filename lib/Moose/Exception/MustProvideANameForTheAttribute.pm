@@ -1,5 +1,5 @@
 package Moose::Exception::MustProvideANameForTheAttribute;
-our $VERSION = '2.1606';
+our $VERSION = '2.1701';
 
 use Moose;
 extends 'Moose::Exception';
