@@ -16,10 +16,8 @@ use Moose::Exporter;
 
 use Class::MOP;
 
-BEGIN {
-    die "Class::MOP version $Moose::VERSION required--this is version $Class::MOP::VERSION"
-        if $Moose::VERSION && $Class::MOP::VERSION ne $Moose::VERSION;
-}
+die "Class::MOP version $Moose::VERSION required--this is version $Class::MOP::VERSION"
+    if $Class::MOP::VERSION ne $Moose::VERSION;
 
 use Moose::Meta::Class;
 use Moose::Meta::TypeConstraint;
