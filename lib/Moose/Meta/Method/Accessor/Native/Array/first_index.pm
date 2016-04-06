@@ -4,7 +4,6 @@ our $VERSION = '2.1606';
 use strict;
 use warnings;
 
-use List::MoreUtils ();
 use Params::Util ();
 
 use Moose::Role;
@@ -30,12 +29,22 @@ sub _inline_check_arguments {
     );
 }
 
-sub _return_value {
+sub _inline_return_value {
     my $self = shift;
     my ($slot_access) = @_;
 
-    return '&List::MoreUtils::first_index($_[0], @{ (' . $slot_access . ') })';
+    return join '',
+        'my @values = @{ (' . $slot_access . ') };',
+        'my $f = $_[0];',
+        'foreach my $i ( 0 .. $#values ) {',
+            'local *_ = \\$values[$i];',
+            'return $i if $f->();',
+        '}',
+        'return -1;';
 }
+
+# Not called, but needed to satisfy the Reader role
+sub _return_value { }
 
 no Moose::Role;
 
