@@ -3,6 +3,8 @@
 
 =pod
 
+=for comment CONTRIBUTING.pod is generated from lib/Moose/Manual/Contributing.pod
+
 =head1 GETTING INVOLVED
 
 Moose is an open project, and we are always willing to accept bug fixes,
