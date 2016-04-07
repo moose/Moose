@@ -3,6 +3,10 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  - Fixed the last remaining use of List::MoreUtils (RT#113587)
+
 2.1700   2016-04-06 (TRIAL RELEASE)
 
   [OTHER]

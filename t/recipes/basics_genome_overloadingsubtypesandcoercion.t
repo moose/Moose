@@ -2,6 +2,10 @@ use strict;
 use warnings;
 
 use Test::More;
+BEGIN {
+    plan skip_all => 'List::MoreUtils required for testing this recipe'
+        unless eval 'require List::MoreUtils';
+}
 
 # TODO: use inc::ExtractInlineTests and inc::MyInline to inline this test into the pod,
 # so we do not need special handling for it in the build.
