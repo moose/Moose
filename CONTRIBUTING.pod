@@ -8,7 +8,7 @@ Moose::Manual::Contributing - How to get involved in Moose
 
 =head1 VERSION
 
-version 2.1701
+version 2.1702
 
 =for comment CONTRIBUTING.pod is generated from lib/Moose/Manual/Contributing.pod
 
