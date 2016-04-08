@@ -151,6 +151,7 @@ like L<List::MoreUtils>'s C<first_index> function. The matching is done with a
 subroutine reference you pass to this method. The subroutine will be called
 against each element in the array until one matches or all elements have been
 checked. Each list element will be available to the sub in C<$_>.
+If no match is made, -1 is returned.
 
 This method requires a single argument.
 

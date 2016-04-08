@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [DOCUMENTATION]
+
+  - Moose::Meta::Attribute::Native::Trait::Array now documents the return
+    value for 'first_index' when there is no match (-1).
+
   [OTHER]
 
   - Moose::Exception's message attribute can now be any defined value, so as
