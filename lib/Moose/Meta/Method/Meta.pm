@@ -1,5 +1,5 @@
 package Moose::Meta::Method::Meta;
-our $VERSION = '2.1703';
+our $VERSION = '2.1704';
 
 use strict;
 use warnings;
