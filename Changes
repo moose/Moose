@@ -4104,7 +4104,7 @@ for, noteworthy changes.
     - Moose::Meta::Class
       - fixed issue where extending metaclasses with
         roles would blow up. Thanks to Aankhen`` for
-        finding this insidious error, and it's solution.
+        finding this insidious error, and its solution.
 
     ~~ lots of spelling and grammer fixes in the docs,
        many many thanks to rlb3 and Aankhen for these :)
@@ -4530,7 +4530,7 @@ for, noteworthy changes.
         - added tests for this
 
     - Moose::Meta::Role
-      - ripped out much of it's guts ,.. much cleaner now
+      - ripped out much of its guts... much cleaner now
       - added required methods and correct handling of
         them in apply() for both classes and roles
         - added tests for this

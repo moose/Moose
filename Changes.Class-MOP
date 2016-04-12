@@ -187,7 +187,7 @@ longer released separately.
 
 0.93 Tue, Sep 15, 2009
     * Class::MOP
-      - The load_class function just returns true, since it's return value was
+      - The load_class function just returns true, since its return value was
         confusing (either a metaclass object or a class name). It either loads
         a class or dies trying. In the future, this may change to not return
         anything, since there's no point in checking its return
@@ -1414,7 +1414,7 @@ longer released separately.
     * Class::MOP::Class
       - added the %:methods attribute, which like
         the $:version and such just actually goes
-        to the symbol table to get it's stuff.
+        to the symbol table to get its stuff.
         However, it makes the MOP more complete.
      ** API CHANGE **
       - The &create method now requires that all
