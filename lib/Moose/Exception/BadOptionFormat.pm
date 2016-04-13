@@ -1,5 +1,5 @@
 package Moose::Exception::BadOptionFormat;
-our $VERSION = '2.1704';
+our $VERSION = '2.1705';
 
 use Moose;
 extends 'Moose::Exception';

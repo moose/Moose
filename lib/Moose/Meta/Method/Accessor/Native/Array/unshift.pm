@@ -1,5 +1,5 @@
 package Moose::Meta::Method::Accessor::Native::Array::unshift;
-our $VERSION = '2.1704';
+our $VERSION = '2.1705';
 
 use strict;
 use warnings;
