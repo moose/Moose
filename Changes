@@ -3,6 +3,10 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [TESTS]
+
+  - restore test on perl 5.8.x when Class::C3::XS is not installed (RT#113704)
+
 2.1703   2016-04-12 (TRIAL RELEASE)
 
   [TESTS]
