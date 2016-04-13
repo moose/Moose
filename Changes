@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  - Fixed method cache regeneration when a class contains a blessed sub
+    (RT#113704, Graham Knop, PR#122)
+
   [TESTS]
 
   - restore test on perl 5.8.x when Class::C3::XS is not installed (RT#113704)
