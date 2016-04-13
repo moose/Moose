@@ -4,12 +4,6 @@ use warnings;
 use Test::More;
 use Test::Fatal;
 
-BEGIN {
-    # see RT#113704
-    plan skip_all => 'Need Class::C3::XS, at least for these tests, when mro is not available'
-        if $] < '5.010' and not eval { require Class::C3::XS; 1 };
-}
-
 use Scalar::Util qw/reftype/;
 use Sub::Name;
 
@@ -106,6 +100,12 @@ my $bork_blessed = bless sub { }, 'Non::Meta::Class';
 is( exception {
   $Foo->add_method('bork', $bork_blessed);
 }, undef, 'can add blessed sub as method');
+
+$Foo->reset_package_cache_flag;
+
+is( exception {
+  $Foo->has_method('bork');
+}, undef, 'regeneration of method cache works after adding blessed sub as method');
 
 # now check all our other items ...
 
