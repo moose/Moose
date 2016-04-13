@@ -24,7 +24,7 @@ for, noteworthy changes.
 
 2.1701   2016-04-07 (TRIAL RELEASE)
 
-  [BUG FIXES]
+  [OTHER]
 
   - Fixed the last remaining use of List::MoreUtils (RT#113587)
 
