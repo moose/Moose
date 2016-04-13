@@ -101,6 +101,12 @@ is( exception {
   $Foo->add_method('bork', $bork_blessed);
 }, undef, 'can add blessed sub as method');
 
+$Foo->reset_package_cache_flag;
+
+is( exception {
+  $Foo->has_method('bork');
+}, undef, 'regeneration of method cache works after adding blessed sub as method');
+
 # now check all our other items ...
 
 ok( $Foo->has_method('FOO_CONSTANT'),

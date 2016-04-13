@@ -24,7 +24,7 @@ mop_update_method_map(pTHX_ HV *const stash, HV *const map)
             continue;
         }
 
-        if (sv_isobject(method)) {
+        if (sv_derived_from(method, "Class::MOP::Method")) {
             /* $method_object->body() */
             body = mop_call0(aTHX_ method, KEY_FOR(body));
         }
