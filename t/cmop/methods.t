@@ -4,12 +4,6 @@ use warnings;
 use Test::More;
 use Test::Fatal;
 
-BEGIN {
-    # see RT#113704
-    plan skip_all => 'Need Class::C3::XS, at least for these tests, when mro is not available'
-        if $] < '5.010' and not eval { require Class::C3::XS; 1 };
-}
-
 use Scalar::Util qw/reftype/;
 use Sub::Name;
 
