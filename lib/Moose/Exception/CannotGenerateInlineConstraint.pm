@@ -1,5 +1,5 @@
 package Moose::Exception::CannotGenerateInlineConstraint;
-our $VERSION = '2.1705';
+our $VERSION = '2.1706';
 
 use Moose;
 extends 'Moose::Exception';

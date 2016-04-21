@@ -1,5 +1,5 @@
 package Moose::Meta::Method::Accessor::Native::Array::uniq;
-our $VERSION = '2.1705';
+our $VERSION = '2.1706';
 
 use strict;
 use warnings;
