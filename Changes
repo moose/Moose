@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [OTHER]
+
+  - build-time compiler sanity checking is now done with ExtUtils::HasCompiler
+    instead of ExtUtils::CBuilder.
+
 2.1704   2016-04-13 (TRIAL RELEASE)
 
   [BUG FIXES]
