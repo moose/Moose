@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [OTHER]
+
+  - an increased Data::OptList version has been added to recommended prereqs,
+    for greater speed. (Olivier Mengué, PR#123)
+
 2.1705   2016-04-21 (TRIAL RELEASE)
 
   [OTHER]
