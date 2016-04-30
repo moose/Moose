@@ -1,5 +1,5 @@
 package Moose::Meta::Method::Accessor::Native::Array::Writer;
-our $VERSION = '2.1706';
+our $VERSION = '2.1801';
 
 use strict;
 use warnings;
