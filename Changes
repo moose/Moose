@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [OTHER]
+
+  - bundled an updated ExtUtils::HasCompiler, to support building with a
+    noexec $TMPDIR.
+
 2.1800   2016-04-30
 
   [OTHER]
