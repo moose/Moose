@@ -15,7 +15,7 @@ override _build_MakeFile_PL_template => sub {
     my $assert_compiler = <<'ASSERT_COMPILER';
 # Secondary compile testing via ExtUtils::HasCompiler
 use lib 'inc';
-use ExtUtils::HasCompiler 0.013 'can_compile_loadable_object';
+use ExtUtils::HasCompiler 0.014 'can_compile_loadable_object';
 die 'This distribution requires a working compiler'
     unless can_compile_loadable_object(quiet => 1);
 
