@@ -1,5 +1,5 @@
 package Class::MOP::Class::Immutable::Trait;
-our $VERSION = '2.1801';
+our $VERSION = '2.1802';
 
 use strict;
 use warnings;
