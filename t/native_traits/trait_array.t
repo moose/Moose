@@ -119,20 +119,63 @@ use Test::Moose;
 }
 
 {
-    run_tests(build_class);
-    run_tests( build_class( lazy => 1, default => sub { [ 42, 84 ] } ) );
-    run_tests( build_class( trigger => sub { } ) );
-    run_tests( build_class( no_inline => 1 ) );
+    subtest( 'simple case', sub { run_tests(build_class) } );
+    subtest(
+        'lazy default attr',
+        sub {
+            run_tests(
+                build_class( lazy => 1, default => sub { [ 42, 84 ] } ) );
+        }
+    );
 
-    # Will force the inlining code to check the entire arrayref when it is modified.
-    subtype 'MyArrayRef', as 'ArrayRef', where { 1 };
+    subtest(
+        'attr with trigger',
+        sub {
+            run_tests( build_class( trigger => sub { } ) );
+        }
+    );
+    subtest(
+        'attr is not inlined',
+        sub { run_tests( build_class( no_inline => 1 ) ) }
+    );
 
-    run_tests( build_class( isa => 'MyArrayRef' ) );
+    subtest(
+        'attr type forces the inlining code to check the entire arrayref when it is modified',
+        sub {
+            subtype 'MyArrayRef', as 'ArrayRef', where {1};
+            run_tests( build_class( isa => 'MyArrayRef' ) );
+        }
+    );
 
-    coerce 'MyArrayRef', from 'ArrayRef', via { $_ };
-
-    run_tests( build_class( isa => 'MyArrayRef', coerce => 1 ) );
+    subtest(
+        'attr type has coercion',
+        sub {
+            coerce 'MyArrayRef', from 'ArrayRef', via {$_};
+            run_tests( build_class( isa => 'MyArrayRef', coerce => 1 ) );
+        }
+    );
 }
+
+subtest(
+    'setting value to undef with accessor',
+    sub {
+        my ( $class, $handles ) = build_class( isa => 'ArrayRef' );
+        my $obj = $class->new;
+        with_immutable {
+            is(
+                exception { $obj->accessor( 0, undef ) },
+                undef,
+                'can use accessor to set value to undef'
+            );
+            is(
+                exception { $obj->accessor_curried_1(undef) },
+                undef,
+                'can use curried accessor to set value to undef'
+            );
+        }
+        $class;
+    }
+);
 
 sub run_tests {
     my ( $class, $handles ) = @_;
@@ -715,24 +758,6 @@ sub run_tests {
                 'unshift works with lazy init'
             );
         }
-    }
-    $class;
-}
-
-{
-    my ( $class, $handles ) = build_class( isa => 'ArrayRef' );
-    my $obj = $class->new;
-    with_immutable {
-        is(
-            exception { $obj->accessor( 0, undef ) },
-            undef,
-            'can use accessor to set value to undef'
-        );
-        is(
-            exception { $obj->accessor_curried_1(undef) },
-            undef,
-            'can use curried accessor to set value to undef'
-        );
     }
     $class;
 }
