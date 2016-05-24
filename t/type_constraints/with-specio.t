@@ -50,10 +50,16 @@ with_immutable(
                     '42 is an acceptable int'
                 );
 
-                like(
+                my $exception_class = 'Moose::Exception::'
+                    . (
+                    $is_immutable
+                    ? 'ValidationFailedForInlineTypeConstraint'
+                    : 'ValidationFailedForTypeConstraint'
+                    );
+
+                isa_ok(
                     exception { Foo->new( int => 42.4 ) },
-                    qr/does not pass the type constraint.+for type named Int/,
-                    '42.4 is not an acceptable int'
+                    $exception_class,
                 );
 
                 is(
@@ -62,10 +68,9 @@ with_immutable(
                     '[ 42, 84 ] is an acceptable array of ints'
                 );
 
-                like(
+                isa_ok(
                     exception { Foo->new( array_of_ints => [ 42.4, 84 ] ) },
-                    qr/does not pass the type constraint.+for (?:anonymous type|type named ArrayRef\[Int\])/,
-                    '[ 42.4, 84 ] is an acceptable array of ints'
+                    $exception_class,
                 );
 
                 is(
@@ -76,13 +81,12 @@ with_immutable(
                     '{ foo => 42, bar => 84 } is an acceptable array of ints'
                 );
 
-                like(
+                isa_ok(
                     exception {
                         Foo->new(
                             hash_of_ints => { foo => 42.4, bar => 84 } );
                     },
-                    qr/does not pass the type constraint.+for (?:anonymous type|type named HashRef\[Int\])/,
-                    '{ foo => 42.4, bar => 84 } is an acceptable array of ints'
+                    $exception_class,
                 );
             }
         );
@@ -143,10 +147,16 @@ with_immutable(
                     '[ 42, 84 ] is an acceptable array of ints'
                 );
 
-                like(
+                my $exception_class = 'Moose::Exception::'
+                    . (
+                    $is_immutable
+                    ? 'ValidationFailedForInlineTypeConstraint'
+                    : 'ValidationFailedForTypeConstraint'
+                    );
+
+                isa_ok(
                     exception { Bar->new( array_of_ints => [ 42.4, 84 ] ) },
-                    qr/does not pass the type constraint.+for anonymous type/,
-                    '[ 42.4, 84 ] is an acceptable array of ints'
+                    $exception_class,
                 );
 
                 {
@@ -172,13 +182,12 @@ with_immutable(
                     '{ foo => 42, bar => 84 } is an acceptable array of ints'
                 );
 
-                like(
+                isa_ok(
                     exception {
                         Bar->new(
                             hash_of_ints => { foo => 42.4, bar => 84 } );
                     },
-                    qr/does not pass the type constraint.+for anonymous type/,
-                    '{ foo => 42.4, bar => 84 } is an acceptable array of ints'
+                    $exception_class,
                 );
 
                 {

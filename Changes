@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  - Fixed test failures if Specio 0.14+ was installed.
+
+
 2.1801   2016-05-02
 
   [OTHER]
