@@ -64,7 +64,7 @@ with_immutable(
 
                 like(
                     exception { Foo->new( array_of_ints => [ 42.4, 84 ] ) },
-                    qr/does not pass the type constraint.+for anonymous type/,
+                    qr/does not pass the type constraint.+for (?:anonymous type|type named ArrayRef\[Int\])/,
                     '[ 42.4, 84 ] is an acceptable array of ints'
                 );
 
@@ -81,7 +81,7 @@ with_immutable(
                         Foo->new(
                             hash_of_ints => { foo => 42.4, bar => 84 } );
                     },
-                    qr/does not pass the type constraint.+for anonymous type/,
+                    qr/does not pass the type constraint.+for (?:anonymous type|type named HashRef\[Int\])/,
                     '{ foo => 42.4, bar => 84 } is an acceptable array of ints'
                 );
             }
