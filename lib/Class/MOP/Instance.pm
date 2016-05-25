@@ -1,5 +1,5 @@
 package Class::MOP::Instance;
-our $VERSION = '2.1802';
+our $VERSION = '2.1803';
 
 use strict;
 use warnings;

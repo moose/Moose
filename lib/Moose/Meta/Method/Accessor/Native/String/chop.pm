@@ -1,5 +1,5 @@
 package Moose::Meta::Method::Accessor::Native::String::chop;
-our $VERSION = '2.1802';
+our $VERSION = '2.1803';
 
 use strict;
 use warnings;
