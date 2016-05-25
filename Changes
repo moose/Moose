@@ -7,6 +7,11 @@ for, noteworthy changes.
 
   - Fixed test failures if Specio 0.14+ was installed.
 
+  [OTHER]
+
+  - updated metadata, used by moose-outdated and t/zzz-check-breaks.t,
+    to reflect downstream modules affected by the recent removal of
+    List::MoreUtils.
 
 2.1801   2016-05-02
 
