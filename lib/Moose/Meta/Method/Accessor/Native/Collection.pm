@@ -87,7 +87,9 @@ sub _check_new_members_only {
     # not Paramet_erized_), we don't know what is being checked by the
     # constraint, so we need to check the whole value, not just the members.
     return 1
-        if $self->_is_root_type( $tc->parent ) && !$tc->can('parameterize');
+        if $self->_is_root_type( $tc->parent )
+            && ( $tc->isa('Moose::Meta::TypeConstraint::Parameterized')
+                 || !$tc->can('parameterize') );
 
     return 0;
 }
