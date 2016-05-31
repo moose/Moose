@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  - fixed type compatibility with Type::Tiny that was partially lost in
+    2.1802.
+
 2.1802   2016-05-25
 
   [BUG FIXES]
