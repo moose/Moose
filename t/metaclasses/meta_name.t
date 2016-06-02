@@ -4,14 +4,14 @@ use Test::More;
 
 {
     # so we don't pick up stuff from Moose::Object
-    package Base;
+    package Base::Class;
     sub foo { } # touch it so that 'extends' doesn't try to load it
 }
 
 {
     package Foo;
     use Moose;
-    extends 'Base';
+    extends 'Base::Class';
     no Moose;
 }
 can_ok('Foo', 'meta');
@@ -21,7 +21,7 @@ isa_ok(Foo->meta->get_method('meta'), 'Moose::Meta::Method::Meta');
 {
     package Bar;
     use Moose -meta_name => 'bar_meta';
-    extends 'Base';
+    extends 'Base::Class';
     no Moose;
 }
 ok(!Bar->can('meta'), q{Bar->cant('meta')});
@@ -32,7 +32,7 @@ isa_ok(Bar->bar_meta->get_method('bar_meta'), 'Moose::Meta::Method::Meta');
 {
     package Baz;
     use Moose -meta_name => undef;
-    extends 'Base';
+    extends 'Base::Class';
     no Moose;
 }
 ok(!Baz->can('meta'), q{Baz->cant('meta')});

@@ -10,14 +10,14 @@ my %results;
 
 {
 
-    package Base;
+    package Base::Class;
     use metaclass;
     sub hey { $results{base}++ }
 }
 
 for my $wrap (qw(before after)) {
     my $meta = Class::MOP::Class->create_anon_class(
-        superclasses => [ 'Base', 'Class::MOP::Object' ] );
+        superclasses => [ 'Base::Class', 'Class::MOP::Object' ] );
     my $alter = "add_${wrap}_method_modifier";
     $meta->$alter(
         'hey' => sub {
@@ -28,7 +28,7 @@ for my $wrap (qw(before after)) {
 
     %results = ();
     my $o = $meta->get_meta_instance->create_instance;
-    isa_ok( $o, 'Base' );
+    isa_ok( $o, 'Base::Class' );
     is( exception {
         $o->hey;
         $o->hey
@@ -42,7 +42,7 @@ for my $wrap (qw(before after)) {
 
 {
     my $meta = Class::MOP::Class->create_anon_class(
-        superclasses => [ 'Base', 'Class::MOP::Object' ] );
+        superclasses => [ 'Base::Class', 'Class::MOP::Object' ] );
     for my $wrap (qw(before after)) {
         my $alter = "add_${wrap}_method_modifier";
         $meta->$alter(
@@ -55,7 +55,7 @@ for my $wrap (qw(before after)) {
 
     %results = ();
     my $o = $meta->get_meta_instance->create_instance;
-    isa_ok( $o, 'Base' );
+    isa_ok( $o, 'Base::Class' );
     is( exception {
         $o->hey;
         $o->hey
