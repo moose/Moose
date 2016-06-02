@@ -3,6 +3,8 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  - restrict Type::Tiny test to versions new enough to support native traits.
+
 2.1803   2016-05-31
 
   [BUG FIXES]

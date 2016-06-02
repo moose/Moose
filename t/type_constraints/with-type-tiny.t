@@ -3,7 +3,7 @@ use warnings;
 use Test::More;
 use Test::Fatal;
 
-use Test::Requires 'Types::Standard';
+use Test::Requires { 'Types::Standard' => 0.021_03 };
 
 is(
     exception {
