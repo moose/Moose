@@ -1,5 +1,5 @@
 package Moose::Meta::Method::Accessor::Native::Array::sort_in_place;
-our $VERSION = '2.1804';
+our $VERSION = '2.1805';
 
 use strict;
 use warnings;

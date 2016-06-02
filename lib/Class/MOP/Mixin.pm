@@ -1,5 +1,5 @@
 package Class::MOP::Mixin;
-our $VERSION = '2.1804';
+our $VERSION = '2.1805';
 
 use strict;
 use warnings;
