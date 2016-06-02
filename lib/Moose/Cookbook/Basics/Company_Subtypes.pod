@@ -7,6 +7,7 @@
 
 use Test::Requires {
     'Locale::US'     => '0',
+    'perl'           => '5.010',    # for Regexp::Common
     'Regexp::Common' => '0',
 };
 

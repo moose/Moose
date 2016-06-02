@@ -3,7 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [OTHER]
+
   - restrict Type::Tiny test to versions new enough to support native traits.
+
+  - restrict recipe test to perls where Regexp::Common is installable
 
 2.1803   2016-05-31
 
