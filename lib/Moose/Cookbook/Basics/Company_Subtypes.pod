@@ -5,9 +5,17 @@
 
 =begin testing-SETUP
 
+# we have to do this silliness because Test::Inline already added a plan for us.
+BEGIN {
+    if ("$]" <= '5.010') {
+        diag 'this test requires Regexp::Common (therefore perl 5.010)';
+        pass;
+        exit 0;
+    }
+}
+
 use Test::Requires {
     'Locale::US'     => '0',
-    'perl'           => '5.010',    # for Regexp::Common
     'Regexp::Common' => '0',
 };
 
