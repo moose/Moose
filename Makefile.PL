@@ -6,8 +6,6 @@ use warnings;
 
 BEGIN {
 
-    $ENV{PERL_MM_OPT} = 'NORECURS=1';
-
     my @modules = qw(
         ExtUtils::MakeMaker::Dist::Zilla::Develop
         File::Find::Rule
@@ -55,5 +53,6 @@ WriteMakefile(
     CCFLAGS => MMHelper::ccflags_static('dev'),
     INSTALLMAN1DIR => 'none',
     INSTALLMAN3DIR => 'none',
+    NORECURS => 1,
     %args,
 );
