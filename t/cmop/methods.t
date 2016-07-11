@@ -199,7 +199,7 @@ is_deeply(
 );
 
 my @universal_methods = qw/isa can VERSION/;
-push @universal_methods, 'DOES' if $] >= 5.010;
+push @universal_methods, 'DOES' if "$]" >= 5.010;
 
 is_deeply(
     [

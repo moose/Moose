@@ -10,7 +10,7 @@ my %methods      = map { $_->name => 1 } $meta_class->get_all_methods();
 my %method_names = map { $_       => 1 } $meta_class->get_all_method_names();
 
 my @universal_methods = qw/isa can VERSION/;
-push @universal_methods, 'DOES' if $] >= 5.010;
+push @universal_methods, 'DOES' if "$]" >= 5.010;
 
 for my $method (@universal_methods) {
     ok(

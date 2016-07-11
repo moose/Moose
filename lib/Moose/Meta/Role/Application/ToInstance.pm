@@ -17,7 +17,7 @@ __PACKAGE__->meta->add_attribute('rebless_params' => (
     Class::MOP::_definition_context(),
 ));
 
-use constant _NEED_OVERLOAD_HACK_FOR_OBJECTS => $] < 5.008009;
+use constant _NEED_OVERLOAD_HACK_FOR_OBJECTS => "$]" < 5.008009;
 
 sub apply {
     my ( $self, $role, $object, $args ) = @_;

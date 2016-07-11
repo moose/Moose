@@ -20,7 +20,7 @@ use Class::MOP::Attribute;
 use Class::MOP::Method;
 
 BEGIN {
-    *IS_RUNNING_ON_5_10 = ($] < 5.009_005)
+    *IS_RUNNING_ON_5_10 = ("$]" < 5.009_005)
         ? sub () { 0 }
         : sub () { 1 };
 

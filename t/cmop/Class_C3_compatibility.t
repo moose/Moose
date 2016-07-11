@@ -56,7 +56,7 @@ ok(Diamond_C->meta->has_method('hello'), '... C has a method hello');
 ok(!Diamond_D->meta->has_method('hello'), '... D does not have a method hello');
 
 SKIP: {
-    skip "C3 does not make aliases on 5.9.5+", 2 if $] > 5.009_004;
+    skip "C3 does not make aliases on 5.9.5+", 2 if "$]" > 5.009_004;
     ok(defined &Diamond_B::hello, '... B does have an alias to the method hello');
     ok(defined &Diamond_D::hello, '... D does have an alias to the method hello');
 }

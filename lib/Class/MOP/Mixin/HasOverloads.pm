@@ -47,7 +47,7 @@ sub get_overloaded_operator {
     return $self->_overload_map->{$op} ||= $self->_overload_for($op);
 }
 
-use constant _SET_FALLBACK_EACH_TIME => $] < 5.120;
+use constant _SET_FALLBACK_EACH_TIME => "$]" < 5.120;
 
 sub add_overloaded_operator {
     my $self = shift;
@@ -103,7 +103,7 @@ sub remove_overloaded_operator {
     # overload.pm provides no api for this - but the problem that makes this
     # necessary has been fixed in 5.18
     $self->get_or_add_package_symbol('%OVERLOAD')->{dummy}++
-        if $] < 5.017000;
+        if "$]" < 5.017000;
 
     $self->remove_package_symbol('&(' . $op);
 }

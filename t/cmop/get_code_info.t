@@ -37,7 +37,7 @@ code_name_is( \&Class::MOP::Method::name, "Class::MOP::Method", "name" );
         my ($class, $code) = @_;
         my @info = Class::MOP::get_code_info($code);
 
-        if ( $] >= 5.011 ) {
+        if ( "$]" >= 5.011 ) {
             ::is_deeply(\@info, ['Foo', 'foo'], "got a name for a code ref in an attr handler");
         }
         else {

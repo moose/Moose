@@ -11,7 +11,7 @@ BEGIN {
 use Class::MOP;
 
 # 5.10.0 has a bug on weaken($hash_ref) which leaks an AV.
-my $expected = ( $] == 5.010_000 ? 1 : 0 );
+my $expected = ( "$]" == 5.010_000 ? 1 : 0 );
 
 leaks_cmp_ok {
     Class::MOP::Class->create_anon_class();

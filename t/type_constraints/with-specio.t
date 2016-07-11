@@ -7,7 +7,7 @@ use Test::More;
 
 BEGIN {
     plan skip_all => 'These tests requires Specio, which requires perl 5.010'
-        unless $] >= 5.010;
+        unless "$]" >= 5.010;
 }
 
 use Test::Requires {

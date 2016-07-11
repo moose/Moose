@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 BEGIN {
     plan skip_all => 'Leak tests fail under perl 5.21.[6-9]'
-        if $] >= '5.021006' and $] <= '5.021011';
+        if "$]" >= '5.021006' and "$]" <= '5.021011';
     plan skip_all => 'Leak tests fail under Devel::Cover' if $INC{'Devel/Cover.pm'};
 }
 
@@ -76,7 +76,7 @@ use Moose::Util::TypeConstraints;
 
 
 {
-    local $TODO = 'anonymous classes leak on 5.8' if $] < 5.010;
+    local $TODO = 'anonymous classes leak on 5.8' if "$]" < 5.010;
     no_leaks_ok(
         sub {
             Moose::Meta::Class->create_anon_class->new_object;
