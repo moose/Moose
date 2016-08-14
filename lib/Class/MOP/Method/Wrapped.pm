@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use Scalar::Util 'blessed';
-use Sub::Name 'subname';
+use Sub::Util 1.40 'set_subname';
 
 use parent 'Class::MOP::Method';
 
@@ -91,7 +91,9 @@ sub wrap {
 
     return $class->SUPER::wrap(
         sub {
-            my $wrapped = subname "${pkg_name}::_wrapped_${method_name}" => $modifier_table->{cache};
+            my $wrapped
+                = set_subname( "${pkg_name}::_wrapped_${method_name}" =>
+                    $modifier_table->{cache} );
             return $wrapped->(@_) ;
         },
         package_name    => $pkg_name,

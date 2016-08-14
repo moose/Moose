@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [OTHER]
+
+  - Replaced all uses of Sub::Name with Sub::Util, since the latter is part of
+    core as of Perl 5.22.
+
 2.2009   2017-11-29
 
   [BUG FIXES]
