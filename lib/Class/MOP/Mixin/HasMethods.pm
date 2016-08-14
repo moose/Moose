@@ -7,7 +7,7 @@ use warnings;
 use Class::MOP::Method::Meta;
 
 use Scalar::Util 'blessed', 'reftype';
-use Sub::Name 'subname';
+use Sub::Util 1.40 'set_subname';
 
 use parent 'Class::MOP::Mixin';
 
@@ -72,7 +72,7 @@ sub add_method {
 
     my ($current_package, $current_name) = Class::MOP::get_code_info($body);
 
-    subname($package_name . '::' . $method_name, $body)
+    set_subname($package_name . '::' . $method_name, $body)
         unless defined $current_name && $current_name !~ /^__ANON__/;
 
     $self->add_package_symbol("&$method_name", $body);

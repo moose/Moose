@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Sub::Name 'subname';
+use Sub::Util 'set_subname';
 
 BEGIN {
     $^P &= ~0x200; # Don't munge anonymous sub names
@@ -23,9 +23,9 @@ sub code_name_is {
 
 code_name_is( sub {}, main => "__ANON__" );
 
-code_name_is( subname("Foo::bar", sub {}), Foo => "bar" );
+code_name_is( set_subname("Foo::bar", sub {}), Foo => "bar" );
 
-code_name_is( subname("", sub {}), "main" => "" );
+code_name_is( set_subname("", sub {}), "main" => "" );
 
 require Class::MOP::Method;
 code_name_is( \&Class::MOP::Method::name, "Class::MOP::Method", "name" );

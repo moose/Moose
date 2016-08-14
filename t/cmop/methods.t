@@ -5,7 +5,7 @@ use Test::More;
 use Test::Fatal;
 
 use Scalar::Util qw/reftype/;
-use Sub::Name;
+use Sub::Util 1.40;
 
 use Class::MOP;
 use Class::MOP::Class;
@@ -31,9 +31,9 @@ use Class::MOP::Method;
     # create something with the typeglob inside the package
     *baaz = sub {'Foo::baaz'};
 
-    {    # method named with Sub::Name inside the package scope
+    {    # method named with Sub::Util inside the package scope
         no strict 'refs';
-        *{'Foo::floob'} = Sub::Name::subname 'floob' => sub {'!floob!'};
+        *{'Foo::floob'} = Sub::Util::set_subname 'floob' => sub {'!floob!'};
     }
 
     # We hateses the "used only once" warnings
@@ -54,8 +54,8 @@ use Class::MOP::Method;
     {
         no strict 'refs';
         *{'Foo::bling'} = sub {'$$Bling$$'};
-        *{'Foo::bang'} = Sub::Name::subname 'Foo::bang' => sub {'!BANG!'};
-        *{'Foo::boom'} = Sub::Name::subname 'boom'      => sub {'!BOOM!'};
+        *{'Foo::bang'} = Sub::Util::set_subname 'Foo::bang' => sub {'!BANG!'};
+        *{'Foo::boom'} = Sub::Util::set_subname 'boom'      => sub {'!BOOM!'};
 
         eval "package Foo; sub evaled_foo { 'Foo::evaled_foo' }";
     }
@@ -87,7 +87,7 @@ is( $foo_method->package_name, 'Foo',
     '... got the right package name for the method' );
 
 ok( $Foo->has_method('foo'),
-    '... Foo->has_method(foo) (defined with Sub::Name)' );
+    '... Foo->has_method(foo) (defined with Sub::Util)' );
 
 is( $Foo->get_method('foo')->body, $foo,
     '... Foo->get_method(foo) == \&foo' );
@@ -112,7 +112,7 @@ is( exception {
 ok( $Foo->has_method('FOO_CONSTANT'),
     '... not Foo->has_method(FOO_CONSTANT) (defined w/ use constant)' );
 ok( !$Foo->has_method('bling'),
-    '... not Foo->has_method(bling) (defined in main:: using symbol tables (no Sub::Name))'
+    '... not Foo->has_method(bling) (defined in main:: using symbol tables (no Sub::Util))'
 );
 
 ok( $Foo->has_method('bar'), '... Foo->has_method(bar) (defined in Foo)' );
@@ -121,13 +121,13 @@ ok( $Foo->has_method('baz'),
 ok( $Foo->has_method('baaz'),
     '... Foo->has_method(baaz) (typeglob aliased within Foo)' );
 ok( $Foo->has_method('floob'),
-    '... Foo->has_method(floob) (defined in Foo:: using symbol tables and Sub::Name w/out package name)'
+    '... Foo->has_method(floob) (defined in Foo:: using symbol tables and Sub::Util w/out package name)'
 );
 ok( $Foo->has_method('blah'),
     '... Foo->has_method(blah) (defined in main:: using fully qualified package name)'
 );
 ok( $Foo->has_method('bang'),
-    '... Foo->has_method(bang) (defined in main:: using symbol tables and Sub::Name)'
+    '... Foo->has_method(bang) (defined in main:: using symbol tables and Sub::Util)'
 );
 ok( $Foo->has_method('evaled_foo'),
     '... Foo->has_method(evaled_foo) (evaled in main::)' );
@@ -184,7 +184,7 @@ for my $method_name (
 ok( !$Foo->has_method('blessed'),
     '... !Foo->has_method(blessed) (imported into Foo)' );
 ok( !$Foo->has_method('boom'),
-    '... !Foo->has_method(boom) (defined in main:: using symbol tables and Sub::Name w/out package name)'
+    '... !Foo->has_method(boom) (defined in main:: using symbol tables and Sub::Util w/out package name)'
 );
 
 ok( !$Foo->has_method('not_a_real_method'),

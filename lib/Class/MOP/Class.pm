@@ -10,10 +10,10 @@ use Class::MOP::Method::Accessor;
 use Class::MOP::Method::Constructor;
 use Class::MOP::MiniTrait;
 
-use Carp         'confess';
+use Carp 'confess';
 use Module::Runtime 'use_package_optimistically';
 use Scalar::Util 'blessed';
-use Sub::Name    'subname';
+use Sub::Util 1.40 'set_subname';
 use Try::Tiny;
 use List::Util 1.33 'all';
 
@@ -1087,7 +1087,7 @@ sub _method_lookup_order {
             || $self->_throw_exception( MethodModifierNeedsMethodName => class_name => $self->name );
         my $method = $fetch_and_prepare_method->($self, $method_name);
         $method->add_before_modifier(
-            subname(':before' => $method_modifier)
+            set_subname(':before' => $method_modifier)
         );
     }
 
@@ -1097,7 +1097,7 @@ sub _method_lookup_order {
             || $self->_throw_exception( MethodModifierNeedsMethodName => class_name => $self->name );
         my $method = $fetch_and_prepare_method->($self, $method_name);
         $method->add_after_modifier(
-            subname(':after' => $method_modifier)
+            set_subname(':after' => $method_modifier)
         );
     }
 
@@ -1107,7 +1107,7 @@ sub _method_lookup_order {
             || $self->_throw_exception( MethodModifierNeedsMethodName => class_name => $self->name );
         my $method = $fetch_and_prepare_method->($self, $method_name);
         $method->add_around_modifier(
-            subname(':around' => $method_modifier)
+            set_subname(':around' => $method_modifier)
         );
     }
 
@@ -1808,8 +1808,8 @@ Determining what is truly a method in a Perl 5 class requires some
 heuristics (aka guessing).
 
 Methods defined outside the package with a fully qualified name (C<sub
-Package::name { ... }>) will be included. Similarly, methods named
-with a fully qualified name using L<Sub::Name> are also included.
+Package::name { ... }>) will be included. Similarly, methods named with a
+fully qualified name using L<Sub::Name> or L<Sub::Util> are also included.
 
 However, we attempt to ignore imported functions.
 
