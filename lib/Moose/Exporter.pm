@@ -8,9 +8,9 @@ use Class::Load qw(is_class_loaded);
 use Class::MOP;
 use List::Util 1.45 qw( uniq );
 use Moose::Util::MetaRole;
-use Scalar::Util 1.11 qw(reftype);
+use Scalar::Util 1.40 qw(reftype);
 use Sub::Exporter 0.980;
-use Sub::Name qw(subname);
+use Sub::Util 1.40 qw(set_subname);
 
 use Moose::Util 'throw_exception';
 
@@ -90,9 +90,8 @@ sub build_import_methods {
                 && !$package->has_package_symbol($symbol);
         $package->add_package_symbol(
             $symbol,
-            subname(
-                $exporting_package . '::' . $to_install, $methods{$to_install}
-            )
+            set_subname( $exporting_package . '::'
+                    . $to_install => $methods{$to_install} )
         );
     }
 
@@ -225,7 +224,7 @@ sub _parse_trait_aliases {
         else {
             ($name = $alias) =~ s/.*:://;
         }
-        push @ret, subname "${package}::${name}" => sub () { $alias };
+        push @ret, set_subname( "${package}::${name}" => sub () {$alias} );
     }
 
     return @ret;
@@ -358,7 +357,7 @@ sub _make_wrapped_sub {
 
         my $wrapper = $self->_curry_wrapper( $sub, $fq_name, $caller );
 
-        my $sub = subname( $fq_name => $wrapper );
+        my $sub = set_subname( $fq_name => $wrapper );
 
         $export_recorder->{$sub} = 1;
 
@@ -381,7 +380,7 @@ sub _make_wrapped_sub_with_meta {
             $meta_lookup => $caller
         );
 
-        my $sub = subname( $fq_name => $wrapper );
+        my $sub = set_subname( $fq_name => $wrapper );
 
         $export_recorder->{$sub} = 1;
 

@@ -12,7 +12,7 @@ use overload '0+'     => sub { refaddr(shift) }, # id an object
 
 use Eval::Closure;
 use Scalar::Util qw(refaddr);
-use Sub::Name qw(subname);
+use Sub::Util qw(set_subname);
 use Try::Tiny;
 
 use base 'Class::MOP::Object';
@@ -320,14 +320,16 @@ sub _compile_subtype {
         # general case, check all the constraints, from the first parent to ourselves
         my @checks = @parents;
         push @checks, $check if $check != $null_constraint;
-        return subname($self->name => sub {
-            my (@args) = @_;
-            local $_ = $args[0];
-            foreach my $check (@checks) {
-                return undef unless $check->(@args);
+        return set_subname(
+            $self->name => sub {
+                my (@args) = @_;
+                local $_ = $args[0];
+                foreach my $check (@checks) {
+                    return undef unless $check->(@args);
+                }
+                return 1;
             }
-            return 1;
-        });
+        );
     }
 }
 
@@ -336,11 +338,13 @@ sub _compile_type {
 
     return $check if $check == $null_constraint; # Item, Any
 
-    return subname($self->name => sub {
-        my (@args) = @_;
-        local $_ = $args[0];
-        $check->(@args);
-    });
+    return set_subname(
+        $self->name => sub {
+            my (@args) = @_;
+            local $_ = $args[0];
+            $check->(@args);
+        }
+    );
 }
 
 ## other utils ...

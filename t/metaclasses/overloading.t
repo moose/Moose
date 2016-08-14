@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 use Test::Fatal;
 
-use Sub::Name qw( subname );
+use Sub::Util 1.40 qw( set_subname );
 
 my $quote = qr/['`"]/;
 
@@ -158,7 +158,7 @@ BEGIN {
 
             my $minus = 0;
             my $minus_impl
-                = subname( 'overload_minus', sub { $minus = 1; -42 } );
+                = set_subname( 'overload_minus', sub { $minus = 1; -42 } );
 
             like(
                 exception { Foo::Overloaded->new - Foo::Overloaded->new },
