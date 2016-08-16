@@ -89,7 +89,6 @@ extern SV *mop_associated_metaclass;
 extern SV *mop_wrap;
 
 UV mop_check_package_cache_flag(pTHX_ HV *stash);
-int mop_get_code_info (SV *coderef, char **pkg, char **name);
 SV *mop_call0(pTHX_ SV *const self, SV *const method);
 
 typedef enum {

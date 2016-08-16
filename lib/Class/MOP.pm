@@ -9,6 +9,7 @@ use 5.008003;
 use MRO::Compat;
 use Class::Load 0.07 ();
 use Scalar::Util  'weaken', 'isweak', 'blessed';
+use Sub::Util 'subname';
 use Data::OptList;
 
 use Class::MOP::Mixin::AttributeCore;
@@ -64,6 +65,8 @@ XSLoader::load(
     # Class::MOP::Package or Class::MOP::Module. Mostly
     # because I don't yet see a good reason to do so.
 }
+
+sub get_code_info { return (subname $_[0]) =~ m/^(.+)::(.*?)$/ }
 
 sub load_class {
     Class::MOP::Deprecated::deprecated(

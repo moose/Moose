@@ -75,39 +75,6 @@ mop_call0 (pTHX_ SV *const self, SV *const method)
     return ret;
 }
 
-int
-mop_get_code_info (SV *coderef, char **pkg, char **name)
-{
-    if (!SvOK(coderef) || !SvROK(coderef) || SvTYPE(SvRV(coderef)) != SVt_PVCV) {
-        return 0;
-    }
-
-    coderef = SvRV(coderef);
-
-    /* sub is still being compiled */
-    if (!CvGV(coderef)) {
-        return 0;
-    }
-
-    /* I think this only gets triggered with a mangled coderef, but if
-       we hit it without the guard, we segfault. The slightly odd return
-       value strikes me as an improvement (mst)
-    */
-
-    if ( isGV_with_GP(CvGV(coderef)) ) {
-        GV *gv    = CvGV(coderef);
-        HV *stash = GvSTASH(gv) ? GvSTASH(gv) : CvSTASH(coderef);
-
-        *pkg  = stash ? HvNAME(stash) : "__UNKNOWN__";
-        *name = GvNAME( CvGV(coderef) );
-    } else {
-        *pkg  = "__UNKNOWN__";
-        *name = "__ANON__";
-    }
-
-    return 1;
-}
-
 /* XXX: eventually this should just use the implementation in Package::Stash */
 void
 mop_get_package_symbols (HV *stash, type_filter_t filter, get_package_symbols_cb_t cb, void *ud)

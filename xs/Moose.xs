@@ -111,7 +111,6 @@ is_regexp (pTHX_ SV* sv) {
 }
 #endif
 
-XS_EXTERNAL(boot_Class__MOP);
 XS_EXTERNAL(boot_Class__MOP__Mixin__HasAttributes);
 XS_EXTERNAL(boot_Class__MOP__Mixin__HasMethods);
 XS_EXTERNAL(boot_Class__MOP__Package);
@@ -131,7 +130,6 @@ PROTOTYPES: DISABLE
 BOOT:
     mop_prehash_keys();
 
-    MOP_CALL_BOOT (boot_Class__MOP);
     MOP_CALL_BOOT (boot_Class__MOP__Mixin__HasAttributes);
     MOP_CALL_BOOT (boot_Class__MOP__Mixin__HasMethods);
     MOP_CALL_BOOT (boot_Class__MOP__Package);
