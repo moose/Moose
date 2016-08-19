@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  - remove inc/Config.pm that should not have appeared in the distribution (an
+    issue since 2.1800; RT#117071)
+
 2.1804   2016-06-02
 
   [OTHER]
