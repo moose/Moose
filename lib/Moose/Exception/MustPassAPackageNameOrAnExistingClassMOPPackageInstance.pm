@@ -1,5 +1,5 @@
 package Moose::Exception::MustPassAPackageNameOrAnExistingClassMOPPackageInstance;
-our $VERSION = '2.1805';
+our $VERSION = '2.1806';
 
 use Moose;
 extends 'Moose::Exception';
