@@ -885,7 +885,7 @@ name> which is a role, like C<'MyApp::Role::Comparable'>.
 
 =head2 Type Constraint Naming
 
-Type name declared via this module can only contain alphanumeric
+Type names declared via this module can only contain alphanumeric
 characters, colons (:), and periods (.).
 
 Since the types created by this module are global, it is suggested
