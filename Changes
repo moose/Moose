@@ -3,6 +3,12 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [ENHANCEMENTS]
+
+  - When a required attribute's init_arg differs from the attribute's name, we
+    now include both the attribute name and init_arg in the exception thrown
+    when that attribute is not provided. (RT#116814, Gordon Fisher)
+
 2.1805   2016-08-19
 
   [BUG FIXES]

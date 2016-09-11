@@ -375,16 +375,21 @@ sub _inline_check_required_attr {
     return unless $attr->can('is_required') && $attr->is_required;
     return if $attr->has_default || $attr->has_builder;
 
-    return (
-        'if (!exists $params->{\'' . $attr->init_arg . '\'}) {',
-            $self->_inline_throw_exception(
-                AttributeIsRequired =>
-                'params         => $params, '.
-                'class_name     => $class_name, '.
-                'attribute_name => "'.quotemeta($attr->name).'"'
-            ).';',
-        '}',
-    );
+    my $throw = $self->_inline_throw_exception(
+        'AttributeIsRequired',
+        sprintf(
+            <<'EOF', quotemeta( $attr->name ), quotemeta( $attr->init_arg ) ), );
+params             => $params,
+class_name         => $class_name,
+attribute_name     => "%s",
+attribute_init_arg => "%s",
+EOF
+
+    return sprintf( <<'EOF', quotemeta( $attr->init_arg ), $throw )
+if ( !exists $params->{"%s"} ) {
+    %s;
+}
+EOF
 }
 
 # XXX: these two are duplicated from cmop, because we have to pass the tc stuff

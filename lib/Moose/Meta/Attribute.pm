@@ -481,11 +481,16 @@ sub initialize_instance_slot {
         return if $self->is_lazy;
         # and die if it's required and doesn't have a default value
         my $class_name = blessed( $instance );
-        throw_exception(AttributeIsRequired => attribute_name => $self->name,
-                                               class_name     => $class_name,
-                                               params         => $params,
-                       )
-            if $self->is_required && !$self->has_default && !$self->has_builder;
+        throw_exception(
+            'AttributeIsRequired',
+            attribute_name => $self->name,
+            ( defined $init_arg ? ( attribute_init_arg => $init_arg ) : () ),
+            class_name => $class_name,
+            params     => $params,
+            )
+            if $self->is_required
+            && !$self->has_default
+            && !$self->has_builder;
 
         # if nothing was in the %params, we can use the
         # attribute's default value (if it has one)
@@ -542,9 +547,16 @@ sub set_value {
 
     my $class_name = blessed( $instance );
     if ($self->is_required and not @args) {
-        throw_exception( AttributeIsRequired => attribute_name => $self->name,
-                                                class_name     => $class_name,
-                       );
+        throw_exception(
+            'AttributeIsRequired',
+            attribute_name => $self->name,
+            (
+                defined $self->init_arg
+                ? ( attribute_init_arg => $self->init_arg )
+                : ()
+            ),
+            class_name => $class_name,
+        );
     }
 
     $value = $self->_coerce_and_verify( $value, $instance );
@@ -620,16 +632,25 @@ sub _inline_check_required {
 
     return unless $self->is_required;
 
-    my $attr_name = quotemeta($self->name);
+    my $throw_params = sprintf( <<'EOF', quotemeta( $self->name ) );
+attribute_name => "%s",
+class_name     => $class_name,
+EOF
+    $throw_params .= sprintf(
+        'attribute_init_arg => "%s",',
+        quotemeta( $self->init_arg )
+    ) if defined $self->init_arg;
 
-    return (
-        'if (@_ < 2) {',
-            $self->_inline_throw_exception( AttributeIsRequired =>
-                                            'attribute_name      => "'.$attr_name.'",'.
-                                            'class_name          => $class_name'
-            ) . ';',
-        '}',
+    my $throw = $self->_inline_throw_exception(
+        'AttributeIsRequired',
+        $throw_params
     );
+
+    return sprintf( <<'EOF', $throw );
+if ( @_ < 2 ) {
+    %s;
+}
+EOF
 }
 
 sub _inline_tc_code {
