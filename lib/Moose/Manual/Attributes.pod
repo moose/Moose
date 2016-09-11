@@ -563,6 +563,16 @@ to C<'Bill'>.
 We recommend that you exercise caution when changing the type (C<isa>)
 of an inherited attribute.
 
+=head2 Attribute Inheritance and Method Modifiers
+
+When an inherited attribute is defined, that creates an entirely new set of
+accessors for the attribute (reader, writer, predicate, etc.). This is
+necessary because these may be what was changed when inheriting the attribute.
+
+As a consequence, any method modifiers defined on the attribute's accessors in
+an ancestor class will effectively be ignored, because the new accessors live
+in the child class and do not see the modifiers from the parent class.
+
 =head1 MULTIPLE ATTRIBUTE SHORTCUTS
 
 If you have a number of attributes that differ only by name, you can declare
