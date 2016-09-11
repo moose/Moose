@@ -674,4 +674,35 @@ use Test::Requires 'Test::Output';  # skip all if not installed
 
 }
 
+BEGIN {
+    {
+        package MooseX::ImportLevel;
+        use Moose ();
+
+        sub import {
+            Moose->import( { into_level => 1 } );
+        }
+
+        sub unimport {
+            Moose->unimport( { into_level => 1 } );
+        }
+    }
+
+    {
+        package ImportTest;
+
+        MooseX::ImportLevel->import;
+        ::ok(
+            __PACKAGE__->can('has'),
+            'Moose->import( { into_level => 1 } ) exports helpers'
+        );
+
+        MooseX::ImportLevel->unimport;
+        ::ok(
+            !__PACKAGE__->can('has'),
+            'Moose->unimport( { into_level => 1 } ) removes helpers'
+        );
+    }
+}
+
 done_testing;
