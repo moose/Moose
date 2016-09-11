@@ -14,6 +14,11 @@ has 'attribute_name' => (
                      "    my \$attribute = \$class->get_attribute( \$exception->attribute_name );\n",
 );
 
+has 'attribute_init_arg' => (
+    is  => 'ro',
+    isa => 'Str',
+);
+
 has 'params' => (
     is        => 'ro',
     isa       => 'HashRef',
@@ -22,7 +27,18 @@ has 'params' => (
 
 sub _build_message {
     my $self = shift;
-    "Attribute (".$self->attribute_name.") is required";
+
+    my $name = $self->attribute_name;
+    my $msg  = "Attribute ($name)";
+
+    my $init_arg = $self->attribute_init_arg;
+    if ( defined $init_arg && $name ne $init_arg ) {
+        $msg .= ", passed as ($init_arg),";
+    }
+
+    $msg .= ' is required';
+
+    return $msg;
 }
 
 1;
