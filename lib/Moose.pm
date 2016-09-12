@@ -446,6 +446,10 @@ exception will be thrown.
 If your role takes options or arguments, they can be passed along in the
 hash reference as well.
 
+You should only use one C<with>, even if you are consuming multiple roles. If
+you consume roles using multiple C<with> statements Moose cannot detect method
+conflicts between those roles.
+
 =head2 has $name|@$names =E<gt> %options
 
 This will install an attribute of a given C<$name> into the current class. If
