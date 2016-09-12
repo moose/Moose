@@ -13,6 +13,12 @@ for, noteworthy changes.
     parameters like { into => 'Package' } or { into_level => 1 }, just like
     the import sub it generates. Requested by Dmytro Zagashev. (RT #93666).
 
+  [DOCUMENTATION]
+
+  - Updated Moose::Manual::Roles with more detail on role consumption and how
+    to deal with various corner cases involving required methods, multiple
+    roles, etc.
+
 2.1805   2016-08-19
 
   [BUG FIXES]
