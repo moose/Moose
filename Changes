@@ -3,6 +3,13 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [ENHANCEMENTS]
+
+  - Moose::Meta::Attribute objects created from role attributes keep a
+    reference to the Moose::Meta::Role::Attribute which created
+    them. Moose::Meta::Attribute now has ->role_attribute and
+    ->has_role_attribute methods. RT #117586. (Dave Rolsky)
+
 2.1805   2016-08-19
 
   [BUG FIXES]
