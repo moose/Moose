@@ -28,6 +28,12 @@ __PACKAGE__->meta->add_attribute('traits' => (
     Class::MOP::_definition_context(),
 ));
 
+__PACKAGE__->meta->add_attribute('role_attribute' => (
+    reader    => 'role_attribute',
+    predicate => 'has_role_attribute',
+    Class::MOP::_definition_context(),
+));
+
 # we need to have a ->does method in here to
 # more easily support traits, and the introspection
 # of those traits. We extend the does check to look
@@ -1458,6 +1464,10 @@ Note the doubled underscore in the builder name. Internally, Moose
 simply prepends the attribute name with "_build_" to come up with the
 builder name.
 
+=item * role_attribute => $role_attribute
+
+If provided, this should be a L<Moose::Meta::Role::Attribute> object.
+
 =back
 
 =item B<< $attr->clone(%options) >>
@@ -1666,6 +1676,15 @@ the constructor, if any.
 =item B<< $attr->has_documentation >>
 
 Returns true if this attribute has any documentation.
+
+=item B<< $attr->role_attribute >>
+
+Returns the L<Moose::Meta::Role::Attribute> object from which this attribute
+was created, if any. This may return C<undef>.
+
+=item B<< $attr->has_role_attribute >>
+
+Returns true if this attribute has an associated role attribute.
 
 =item B<< $attr->applied_traits >>
 

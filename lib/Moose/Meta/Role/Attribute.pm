@@ -87,7 +87,9 @@ sub attribute_for_class {
     my $metaclass = $self->original_role->applied_attribute_metaclass;
 
     return $metaclass->interpolate_class_and_new(
-        $self->name => %{ $self->original_options } );
+        $self->name    => %{ $self->original_options },
+        role_attribute => $self,
+    );
 }
 
 sub clone {
