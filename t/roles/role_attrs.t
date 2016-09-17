@@ -4,6 +4,7 @@ use warnings;
 use Test::More;
 
 use Moose ();
+use Moose::Meta::Class;
 use Moose::Meta::Role;
 use Moose::Util;
 
@@ -48,6 +49,22 @@ ok( $combined->has_attribute('foo'), 'combined role has a foo attribute' );
 is(
     $foo_attr->associated_role->name, 'Foo',
     'associated_role for foo attr is still Foo role'
+);
+
+my $class = Moose::Meta::Class->create(
+    package => 'WithRoles',
+    roles   => [$role1],
+);
+
+ok( $class->has_attribute('foo'), 'class has a foo attribute' );
+ok(
+    $class->get_attribute('foo')->has_role_attribute,
+    'foo attribute in class has an associated role_attribute'
+);
+is(
+    $class->get_attribute('foo')->role_attribute,
+    $foo_attr,
+    'foo attribute in class links to attribute object from role'
 );
 
 done_testing;
