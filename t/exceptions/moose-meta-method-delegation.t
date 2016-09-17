@@ -151,23 +151,25 @@ use Moose();
     like(
         $exception,
         qr/\QCannot delegate get_count to count because the value of foo is not an object (got '$array')/,
-        "value of foo is an ARRAY ref");
-        #Cannot delegate get_count to count because the value of foo is not an object (got 'ARRAY(0x223f578)')
+        'exception thrown when trying to delegate to an unblessed ref'
+    );
 
     isa_ok(
         $exception,
-        "Moose::Exception::AttributeValueIsNotAnObject",
-        "value of foo is an ARRAY ref");
+        'Moose::Exception::AttributeValueIsNotAnObject',
+    );
 
     is(
         $exception->given_value,
         $array,
-        "value of foo is an ARRAY ref");
+        'exception contains the attribute value'
+    );
 
     is(
         $exception->attribute->name,
         "foo",
-        "value of foo is an ARRAY ref");
+        'exception contains the attribute'
+    );
 }
 
 done_testing;

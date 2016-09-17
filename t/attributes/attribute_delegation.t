@@ -480,4 +480,62 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     );
 }
 
+{
+    package Thrower;
+    use Moose;
+    use Carp qw( confess );
+
+    sub throw {
+        confess 'Throwing here';
+    }
+}
+
+{
+    package DelegatesToThrower;
+    use Moose;
+
+    has thrower => (
+        is      => 'ro',
+        isa     => 'Thrower',
+        default => sub { Thrower->new },
+        handles => ['throw'],
+    );
+}
+
+{
+    # https://rt.cpan.org/Ticket/Display.html?id=98402
+    unlike(
+        exception { DelegatesToThrower->new->throw },
+        qr{Moose(?:/|::)},
+        'stack trace from inside delegated-to method does not include Moose when delegation is inlined'
+    );
+}
+
+{
+    package DelegatesToNonexistentMethod;
+    use Moose;
+
+    has thrower => (
+        is      => 'ro',
+        isa     => 'Thrower',
+        default => sub { Thrower->new },
+        handles => ['foo'],
+    );
+}
+
+{
+    # https://rt.cpan.org/Ticket/Display.html?id=46614
+    like(
+        exception { DelegatesToNonexistentMethod->new->foo },
+        qr{thrower->foo},
+        'stack trace when delegated-to method does not exist mentions attribute name and class that contains it'
+    );
+
+    like(
+        exception { DelegatesToNonexistentMethod->new->foo },
+        qr{DelegatesToNonexistentMethod},
+        'stack trace when delegated-to method does not exist mentions class that contains the delegation'
+    );
+}
+
 done_testing;
