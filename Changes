@@ -3,6 +3,12 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [ENHANCEMENTS]
+
+  - Updated Moose::Manual::Roles with more detail on role consumption and how
+    to deal with various corner cases involving required methods, multiple
+    roles, etc.
+
 2.1805   2016-08-19
 
   [BUG FIXES]
