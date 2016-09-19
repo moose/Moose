@@ -693,7 +693,7 @@ sub _make_unimport_sub {
     my $meta_lookup       = shift;
 
     return sub {
-        my $caller = scalar caller();
+        my $caller = _get_caller(@_);
         Moose::Exporter->_remove_keywords(
             $caller,
             [ keys %{$exports} ],
