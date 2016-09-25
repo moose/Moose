@@ -1,5 +1,5 @@
 package Moose::Meta::Method::Accessor::Native::String::prepend;
-our $VERSION = '2.1806';
+our $VERSION = '2.1807';
 
 use strict;
 use warnings;

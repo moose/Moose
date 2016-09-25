@@ -1,5 +1,5 @@
 package Moose::Exception::InvalidHandleValue;
-our $VERSION = '2.1806';
+our $VERSION = '2.1807';
 
 use Moose;
 extends 'Moose::Exception';
