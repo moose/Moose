@@ -5,7 +5,7 @@ for, noteworthy changes.
 
 2.1806   2016-09-25
 
-  [BUG FIXES}
+  [BUG FIXES]
 
   - A role generated on the fly (as opposed to one in a file on disk) could
     not be used as a trait. Fixed by Aaron Cohen. (RT#92089, PR#47).
