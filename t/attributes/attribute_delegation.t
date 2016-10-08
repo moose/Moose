@@ -524,17 +524,20 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
 }
 
 {
-    # https://rt.cpan.org/Ticket/Display.html?id=46614
+    # https://rt.cpan.org/Ticket/Display.html?id=46614, 109631
+    my $exception = exception { DelegatesToNonexistentMethod->new->foo };
+
+    note 'stack trace when the delegated-to method does not exist:';
     like(
-        exception { DelegatesToNonexistentMethod->new->foo },
+        $exception,
         qr{thrower->foo},
-        'stack trace when delegated-to method does not exist mentions attribute name and class that contains it'
+        '...mentions the attribute name and class that contains it'
     );
 
     like(
-        exception { DelegatesToNonexistentMethod->new->foo },
+        $exception,
         qr{DelegatesToNonexistentMethod},
-        'stack trace when delegated-to method does not exist mentions class that contains the delegation'
+        '...mentions the class that contains the delegation',
     );
 }
 
