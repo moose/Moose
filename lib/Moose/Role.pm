@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package Moose::Role;
-our $VERSION = '2.1807';
+our $VERSION = '2.1901';
 
 use Scalar::Util ();
 use Carp ();

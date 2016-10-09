@@ -1,5 +1,5 @@
 package Class::MOP::Mixin::AttributeCore;
-our $VERSION = '2.1807';
+our $VERSION = '2.1901';
 
 use strict;
 use warnings;
