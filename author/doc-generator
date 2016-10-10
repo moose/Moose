@@ -8,7 +8,7 @@ use autodie;
 # version for the release-to-be, not the installed version.
 use blib;
 
-use Module::Runtime qw( use_module );
+use Module::Runtime qw( require_module );
 use Moose::Util qw( english_list find_meta );
 use Path::Tiny qw( path );
 
@@ -24,7 +24,7 @@ sub main {
         my ($class) = $file =~ m{.*(Moose/Exception/.+)\.pm};
         $class =~ s{/}{::}g;
 
-        use_module($class) or next;
+        require_module($class);
         push @classes, $class;
     }
 
