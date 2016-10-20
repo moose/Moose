@@ -130,13 +130,18 @@ sub {
 }
 EOF
 
+    my $definition = $attr->definition_context;
+    my $description
+        = 'inline delegation in '
+        . $self->package_name . ' for '
+        . $attr->name . '->'
+        . $delegate
+        . " (attribute declared in $definition->{file} at line $definition->{line})";
+
     return try {
         $self->_compile_code(
             source      => $source,
-            description => 'inline delegation in '
-                . $self->package_name . ' for '
-                . $attr->name . '->'
-                . $delegate
+            description => $description,
         );
     }
     catch {

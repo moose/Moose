@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [ENHANCEMENTS]
+
+  - The stack trace for an inlined delegation now tells you where the
+    delegating attribute was declared (file and line number).
+
 2.1901   2016-10-20 (TRIAL RELEASE)
 
   [TESTS]
@@ -12,7 +17,7 @@ for, noteworthy changes.
 
 2.1900   2016-10-09 (TRIAL RELEASE)
 
-  [ENHANCEMENTS}
+  [ENHANCEMENTS]
 
   - Most delegations are inlined now. This is not done for speed but rather to
     improve stack traces when the delegated-to method throws an exception or

@@ -504,10 +504,18 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
 
 {
     # https://rt.cpan.org/Ticket/Display.html?id=98402
+    my $e = exception { DelegatesToThrower->new->throw };
+
     unlike(
-        exception { DelegatesToThrower->new->throw },
+        $e,
         qr{Moose(?:/|::)},
         'stack trace from inside delegated-to method does not include Moose when delegation is inlined'
+    );
+    my $file = __FILE__;
+    like(
+        $e,
+        qr{ in DelegatesToThrower for thrower->throw \(attribute declared in $file at line \d+\)},
+        'stack trace tells you where delegation was defined'
     );
 }
 
