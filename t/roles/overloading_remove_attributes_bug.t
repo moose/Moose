@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::More 0.88;
-use Test::Warnings;
+use if $ENV{AUTHOR_TESTING}, 'Test::Warnings';
 
 use lib 't/lib';
 

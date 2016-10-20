@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [TESTS]
+
+  - warnings are only checked for in tests under AUTHOR_TESTING, so as to not
+    prevent installation when warnings occur in prerequisites.
+
 2.1900   2016-10-09 (TRIAL RELEASE)
 
   [ENHANCEMENTS}
