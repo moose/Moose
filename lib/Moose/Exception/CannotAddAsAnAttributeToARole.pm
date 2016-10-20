@@ -1,5 +1,5 @@
 package Moose::Exception::CannotAddAsAnAttributeToARole;
-our $VERSION = '2.1901';
+our $VERSION = '2.1902';
 
 use Moose;
 extends 'Moose::Exception';

@@ -1,5 +1,5 @@
 package Moose::Exception::AttributeValueIsNotDefined;
-our $VERSION = '2.1901';
+our $VERSION = '2.1902';
 
 use Moose;
 extends 'Moose::Exception';
