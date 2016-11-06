@@ -31,6 +31,7 @@ It's probably easiest to understand this feature with a few examples:
 
       print "  I'm still around foo\n";
   };
+  1;
 
 Now if I call C<< Example->new->foo >> I'll get the following output:
 
@@ -185,7 +186,7 @@ modifiers of the superclass, as the following example illustrates:
 
 Here is the parent class:
 
-  package Parent;
+  package Progenitor;
   use Moose;
   sub rant { printf "        RANTING!\n" }
   before 'rant' => sub { printf "    In %s before\n", __PACKAGE__ };
@@ -203,7 +204,7 @@ And the child class:
 
   package Child;
   use Moose;
-  extends 'Parent';
+  extends 'Progenitor';
   before 'rant' => sub { printf "In %s before\n", __PACKAGE__ };
   after 'rant'  => sub { printf "In %s after\n",  __PACKAGE__ };
   around 'rant' => sub {
@@ -221,11 +222,11 @@ And here's the output when we call the wrapped method (C<< Child->rant >>):
 
   In Child before
     In Child around before calling original
-      In Parent before
-        In Parent around before calling original
+      In Progenitor before
+        In Progenitor around before calling original
           RANTING!
-        In Parent around after calling original
-      In Parent after
+        In Progenitor around after calling original
+      In Progenitor after
     In Child around after calling original
   In Child after
 
