@@ -185,7 +185,7 @@ modifiers of the superclass, as the following example illustrates:
 
 Here is the parent class:
 
-  package Parent;
+  package Superclass;
   use Moose;
   sub rant { printf "        RANTING!\n" }
   before 'rant' => sub { printf "    In %s before\n", __PACKAGE__ };
@@ -201,9 +201,9 @@ Here is the parent class:
 
 And the child class:
 
-  package Child;
+  package Subclass;
   use Moose;
-  extends 'Parent';
+  extends 'Superclass';
   before 'rant' => sub { printf "In %s before\n", __PACKAGE__ };
   after 'rant'  => sub { printf "In %s after\n",  __PACKAGE__ };
   around 'rant' => sub {
@@ -217,17 +217,17 @@ And the child class:
 
 And here's the output when we call the wrapped method (C<< Child->rant >>):
 
-  % perl -MChild -e 'Child->new->rant'
+  % perl -MSubclass -e 'Subclass->new->rant'
 
-  In Child before
-    In Child around before calling original
-      In Parent before
-        In Parent around before calling original
+  In Subclass before
+    In Subclass around before calling original
+      In Superclass before
+        In Superclass around before calling original
           RANTING!
-        In Parent around after calling original
-      In Parent after
-    In Child around after calling original
-  In Child after
+        In Superclass around after calling original
+      In Superclass after
+    In Subclass around after calling original
+  In Subclass after
 
 =head1 INNER AND AUGMENT
 
