@@ -549,4 +549,21 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     );
 }
 
+
+{
+    package DelegationViaCoderef;
+    use Moose;
+
+    has foo => (
+        is      => 'ro',
+        isa     => 'Foo',
+        default => sub { Foo->new },
+        handles => sub {
+            return ( bar => 'bar' );
+        },
+    );
+}
+
+is(DelegationViaCoderef->new->bar, 10, 'delegation defined by a coderef returning a hash works');
+
 done_testing;
