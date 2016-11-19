@@ -3,6 +3,12 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  - Brought back the Moose::Meta::Method::Delegation->_get_delegate_accessor
+    method for the benefit of MooseX::CurriedDelegation.
+
+
 2.1902   2016-10-23 (TRIAL RELEASE)
 
   [ENHANCEMENTS]

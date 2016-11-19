@@ -163,21 +163,21 @@ sub _eval_environment {
     }
 
     unless ( $self->associated_attribute->has_read_method ) {
-        $env{'$reader'} = $self->_get_delegate_accessor_ref;
+        $env{'$reader'} = \( $self->_get_delegate_accessor );
     }
 
     return \%env;
 }
 
-sub _get_delegate_accessor_ref {
+sub _get_delegate_accessor {
     my $self = shift;
 
     my $accessor = $self->associated_attribute->get_read_method_ref;
 
     # If it's blessed it's a Moose::Meta::Method
     return blessed $accessor
-        ? \( $accessor->body )
-        : \$accessor;
+        ? ( $accessor->body )
+        : $accessor;
 }
 
 1;
