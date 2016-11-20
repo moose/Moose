@@ -94,7 +94,7 @@ sub is_class_loaded {
 
 sub _definition_context {
     my %context;
-    @context{qw(package file line)} = caller(1);
+    @context{qw(package file line)} = caller(0);
 
     return (
         definition_context => \%context,

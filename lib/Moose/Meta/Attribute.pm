@@ -1040,15 +1040,39 @@ sub _process_accessors {
     my $method = $self->associated_class->get_method($accessor);
 
     if (   $method
-        && $method->isa('Class::MOP::Method::Accessor')
-        && $method->associated_attribute->name ne $self->name ) {
+        && $method->isa('Class::MOP::Method::Accessor') ) {
 
-        my $other_attr_name = $method->associated_attribute->name;
-        my $name            = $self->name;
+        # This is a special case that is very unlikely to occur outside of the
+        # Moose bootstrapping process. We do not want to warn if the method
+        # we're about to replace is for this same attribute, _and_ we're
+        # replacing a non-inline method with an inlined version.
+        #
+        # This would never occur in normal user code because Moose inlines all
+        # accessors. However, Moose metaclasses are instances of
+        # Class::MOP::Class, which _does not_ inline accessors by
+        # default. However, in Class::MOP & Moose.pm, we iterate over all of
+        # our internal metaclasses and make them immutable after they're fully
+        # defined. This ends up replacing the attribute accessors.
+        unless ( $method->associated_attribute->name eq $self->name
+            && ( $generate_as_inline_methods && !$method->is_inline ) ) {
 
-        Carp::cluck(
-            "You are overwriting an accessor ($accessor) for the $other_attr_name attribute"
-                . " with a new accessor method for the $name attribute" );
+            my $other_attr = $method->associated_attribute;
+
+            my $msg = sprintf(
+                'You are overwriting a %s (%s) for the %s attribute (defined at %s line %s)'
+                    . ' with a new %s method for the %s attribute (defined at %s line %s)',
+                $method->accessor_type,
+                $accessor,
+                $other_attr->name,
+                $method->definition_context->{file},
+                $method->definition_context->{line},
+                $type,
+                $self->name,
+                $self->definition_context->{file},
+                $self->definition_context->{line}
+            );
+            Carp::cluck($msg);
+        }
     }
 
     if (

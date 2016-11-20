@@ -3,6 +3,21 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [ENHANCEMENTS]
+
+  - When an attribute defines two methods (say a reader and writer) with the
+    same name, this now generates a warning.
+
+  - The warning when attribute methods overwrite one another is now much more
+    informative. It includes the type of accessors involve (reader, writer,
+    predicate, etc.) as well as the file and line where each accessor was
+    defined. Fixes RT #118325.
+
+  [BUG FIXES]
+
+  - The definition context (package, file, & line) for attributes on
+    Class::MOP and Moose metaclasses was wrong in all cases.
+
 2.1902   2016-10-23 (TRIAL RELEASE)
 
   [ENHANCEMENTS]
