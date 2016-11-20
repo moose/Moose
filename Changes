@@ -8,6 +8,8 @@ for, noteworthy changes.
   - Brought back the Moose::Meta::Method::Delegation->_get_delegate_accessor
     method for the benefit of MooseX::CurriedDelegation.
 
+  - The definition context (package, file, & line) for attributes on
+    Class::MOP and Moose metaclasses was wrong in all cases.
 
 2.1902   2016-10-23 (TRIAL RELEASE)
 
