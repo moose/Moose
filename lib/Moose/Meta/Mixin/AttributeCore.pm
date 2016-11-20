@@ -36,7 +36,8 @@ __PACKAGE__->meta->add_attribute(
 
 __PACKAGE__->meta->add_attribute(
     'lazy' => (
-        reader => 'is_lazy', Class::MOP::_definition_context(),
+        reader => 'is_lazy',
+        Class::MOP::_definition_context(),
     )
 );
 
