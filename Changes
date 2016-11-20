@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  - The definition context (package, file, & line) for attributes on
+    Class::MOP and Moose metaclasses was wrong in all cases.
+
 2.1902   2016-10-23 (TRIAL RELEASE)
 
   [ENHANCEMENTS]
