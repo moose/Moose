@@ -3,6 +3,16 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [ENHANCEMENTS]
+
+  - When an attribute defines two methods (say a reader and writer) with the
+    same name, this now generates a warning.
+
+  - The warning when attribute methods overwrite one another is now much more
+    informative. It includes the type of accessors involve (reader, writer,
+    predicate, etc.) as well as the file and line where each accessor was
+    defined. Fixes RT #118325.
+
   [BUG FIXES]
 
   - Brought back the Moose::Meta::Method::Delegation->_get_delegate_accessor
