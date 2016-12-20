@@ -14,8 +14,8 @@ use Moose::Util::TypeConstraints;
     has 'hash'  => (is => 'ro');
 }
 
-subtype Header =>
-    => as Object
+subtype Header
+    => as 'Object'
     => where { $_->isa('HTTPHeader') };
 
 coerce Header
