@@ -19,8 +19,8 @@ use Test::Fatal;
     use Moose;
     use Moose::Util::TypeConstraints;
 
-    subtype Header =>
-        => as Object
+    subtype Header
+        => as 'Object'
         => where { $_->isa('HTTPHeader') };
 
     coerce Header
