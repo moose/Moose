@@ -20,7 +20,7 @@ type representing the Foo moose class.
 
 BEGIN {
     # create this subtype first (in BEGIN)
-    subtype Foo
+    subtype 'Foo'
         => as 'Value'
         => where { $_ eq 'Foo' };
 }
