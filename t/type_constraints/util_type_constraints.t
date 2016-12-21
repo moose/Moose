@@ -14,12 +14,12 @@ type String
     => where { !ref($_) && !Number($_) }
     => message { "This is not a string ($_)" };
 
-subtype Natural
-        => as Number
+subtype 'Natural'
+        => as 'Number'
         => where { $_ > 0 };
 
-subtype NaturalLessThanTen
-        => as Natural
+subtype 'NaturalLessThanTen'
+        => as 'Natural'
         => where { $_ < 10 }
         => message { "The number '$_' is not less than 10" };
 
