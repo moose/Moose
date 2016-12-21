@@ -14,14 +14,14 @@ use Moose::Util::TypeConstraints;
     has 'hash'  => (is => 'ro');
 }
 
-subtype Header =>
-    => as Object
+subtype 'Header'
+    => as 'Object'
     => where { $_->isa('HTTPHeader') };
 
-coerce Header
-    => from ArrayRef
+coerce 'Header'
+    => from 'ArrayRef'
         => via { HTTPHeader->new(array => $_[0]) }
-    => from HashRef
+    => from 'HashRef'
         => via { HTTPHeader->new(hash => $_[0]) };
 
 
@@ -38,9 +38,9 @@ my $anon_type = subtype Object => where { $_->isa('HTTPHeader') };
 
 is( exception {
     coerce $anon_type
-        => from ArrayRef
+        => from 'ArrayRef'
             => via { HTTPHeader->new(array => $_[0]) }
-        => from HashRef
+        => from 'HashRef'
             => via { HTTPHeader->new(hash => $_[0]) };
 }, undef, 'coercion of anonymous subtype succeeds' );
 

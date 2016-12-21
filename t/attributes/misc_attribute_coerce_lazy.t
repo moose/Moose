@@ -19,14 +19,14 @@ use Test::Fatal;
     use Moose;
     use Moose::Util::TypeConstraints;
 
-    subtype Header =>
-        => as Object
+    subtype 'Header'
+        => as 'Object'
         => where { $_->isa('HTTPHeader') };
 
-    coerce Header
-        => from ArrayRef
+    coerce 'Header'
+        => from 'ArrayRef'
             => via { HTTPHeader->new(array => $_[0]) }
-        => from HashRef
+        => from 'HashRef'
             => via { HTTPHeader->new(hash => $_[0]) };
 
     has 'headers'  => (
