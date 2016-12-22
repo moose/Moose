@@ -1,5 +1,5 @@
 package Moose::Exception::CouldNotFindTypeConstraintToCoerceFrom;
-our $VERSION = '2.1807';
+our $VERSION = '2.1808';
 
 use Moose;
 extends 'Moose::Exception';
