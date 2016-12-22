@@ -55,6 +55,18 @@ for, noteworthy changes.
     helpful than they could have been. Requested by Tim Bunce, Olaf Alders,
     and Van de Bugger. (RT#46614, RT#98402, and RT#109631).
 
+2.1807   2016-12-22
+
+  [BUG FIXES]
+
+  - The definition context (package, file, & line) for attributes on
+    Class::MOP and Moose metaclasses was wrong in all cases.
+
+  - Slight tweaks to the syntax used for hashes in a few tests, that were
+    broken by a recent Test::More release that started using a new namespace
+    that clashes with a (bareword) type name in these tests. (PR#141,
+    D.Maestro)
+
 2.1806   2016-09-25
 
   [BUG FIXES]
