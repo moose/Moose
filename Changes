@@ -3,6 +3,13 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  - Slight tweaks to the syntax used for hashes in a few tests, that were
+    broken by a recent Test::More release that started using a new namespace
+    that clashes with a (bareword) type name in these tests. (PR#141,
+    D.Maestro)
+
 2.1903   2016-11-22 (TRIAL RELEASE)
 
   [ENHANCEMENTS]
