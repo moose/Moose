@@ -1,5 +1,5 @@
 package Moose::Exception::CanReblessOnlyIntoASubclass;
-our $VERSION = '2.1904';
+our $VERSION = '2.1905';
 
 use Moose;
 extends 'Moose::Exception';

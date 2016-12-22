@@ -1,6 +1,8 @@
 Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
+{{$NEXT}}
+
 2.1904   2016-12-22 (TRIAL RELEASE)
 
   [BUG FIXES]

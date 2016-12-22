@@ -1,5 +1,5 @@
 package Moose::Exception::Role::TypeConstraint;
-our $VERSION = '2.1904';
+our $VERSION = '2.1905';
 
 use Moose::Role;
 

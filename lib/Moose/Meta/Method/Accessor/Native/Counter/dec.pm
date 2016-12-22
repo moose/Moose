@@ -1,5 +1,5 @@
 package Moose::Meta::Method::Accessor::Native::Counter::dec;
-our $VERSION = '2.1904';
+our $VERSION = '2.1905';
 
 use strict;
 use warnings;
