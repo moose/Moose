@@ -485,6 +485,8 @@ sub _inline_BUILDALL {
     my $self = shift;
 
     my @methods = reverse $self->find_all_methods_by_name('BUILD');
+    return () unless @methods;
+
     my @BUILD_calls;
 
     foreach my $method (@methods) {
@@ -492,7 +494,11 @@ sub _inline_BUILDALL {
             '$instance->' . $method->{class} . '::BUILD($params);';
     }
 
-    return @BUILD_calls;
+    return (
+        'if (!$params->{__no_BUILD__}) {',
+        @BUILD_calls,
+        '}',
+    );
 }
 
 sub _eval_environment {
