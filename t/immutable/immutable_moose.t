@@ -53,12 +53,14 @@ use Moose::Meta::Role;
 
 }
 
+my %called;
+
 {
   package Bar;
 
   use Moose;
 
-  sub BUILD { 'bar' }
+  sub BUILD { $called{+__PACKAGE__}++ }
 }
 
 {
@@ -68,12 +70,31 @@ use Moose::Meta::Role;
 
   extends 'Bar';
 
-  sub BUILD { 'baz' }
+  sub BUILD { $called{+__PACKAGE__}++ }
 }
 
 is( exception { Bar->meta->make_immutable }, undef, 'Immutable meta with single BUILD' );
 
 is( exception { Baz->meta->make_immutable }, undef, 'Immutable meta with multiple BUILDs' );
+
+Bar->new;
+is_deeply \%called, {'Bar' => 1},
+    'single BUILD called with immutable meta';
+
+%called = ();
+Baz->new;
+is_deeply \%called, {'Bar' => 1, 'Baz' => 1},
+    'multiple BUILD called with immutable meta';
+
+%called = ();
+Bar->new({__no_BUILD__ => 1});
+is_deeply \%called, {},
+    'single BUILD skipped with __no_BUILD__ with immutable meta';
+
+%called = ();
+Baz->new({__no_BUILD__ => 1});
+is_deeply \%called, {},
+    'multiple BUILD skipped with __no_BUILD__ with immutable meta';
 
 =pod
 
