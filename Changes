@@ -3,6 +3,12 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [ENHANCEMENTS]
+
+  - Added support for __no_BUILD__ as a constructor argument to skip calling
+    any BUILD subs (used internally by modules like Moo that have their own
+    implementation of calling BUILD) (PR#142, Graham Knop)
+
 2.1904   2016-12-22 (TRIAL RELEASE)
 
   [BUG FIXES]
