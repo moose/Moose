@@ -1,5 +1,5 @@
 package Moose::Exception::RequiredAttributeLacksInitialization;
-our $VERSION = '2.1905';
+our $VERSION = '2.1906';
 
 use Moose;
 extends 'Moose::Exception';
