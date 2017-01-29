@@ -514,7 +514,7 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
     my $file = __FILE__;
     like(
         $e,
-        qr{ in DelegatesToThrower for thrower->throw \(attribute declared in $file at line \d+\)},
+        qr{ in DelegatesToThrower for thrower->throw \(attribute declared in \Q$file\E at line \d+\)},
         'stack trace tells you where delegation was defined'
     );
 }

@@ -3,6 +3,10 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [TESTS]
+
+  - fixed variable interpolation in filename in test (RT#120033)
+
 2.2000   2017-01-29
 
   [OTHER]
