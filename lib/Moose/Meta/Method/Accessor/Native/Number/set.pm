@@ -1,5 +1,5 @@
 package Moose::Meta::Method::Accessor::Native::Number::set;
-our $VERSION = '2.2001';
+our $VERSION = '2.2002';
 
 use strict;
 use warnings;
