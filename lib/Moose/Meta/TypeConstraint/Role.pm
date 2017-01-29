@@ -1,5 +1,5 @@
 package Moose::Meta::TypeConstraint::Role;
-our $VERSION = '2.1906';
+our $VERSION = '2.2001';
 
 use strict;
 use warnings;

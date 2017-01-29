@@ -1,5 +1,5 @@
 package Moose::Exception::CannotOverrideLocalMethodIsPresent;
-our $VERSION = '2.1906';
+our $VERSION = '2.2001';
 
 use Moose;
 extends 'Moose::Exception';

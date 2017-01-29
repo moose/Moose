@@ -1,5 +1,5 @@
 package Moose::Exception::Role::InvalidAttributeOptions;
-our $VERSION = '2.1906';
+our $VERSION = '2.2001';
 
 use Moose::Role;
 with 'Moose::Exception::Role::ParamsHash';

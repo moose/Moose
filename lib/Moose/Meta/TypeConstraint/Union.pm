@@ -1,5 +1,5 @@
 package Moose::Meta::TypeConstraint::Union;
-our $VERSION = '2.1906';
+our $VERSION = '2.2001';
 
 use strict;
 use warnings;
