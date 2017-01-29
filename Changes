@@ -3,6 +3,10 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [OTHER}
+
+  - increased minimum required version of Sub::Name.
+
 2.1905   2017-01-07 (TRIAL RELEASE)
 
   [ENHANCEMENTS]
