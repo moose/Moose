@@ -6,7 +6,7 @@ for, noteworthy changes.
   [BUG FIXES]
 
   - Moose could die when attempting to warn about overwriting an attribute's
-    access method in some cases (RT #120040)
+    access method in some cases (since version 2.1902) (RT #120040)
 
 2.2002   2017-01-30
 
