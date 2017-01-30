@@ -1,5 +1,5 @@
 package Moose::Deprecated;
-our $VERSION = '2.2002';
+our $VERSION = '2.2003';
 
 use strict;
 use warnings;

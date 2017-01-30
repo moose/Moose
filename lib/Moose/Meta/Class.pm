@@ -1,5 +1,5 @@
 package Moose::Meta::Class;
-our $VERSION = '2.2002';
+our $VERSION = '2.2003';
 
 use strict;
 use warnings;
