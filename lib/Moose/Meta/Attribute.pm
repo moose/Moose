@@ -1059,18 +1059,38 @@ sub _process_accessors {
             my $other_attr = $method->associated_attribute;
 
             my $msg = sprintf(
-                'You are overwriting a %s (%s) for the %s attribute (defined at %s line %s)'
-                    . ' with a new %s method for the %s attribute (defined at %s line %s)',
+                'You are overwriting a %s (%s) for the %s attribute',
                 $method->accessor_type,
                 $accessor,
                 $other_attr->name,
-                $method->definition_context->{file},
-                $method->definition_context->{line},
+            );
+
+            if ( my $method_context = $method->definition_context ) {
+                $msg .= sprintf(
+                    ' (defined at %s line %s)',
+                    $method_context->{file},
+                    $method_context->{line},
+                    )
+                    if defined $method_context->{file}
+                    && $method_context->{line};
+            }
+
+            $msg .= sprintf(
+                ' with a new %s method for the %s attribute',
                 $type,
                 $self->name,
-                $self->definition_context->{file},
-                $self->definition_context->{line}
             );
+
+            if ( my $self_context = $self->definition_context ) {
+                $msg .= sprintf(
+                    ' (defined at %s line %s)',
+                    $self_context->{file},
+                    $self_context->{line},
+                    )
+                    if defined $self_context->{file}
+                    && $self_context->{line};
+            }
+
             Carp::cluck($msg);
         }
     }
