@@ -130,13 +130,19 @@ sub {
 }
 EOF
 
-    my $definition = $attr->definition_context;
     my $description
         = 'inline delegation in '
         . $self->package_name . ' for '
         . $attr->name . '->'
-        . $delegate
-        . " (attribute declared in $definition->{file} at line $definition->{line})";
+        . $delegate;
+
+    my $definition = $attr->definition_context;
+    # While all attributes created in the usual way (via Moose's has()) will
+    # define this, there's no guarantee that this must be defined. For
+    # example, when Moo inflates a class to Moose it does not define these (as
+    # of Moo 2.003).
+    $description .= " (attribute declared in $definition->{file} at line $definition->{line})"
+        if defined $definition->{file} && defined $definition->{line};
 
     return try {
         $self->_compile_code(
