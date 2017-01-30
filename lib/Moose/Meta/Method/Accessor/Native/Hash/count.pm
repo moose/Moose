@@ -1,5 +1,5 @@
 package Moose::Meta::Method::Accessor::Native::Hash::count;
-our $VERSION = '2.2003';
+our $VERSION = '2.2004';
 
 use strict;
 use warnings;

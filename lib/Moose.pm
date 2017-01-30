@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package Moose;
-our $VERSION = '2.2003';
+our $VERSION = '2.2004';
 our $AUTHORITY = 'cpan:STEVAN';
 
 use 5.008003;
