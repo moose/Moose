@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  - Creating a Moose subclass of a Moo class with an attribute with a
+    delegation would cause a warning.
+
 2.2001   2017-01-29
 
   [TESTS]
