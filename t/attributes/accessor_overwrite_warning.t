@@ -53,4 +53,23 @@ my $file = __FILE__;
     );
 }
 
+{
+    package Baz;
+    use Moose;
+
+    # This tests where Moose would also make a reader named buz for this
+    # attribute, leading to an overwrite warning.
+    ::stderr_is(
+        sub {
+            has buz => (
+                is       => 'rw',
+                accessor => 'buz',
+                writer   => '_set_buz',
+            );
+        },
+        q{},
+        'no warning with rw attribute that has both an accessor and a writer'
+    );
+}
+
 done_testing;

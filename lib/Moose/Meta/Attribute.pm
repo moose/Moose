@@ -291,11 +291,13 @@ sub _process_is_option {
         $options->{reader} ||= $name;
     }
     elsif ( $options->{is} eq 'rw' ) {
-        if ( $options->{writer} ) {
-            $options->{reader} ||= $name;
-        }
-        else {
-            $options->{accessor} ||= $name;
+        if ( ! $options->{accessor} ) {
+            if ( $options->{writer}) {
+                $options->{reader} ||= $name;
+            }
+            else {
+                $options->{accessor} = $name;
+            }
         }
     }
     elsif ( $options->{is} eq 'bare' ) {

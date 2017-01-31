@@ -3,6 +3,14 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  - When an attribute was specified as 'rw' and you also provided an accessor
+    name matching the attribute and there was an explicit writer, Moose would
+    try to make an additional reader access with the same name as the
+    attribute. Then Moose would warn about overwriting an accessor with a
+    reader. This is related to the bugs reported in RT #120040.
+
 2.2003   2017-01-30
 
   [BUG FIXES]
