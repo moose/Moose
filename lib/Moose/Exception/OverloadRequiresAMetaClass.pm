@@ -1,5 +1,5 @@
 package Moose::Exception::OverloadRequiresAMetaClass;
-our $VERSION = '2.2004';
+our $VERSION = '2.2005';
 
 use Moose;
 extends 'Moose::Exception';

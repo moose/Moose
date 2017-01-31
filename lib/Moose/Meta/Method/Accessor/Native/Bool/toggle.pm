@@ -1,5 +1,5 @@
 package Moose::Meta::Method::Accessor::Native::Bool::toggle;
-our $VERSION = '2.2004';
+our $VERSION = '2.2005';
 
 use strict;
 use warnings;

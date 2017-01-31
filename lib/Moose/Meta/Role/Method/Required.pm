@@ -1,5 +1,5 @@
 package Moose::Meta::Role::Method::Required;
-our $VERSION = '2.2004';
+our $VERSION = '2.2005';
 
 use strict;
 use warnings;

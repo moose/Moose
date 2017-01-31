@@ -1,5 +1,5 @@
 package Class::MOP::Module;
-our $VERSION = '2.2004';
+our $VERSION = '2.2005';
 
 use strict;
 use warnings;
