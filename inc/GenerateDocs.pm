@@ -1,4 +1,4 @@
-package inc::GenerateDocs;
+package GenerateDocs;
 
 use Moose;
 with 'Dist::Zilla::Role::FileGatherer',

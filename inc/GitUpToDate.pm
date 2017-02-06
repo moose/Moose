@@ -1,4 +1,4 @@
-package inc::GitUpToDate;
+package GitUpToDate;
 use Moose;
 
 with 'Dist::Zilla::Role::BeforeBuild';

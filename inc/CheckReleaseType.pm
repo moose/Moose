@@ -1,4 +1,4 @@
-package inc::CheckReleaseType;
+package CheckReleaseType;
 use Moose;
 with 'Dist::Zilla::Role::BeforeRelease';
 

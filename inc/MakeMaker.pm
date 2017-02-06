@@ -1,4 +1,4 @@
-package inc::MakeMaker;
+package MakeMaker;
 
 use Moose;
 

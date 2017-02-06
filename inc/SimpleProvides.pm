@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-package inc::SimpleProvides;
+package SimpleProvides;
 
 use Moose;
 with 'Dist::Zilla::Role::MetaProvider',

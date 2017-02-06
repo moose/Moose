@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-package inc::Documentation;
+package Documentation;
 
 # add x_documentation metadata
 # see https://github.com/metacpan/metacpan-web/issues/1468#event-283925638

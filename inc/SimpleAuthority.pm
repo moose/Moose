@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-package inc::SimpleAuthority;
+package SimpleAuthority;
 
 use Moose;
 with 'Dist::Zilla::Role::MetaProvider';

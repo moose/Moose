@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-package inc::CheckAuthorDeps;
+package CheckAuthorDeps;
 
 # our goal is to verify that the declared authordeps already reflect
 # everything in configure + runtime prerequisites -- otherwise, we won't be

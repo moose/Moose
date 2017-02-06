@@ -1,4 +1,4 @@
-package inc::Clean;
+package Clean;
 use Moose;
 
 with 'Dist::Zilla::Role::BeforeBuild',

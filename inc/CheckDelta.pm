@@ -1,4 +1,4 @@
-package inc::CheckDelta;
+package CheckDelta;
 use Moose;
 
 with 'Dist::Zilla::Role::AfterBuild';
