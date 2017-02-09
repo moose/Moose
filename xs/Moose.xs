@@ -1,7 +1,10 @@
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
+
+#define NEED_SvRX
 #include "ppport.h"
+
 #include "mop.h"
 
 #ifndef MGf_COPY
@@ -85,31 +88,6 @@ unset_export_flag (pTHX_ SV *sv, MAGIC *mymg)
 
     return 0;
 }
-
-#ifndef SvRXOK
-/* SvRXOK appeared before SVt_REGEXP did, so this implementation assumes magic
- * based qr//. Note re::is_regexp isn't in 5.8, hence the need for this XS.
- */
-#define SvRXOK(sv) is_regexp(aTHX_ sv)
-
-STATIC int
-is_regexp (pTHX_ SV* sv) {
-    SV* tmpsv;
-
-    if (SvMAGICAL(sv)) {
-        mg_get(sv);
-    }
-
-    if (SvROK(sv) &&
-        (tmpsv = (SV*) SvRV(sv)) &&
-        SvTYPE(tmpsv) == SVt_PVMG &&
-        (mg_find(tmpsv, PERL_MAGIC_qr))) {
-        return TRUE;
-    }
-
-    return FALSE;
-}
-#endif
 
 XS_EXTERNAL(boot_Class__MOP);
 XS_EXTERNAL(boot_Class__MOP__Mixin__HasAttributes);
