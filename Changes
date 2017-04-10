@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [OTHER]
+
+  - increased minimum required version of Test::More, to ensure a reliable
+    subtest.
+
 2.2004   2017-01-31
 
   [BUG FIXES]

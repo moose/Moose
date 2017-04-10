@@ -6,7 +6,7 @@ use lib 't/lib';
 use Moose ();
 use Moose::Util::TypeConstraints;
 use NoInlineAttribute;
-use Test::More;
+use Test::More 0.96;
 use Test::Fatal;
 use Test::Moose;
 

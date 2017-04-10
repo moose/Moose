@@ -3,7 +3,7 @@ use warnings;
 
 use Test::Fatal;
 use Test::Moose qw( with_immutable );
-use Test::More;
+use Test::More 0.96;
 
 BEGIN {
     plan skip_all => 'These tests requires Specio, which requires perl 5.010'
