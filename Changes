@@ -2,6 +2,8 @@ Also see Moose::Manual::Delta for more details of, and workarounds
 for, noteworthy changes.
 
 {{$NEXT}}
+  - Fix a test that was trying to load Test::Exception instead of Test::Fatal.
+    (Michael Schout)
 
 2.2004   2017-01-31
 
