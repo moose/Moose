@@ -66,8 +66,8 @@ sub is_role {
 sub does_role {
     my ($class_or_obj, $role) = @_;
 
-    if (try { $class_or_obj->isa('Moose::Object') }) {
-        return $class_or_obj->does($role);
+    if (defined $class_or_obj) {
+        return $class_or_obj->DOES($role);
     }
 
     my $meta = find_meta($class_or_obj);
