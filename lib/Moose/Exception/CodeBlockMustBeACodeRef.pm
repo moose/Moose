@@ -1,5 +1,5 @@
 package Moose::Exception::CodeBlockMustBeACodeRef;
-our $VERSION = '2.2005';
+our $VERSION = '2.2006';
 
 use Moose;
 extends 'Moose::Exception';

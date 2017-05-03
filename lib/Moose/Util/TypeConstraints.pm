@@ -1,5 +1,5 @@
 package Moose::Util::TypeConstraints;
-our $VERSION = '2.2005';
+our $VERSION = '2.2006';
 
 use Carp ();
 use Scalar::Util qw( blessed );
