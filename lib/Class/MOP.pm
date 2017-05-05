@@ -1109,8 +1109,6 @@ L<http://citeseer.ist.psu.edu/37617.html>
 
 =over 4
 
-=item L<http://svn.openfoundry.org/pugs/misc/Perl-MetaModel/>
-
 =item L<http://github.com/perl6/p5-modules/tree/master/Perl6-ObjectSpace/>
 
 =back
