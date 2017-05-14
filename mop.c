@@ -1,4 +1,5 @@
 #include "mop.h"
+#include "ppport.h"
 
 void
 mop_call_xs (pTHX_ XSPROTO(subaddr), CV *cv, SV **mark)

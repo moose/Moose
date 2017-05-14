@@ -1,4 +1,5 @@
 #include "mop.h"
+#include "ppport.h"
 
 MODULE = Class::MOP   PACKAGE = Class::MOP
 

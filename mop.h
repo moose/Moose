@@ -5,8 +5,6 @@
 #include "perl.h"
 #include "XSUB.h"
 
-#define NEED_newRV_noinc
-#define NEED_sv_2pv_flags
 #define NEED_sv_2pv_nolen
 #include "ppport.h"
 

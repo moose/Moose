@@ -1,4 +1,5 @@
 #include "mop.h"
+#include "ppport.h"
 
 SV *mop_method_metaclass;
 SV *mop_associated_metaclass;
