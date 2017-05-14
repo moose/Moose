@@ -56,3 +56,7 @@ WriteMakefile(
     NORECURS => 1,
     %args,
 );
+
+use Devel::PPPort;
+Devel::PPPort::WriteFile();
+system("$^X ppport.h --compat-version=5.008003 --quiet xs/* *.[hc]");
