@@ -40,7 +40,7 @@ before_install:
   - build-dist
   - cd $BUILD_DIR
 install:
-  - cpan-install ExtUtils::MakeMaker~6.68 --deps
+  - cpan-install ExtUtils::MakeMaker~6.68 --deps Devel::PPPort
   - cpan-install --coverage
 before_script:
   - coverage-setup
