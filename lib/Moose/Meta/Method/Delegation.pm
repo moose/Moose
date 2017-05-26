@@ -84,6 +84,9 @@ sub _initialize_body {
     return;
 }
 
+# compatibility shim for traits expecting Moose < 2.019
+sub _get_delegate_accessor { ${ $_[0]->_get_delegate_accessor_ref } }
+
 sub _generate_inline_method {
     my $self = shift;
 
