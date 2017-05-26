@@ -31,6 +31,7 @@ It's probably easiest to understand this feature with a few examples:
 
       print "  I'm still around foo\n";
   };
+  1;
 
 Now if I call C<< Example->new->foo >> I'll get the following output:
 
