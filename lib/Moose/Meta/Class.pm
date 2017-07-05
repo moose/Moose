@@ -106,7 +106,9 @@ sub _anon_cache_key {
 
     my $roles = Data::OptList::mkopt(($options{roles} || []), {
         moniker  => 'role',
-        val_test => sub { ref($_[0]) eq 'HASH' },
+        name_test => sub {
+            ! ref $_[0] or blessed($_[0]) && $_[0]->isa('Moose::Meta::Role')
+        },
     });
 
     my @role_keys;
