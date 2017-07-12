@@ -1,5 +1,5 @@
 package Moose::Exception::CannotDelegateLocalMethodIsPresent;
-our $VERSION = '2.2006';
+our $VERSION = '2.2007';
 
 use Moose;
 extends 'Moose::Exception';

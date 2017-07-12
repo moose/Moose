@@ -1,5 +1,5 @@
 package Moose::Util::MetaRole;
-our $VERSION = '2.2006';
+our $VERSION = '2.2007';
 
 use strict;
 use warnings;
