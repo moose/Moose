@@ -407,12 +407,12 @@ sub coerce {
 #
 # If as() returns all its extra arguments, this just works, and
 # preserves backwards compatibility.
-sub as { { as => shift }, @_ }
-sub where (&)       { { where       => $_[0] } }
-sub message (&)     { { message     => $_[0] } }
-sub inline_as (&)   { { inline_as   => $_[0] } }
+sub as { +{ as => shift }, @_ }
+sub where (&)       { +{ where       => $_[0] } }
+sub message (&)     { +{ message     => $_[0] } }
+sub inline_as (&)   { +{ inline_as   => $_[0] } }
 
-sub from    {@_}
+sub from    { @_ }
 sub via (&) { $_[0] }
 
 sub enum {
