@@ -166,8 +166,8 @@ There are a couple caveats worth mentioning in regards to what
 "required" actually means.
 
 Basically, all it says is that this attribute (C<name>) must be provided to
-the constructor, or be lazy with either a default or a builder. It does not
-say anything about its value, so it could be C<undef>.
+the constructor or it must have either a default or a builder. It does not say
+anything about its value, so it could be C<undef>.
 
 If you define a clearer method on a required attribute, the clearer
 I<will> work, so even a required attribute can be unset after object
