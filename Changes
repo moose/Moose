@@ -3,6 +3,12 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [DOCUMENTATION]
+
+  - The Moose::Manual::Attributes pod has been amended to clarify that
+    'required' attributes can be satisfied with a 'default' or 'builder' sub,
+    and that 'ro' attributes can be set through the constructor.
+
 2.2006   2017-07-12
 
   [BUG FIXES]
