@@ -108,7 +108,7 @@ is( exception { class_type('Boop', message { "${_} is not a Boop" }) }, undef, '
     # We test class_type keeping the existing type (not making a new one) here.
     is( exception { is(class_type('MyExampleClass'), $type, 're-running class_type gives same type') }, undef, 'No exception making duplicate class_type' );;
 
-    # Next define a class which needs this type and it's original coercion
+    # Next define a class which needs this type and its original coercion
     # Note this has to be after the 2nd class_type call to test the bug as M::M::Attribute grabs
     # the type constraint which is there at the time the attribute decleration runs.
     {

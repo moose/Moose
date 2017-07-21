@@ -6,7 +6,7 @@ use Test::More;
 =pod
 
 This tests that Class::MOP works correctly
-with Class::C3 and it's somewhat insane
+with Class::C3 and its somewhat insane
 approach to method resolution.
 
 =cut
