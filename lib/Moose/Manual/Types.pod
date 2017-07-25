@@ -387,27 +387,37 @@ Moose does not provide any means of validating method
 parameters. However, there are several MooseX extensions on CPAN which
 let you do this.
 
-The simplest and least sugary is L<MooseX::Params::Validate>. This
+The simplest and least sugary is L<Params::ValidationCompiler>. This
 lets you validate a set of named parameters using Moose types:
 
-  use Moose;
-  use MooseX::Params::Validate;
+  use Moose::Util::TypeConstraints qw( find_type_constraint );
+  use Params::ValidationCompiler qw( validation_for );
 
-  sub foo {
-      my $self   = shift;
-      my %params = validated_hash(
-          \@_,
-          bar => { isa => 'Str', default => 'Moose' },
+  {
+      my $validator = validation_for(
+          params => {
+              foo => { type => find_type_constraint('Int') },
+              bar => {
+                  type     => find_type_constraint('Str'),
+                  optional => 1,
+              },
+              baz => {
+                  type    => find_type_constraint('Int'),
+                  default => 42,
+              },
+          },
       );
-      ...
-  }
 
-L<MooseX::Params::Validate> also supports coercions.
+      sub foo {
+          my %args = $validator->(@_);
+      }
+}
 
-There are several more powerful extensions that support method
-parameter validation using Moose types, including
-L<MooseX::Method::Signatures>, which gives you a full-blown C<method>
-keyword.
+L<Params::ValidationCompiler> also supports coercions.
+
+There are several more powerful extensions that support method parameter
+validation using Moose types, including L<Moops>, which gives you a full-blown
+C<method> keyword.
 
   method morning ( Str $name ) {
       $self->say("Good morning ${name}!");
