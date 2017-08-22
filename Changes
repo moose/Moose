@@ -4662,8 +4662,8 @@ for, noteworthy changes.
         release because it uses the a new
         instance sub-protocol and a fairly
         complete Role implementation. It has
-        not yet been optimized, so it slower
-        the the previous CPAN version. This
+        not yet been optimized, so it is slower
+        than the previous CPAN version. This
         release also lacks good updated docs,
         the official release will have updated docs.
 

@@ -9,7 +9,7 @@ use Class::MOP::Mixin::HasMethods;
 # (line numbers and originating file).  However, the reinitialize()
 # functionality for classes and roles can sometimes clobber this information,
 # causing to reference internal MOP files/lines instead.
-# These tests check to make sure the the reinitialize() functionality
+# These tests check to make sure the reinitialize() functionality
 # preserves the correct debugging information when it (re)adds methods
 # back into a class or role.
 

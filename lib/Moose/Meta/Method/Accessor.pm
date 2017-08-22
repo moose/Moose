@@ -135,7 +135,7 @@ This class is a subclass of L<Class::MOP::Method::Accessor> that
 provides additional Moose-specific functionality, all of which is
 private.
 
-To understand this class, you should read the the
+To understand this class, you should read the
 L<Class::MOP::Method::Accessor> documentation.
 
 =head1 BUGS
