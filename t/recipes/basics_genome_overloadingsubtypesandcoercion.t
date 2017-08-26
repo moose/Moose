@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Requires 'List::MoreUtils';
+use Test::Requires 'List::SomeUtils';
 
 # TODO: use inc::ExtractInlineTests and inc::MyInline to inline this test into the pod,
 # so we do not need special handling for it in the build.
@@ -43,7 +43,7 @@ use Test::Requires 'List::MoreUtils';
         );
     }
 
-    use List::MoreUtils qw( zip );
+    use List::SomeUtils qw( zip );
 
     coerce 'Human::EyeColor'
         => from 'ArrayRef'

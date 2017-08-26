@@ -198,7 +198,7 @@ returns a new C<Human::EyeColor> object.
 Our original C<Human> class requires just a few changes to incorporate
 our new C<Human::EyeColor> class.
 
-  use List::MoreUtils qw( zip );
+  use List::SomeUtils qw( zip );
 
   coerce 'Human::EyeColor'
       => from 'ArrayRef'

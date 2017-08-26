@@ -147,7 +147,7 @@ This method requires a single argument.
 =item * B<first_index( sub { ... } )>
 
 This method returns the index of the first matching item in the array, just
-like L<List::MoreUtils>'s C<first_index> function. The matching is done with a
+like L<List::SomeUtils/first_index>. The matching is done with a
 subroutine reference you pass to this method. The subroutine will be called
 against each element in the array until one matches or all elements have been
 checked. Each list element will be available to the sub in C<$_>.
@@ -233,8 +233,7 @@ This method does not accept any arguments.
 
 =item * B<uniq>
 
-Returns the array with all duplicate elements removed, like C<uniq> from
-L<List::MoreUtils>.
+Returns the array with all duplicate elements removed, like L<List::Util/uniq>.
 
 This method does not accept any arguments.
 
@@ -298,7 +297,7 @@ This method accepts one or two arguments.
 =item * B<natatime($n, $code)>
 
 This method returns an iterator which, on each call, returns C<$n> more items
-from the array, in order, like C<natatime> from L<List::MoreUtils>.
+from the array, in order, like L<List::SomeUtils/natatime>.
 
 If you pass a coderef as the second argument, then this code ref will be
 called on each group of C<$n> elements in the array until the array is
