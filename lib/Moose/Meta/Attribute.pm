@@ -551,8 +551,6 @@ sub set_value {
     my ($self, $instance, @args) = @_;
     my $value = $args[0];
 
-    my $attr_name = quotemeta($self->name);
-
     my $class_name = blessed( $instance );
     if ($self->is_required and not @args) {
         throw_exception(
