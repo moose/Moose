@@ -338,7 +338,7 @@ class, you can do this with C<override>:
   override 'display_name' => sub {
       my $self = shift;
 
-      return super() . q{, } . $self->title();
+      return super() . q{, } . $self->job_title();
   };
 
 The call to C<super()> is almost the same as calling C<<
