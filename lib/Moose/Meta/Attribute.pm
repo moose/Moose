@@ -1335,8 +1335,8 @@ sub verify_against_type_constraint {
                           );
 }
 
-package Moose::Meta::Attribute::Custom::Moose;
-our $VERSION = '2.1403';
+package  # hide from PAUSE
+    Moose::Meta::Attribute::Custom::Moose;
 
 sub register_implementation { 'Moose::Meta::Attribute' }
 1;
