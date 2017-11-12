@@ -15,4 +15,5 @@ sub _build_message {
     "You must provide a name for the attribute";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

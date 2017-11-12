@@ -42,4 +42,5 @@ sub _build_message {
         . " => \\&$method)";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

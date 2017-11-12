@@ -16,4 +16,5 @@ sub _build_message {
     "The __INSTANCE__ parameter must be a blessed reference, not ". $self->instance;
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

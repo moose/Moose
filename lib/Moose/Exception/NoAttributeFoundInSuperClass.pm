@@ -10,4 +10,5 @@ sub _build_message {
     "Could not find an attribute by the name of '".$self->attribute_name."' to inherit from in ".$self->class_name;
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

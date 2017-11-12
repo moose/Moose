@@ -15,4 +15,5 @@ sub _build_message {
     "Cannot find type '".$self->type_name."', perhaps you forgot to load it";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

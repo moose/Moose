@@ -15,4 +15,5 @@ sub _build_message {
     "You must pass a hash of options";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

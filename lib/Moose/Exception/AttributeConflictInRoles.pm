@@ -28,4 +28,5 @@ sub _build_message {
     . " The conflicting attribute is named '$attribute_name'.";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

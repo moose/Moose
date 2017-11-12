@@ -20,4 +20,5 @@ sub _build_message {
     "The is_needed method expected a metaclass object as its arugment";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

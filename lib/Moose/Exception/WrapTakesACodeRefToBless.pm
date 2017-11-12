@@ -22,4 +22,5 @@ sub _build_message {
     "You must supply a CODE reference to bless, not (" . ( $self->code ? $self->code : 'undef' ) . ")";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

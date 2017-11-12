@@ -23,4 +23,5 @@ sub _build_message {
         ( $max ? "more than $max" : 'any'). " argument".( $max == 1 ? '' : 's' );
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

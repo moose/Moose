@@ -18,4 +18,5 @@ sub _build_message {
     return "Unable to recognize the delegate metaclass '$meta'";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

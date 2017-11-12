@@ -21,4 +21,5 @@ sub _build_message {
     "Cannot call ".$self->method_name." without at least ".$self->minimum_args." argument".($self->minimum_args == 1 ? '' : 's');
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

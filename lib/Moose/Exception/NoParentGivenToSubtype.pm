@@ -14,4 +14,5 @@ sub _build_message {
     "A subtype cannot consist solely of a name, it must have a parent";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

@@ -19,4 +19,5 @@ sub _build_message {
     return "Can't make $class_name compatible with metaclass $superclass";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

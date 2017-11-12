@@ -10,4 +10,5 @@ sub _build_message {
     "Cannot have an isa option and a does option if the isa does not do the does on attribute (".$self->attribute_name.")";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

@@ -9,4 +9,5 @@ sub _build_message {
     "You must define a method name";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

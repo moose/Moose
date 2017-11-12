@@ -15,4 +15,5 @@ sub _build_message {
     "Must specify at least one role to apply to ".$self->applicant;
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

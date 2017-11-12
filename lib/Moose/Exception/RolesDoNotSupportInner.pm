@@ -8,4 +8,5 @@ sub _build_message {
     "Roles cannot support 'inner'";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

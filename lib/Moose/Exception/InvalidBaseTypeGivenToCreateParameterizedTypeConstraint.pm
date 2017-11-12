@@ -10,4 +10,5 @@ sub _build_message {
     "Could not locate the base type (".$self->type_name.")";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

@@ -16,4 +16,5 @@ sub _build_message {
     "You must pass a metaclass instance if you want to inline";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

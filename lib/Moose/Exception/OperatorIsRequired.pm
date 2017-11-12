@@ -15,4 +15,5 @@ sub _build_message {
     "operator is required";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

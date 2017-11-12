@@ -10,4 +10,5 @@ sub _build_message {
     "You cannot auto-dereference anything other than a ArrayRef or HashRef on attribute (".$self->attribute_name.")";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

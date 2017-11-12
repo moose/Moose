@@ -15,4 +15,5 @@ sub _build_message {
     "builder must be a defined scalar value which is a method name";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

@@ -35,4 +35,5 @@ sub _build_message {
    . " metaclass of its superclass, $superclass_name ($super_metatype)";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

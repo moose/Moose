@@ -22,4 +22,5 @@ sub _build_message {
     }
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

@@ -10,4 +10,5 @@ sub _build_message {
     blessed($self->instance)." does not support builder method '".$self->attribute->builder."' for attribute '".$self->attribute->name."'";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

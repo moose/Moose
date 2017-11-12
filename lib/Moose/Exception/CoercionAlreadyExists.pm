@@ -16,4 +16,5 @@ sub _build_message {
     "A coercion action already exists for '".$self->constraint_name."'";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

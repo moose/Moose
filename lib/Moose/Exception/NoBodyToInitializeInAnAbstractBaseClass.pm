@@ -15,4 +15,5 @@ sub _build_message {
     "No body to initialize, " .$self->package_name. " is an abstract base class";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

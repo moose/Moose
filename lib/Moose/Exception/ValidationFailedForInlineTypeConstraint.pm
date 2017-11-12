@@ -45,4 +45,5 @@ sub _build_message {
     return $line1 . $self->type_constraint_message;
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

@@ -9,4 +9,5 @@ sub _build_message {
     "You must pass an ARRAY ref of attributes";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

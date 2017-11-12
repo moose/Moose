@@ -15,4 +15,5 @@ sub _build_message {
     "Role applications must be instances of Moose::Meta::Role::Application::ToClass";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

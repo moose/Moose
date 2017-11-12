@@ -23,4 +23,5 @@ sub _build_message {
     return "No cases matched for $to_match";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

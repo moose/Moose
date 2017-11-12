@@ -9,4 +9,5 @@ sub _build_message {
     "You must supply a role name to does()";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

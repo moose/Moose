@@ -8,4 +8,5 @@ sub _build_message {
     "Abstract method";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

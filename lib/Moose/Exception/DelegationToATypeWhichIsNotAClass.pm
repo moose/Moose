@@ -10,4 +10,5 @@ sub _build_message {
     "The ".$self->attribute->name." attribute is trying to delegate to a type (".$self->attribute->type_constraint->name.") that is not backed by a class";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

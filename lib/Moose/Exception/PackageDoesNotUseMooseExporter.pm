@@ -24,4 +24,5 @@ sub _build_message {
            . ( $self->is_loaded ? "" : " (is it loaded?)" );
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

@@ -18,4 +18,5 @@ sub _build_message {
     . $self->attribute->name . " is not defined";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

@@ -22,4 +22,5 @@ sub _build_message {
     return "$type_parameter is not a subtype of $parent";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

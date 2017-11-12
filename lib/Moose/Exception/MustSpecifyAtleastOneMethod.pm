@@ -9,4 +9,5 @@ sub _build_message {
     "Must specify at least one method";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

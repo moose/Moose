@@ -41,4 +41,5 @@ sub _build_message {
     return $msg;
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

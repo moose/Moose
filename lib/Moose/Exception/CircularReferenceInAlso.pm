@@ -27,4 +27,5 @@ sub _build_message {
            ."$existing_stack and $also_member";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

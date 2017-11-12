@@ -26,4 +26,5 @@ sub _build_message {
     return "Can't generate an inline constraint for $type, since none was defined";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

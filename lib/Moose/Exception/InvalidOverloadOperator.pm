@@ -17,4 +17,5 @@ sub _build_message {
         . ') was not a valid overloading operator';
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

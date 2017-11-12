@@ -26,4 +26,5 @@ sub _build_message {
     'Moose::Meta::Role::Composite instances can only be reinitialized from an existing metaclass instance';
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

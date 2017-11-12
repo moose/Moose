@@ -14,4 +14,5 @@ sub _build_message {
     "You must pass a package name and it cannot be blessed";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

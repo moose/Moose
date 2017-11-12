@@ -9,4 +9,5 @@ sub _build_message {
     "Cannot add an override method if a local method is already present";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

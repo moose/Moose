@@ -16,4 +16,5 @@ sub _build_message {
     "Roles do not currently support regex references for ".$self->modifier_type." method modifiers";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

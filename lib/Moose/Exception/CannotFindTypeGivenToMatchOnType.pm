@@ -29,4 +29,5 @@ sub _build_message {
     return "Cannot find or parse the type '$type'"
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

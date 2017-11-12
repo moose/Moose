@@ -13,4 +13,5 @@ sub _build_message {
     "no immutable trait specified for $class";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

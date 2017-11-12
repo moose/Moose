@@ -21,4 +21,5 @@ sub _build_message {
     "Hash keys passed to ".$self->method_name." must be defined";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

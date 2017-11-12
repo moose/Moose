@@ -20,4 +20,5 @@ sub _build_message {
     return "No type supplied / type is not a valid type constraint";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

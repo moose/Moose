@@ -10,4 +10,5 @@ sub _build_message {
     "You cannot overwrite a locally defined method (".$self->method->name.") with a delegation";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

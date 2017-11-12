@@ -20,4 +20,5 @@ sub _build_message {
     "You must pass a Moose::Meta::Role instance (or a subclass)";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

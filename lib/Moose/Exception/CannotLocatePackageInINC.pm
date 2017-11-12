@@ -37,4 +37,5 @@ sub _build_message {
     return "Can't locate $possible_packages in \@INC (\@INC contains: @INC)."
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

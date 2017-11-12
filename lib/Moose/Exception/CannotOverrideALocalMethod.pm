@@ -16,4 +16,5 @@ sub _build_message {
     "Cannot add an override of method '".$self->method_name."' because there is a local version of '".$self->method_name."'";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

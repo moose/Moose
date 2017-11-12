@@ -15,4 +15,5 @@ sub _build_message {
     "You must pass a Class::MOP::Class instance (or a subclass)";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

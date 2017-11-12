@@ -9,4 +9,5 @@ sub _build_message {
     "The 'inline_destructor' option is present, but no destructor class was specified";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

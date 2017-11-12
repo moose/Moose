@@ -20,4 +20,5 @@ sub _build_message {
         . "because $error";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

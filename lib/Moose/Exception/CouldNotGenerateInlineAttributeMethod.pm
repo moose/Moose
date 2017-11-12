@@ -22,4 +22,5 @@ sub _build_message {
     "Could not generate inline ".$self->option." because : ".$self->error;
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

@@ -16,4 +16,5 @@ sub _build_message {
     "The ".$self->attribute->name." attribute is trying to delegate to a role which has not been loaded - ".$self->role_name;
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

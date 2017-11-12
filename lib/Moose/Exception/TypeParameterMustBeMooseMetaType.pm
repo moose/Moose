@@ -9,4 +9,5 @@ sub _build_message {
     "The type parameter must be a Moose meta type";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

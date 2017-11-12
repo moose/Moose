@@ -10,4 +10,5 @@ sub _build_message {
     "The Metaclass ".$self->class_name." must be a subclass of Moose::Meta::Class."
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

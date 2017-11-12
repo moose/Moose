@@ -21,4 +21,5 @@ sub _build_message {
            "Moose::Meta::TypeConstraint::Union, not a $type_constraint"
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

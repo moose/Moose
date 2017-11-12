@@ -14,4 +14,5 @@ sub _build_message {
     my $self = shift;
     "You can only consume roles, ".$self->role_name." is not a Moose role";
 }
+__PACKAGE__->meta->make_immutable;
 1;

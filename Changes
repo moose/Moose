@@ -20,6 +20,8 @@ for, noteworthy changes.
 
   - some dead code has been removed (thanks, Jens Berthold!)
 
+  - all Moose exception classes have been made immutable.
+
 2.2006   2017-07-12
 
   [BUG FIXES]

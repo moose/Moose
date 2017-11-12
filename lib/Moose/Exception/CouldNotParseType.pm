@@ -26,4 +26,5 @@ sub _build_message {
         . " and str-length=$length)";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

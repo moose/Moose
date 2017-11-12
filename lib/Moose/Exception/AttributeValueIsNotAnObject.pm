@@ -24,4 +24,5 @@ sub _build_message {
     . $self->attribute->name . " is not an object (got '".$self->given_value."')";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

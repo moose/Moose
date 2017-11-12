@@ -9,4 +9,5 @@ sub _build_message {
     "You must pass a HASH ref of attributes";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

@@ -9,4 +9,5 @@ sub _build_message {
     "You can only apply base class roles to a Moose class, not a role.";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

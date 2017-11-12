@@ -22,4 +22,5 @@ sub _build_message {
     "Can't fix metaclass incompatibility for $class_name because it is not pristine.";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

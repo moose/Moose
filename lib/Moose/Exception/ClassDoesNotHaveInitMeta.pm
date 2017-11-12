@@ -18,4 +18,5 @@ sub _build_message {
     return "Cannot provide traits when $class does not have an init_meta() method";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

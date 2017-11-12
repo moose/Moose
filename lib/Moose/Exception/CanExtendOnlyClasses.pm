@@ -11,4 +11,5 @@ sub _build_message {
     return "You cannot inherit from a Moose Role ($role_name)";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

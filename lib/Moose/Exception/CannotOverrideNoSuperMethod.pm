@@ -22,4 +22,5 @@ sub _build_message {
     "You cannot override '".$self->method_name."' because it has no super method";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

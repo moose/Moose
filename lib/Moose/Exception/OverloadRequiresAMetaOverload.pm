@@ -9,4 +9,5 @@ sub _build_message {
     'If you provide an original_overload parameter to the Moose::Meta::Overload constructor it must be a Moose::Meta::Overload object';
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

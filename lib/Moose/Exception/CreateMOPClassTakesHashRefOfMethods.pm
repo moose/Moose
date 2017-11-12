@@ -9,4 +9,5 @@ sub _build_message {
     "You must pass an HASH ref of methods";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

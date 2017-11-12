@@ -10,4 +10,5 @@ sub _build_message {
     "The Metaclass ".$self->class_name." must be loaded. (Perhaps you forgot to 'use ".$self->class_name."'?)";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

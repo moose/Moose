@@ -9,4 +9,5 @@ sub _build_message {
     "Your code block must be a CODE reference";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

@@ -15,4 +15,5 @@ sub _build_message {
     "A required attribute must have either 'init_arg', 'builder', or 'default'";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

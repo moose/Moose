@@ -10,4 +10,5 @@ sub _build_message {
     "Can not auto de-reference the type constraint '" . $self->type_name . "'";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

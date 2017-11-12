@@ -14,4 +14,5 @@ sub _build_message {
     return "Cannot add additional type coercions to Union types";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

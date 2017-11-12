@@ -24,4 +24,5 @@ sub _build_message {
            . " This is a fatal error and cannot be disambiguated.";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

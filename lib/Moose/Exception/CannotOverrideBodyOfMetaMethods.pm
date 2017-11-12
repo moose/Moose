@@ -15,4 +15,5 @@ sub _build_message {
     "Overriding the body of meta methods is not allowed";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

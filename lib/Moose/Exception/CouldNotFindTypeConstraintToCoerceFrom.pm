@@ -16,4 +16,5 @@ sub _build_message {
     "Could not find the type constraint (".$self->constraint_name.") to coerce from";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

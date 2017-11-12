@@ -16,4 +16,5 @@ sub _build_message {
     "You can only clone instances, (".$self->instance.") is not a blessed instance";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

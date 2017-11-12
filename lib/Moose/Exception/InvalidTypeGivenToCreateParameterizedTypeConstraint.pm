@@ -10,4 +10,5 @@ sub _build_message {
     "Could not parse type name (".$self->type_name.") correctly";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

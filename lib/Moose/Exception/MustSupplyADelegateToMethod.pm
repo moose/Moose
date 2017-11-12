@@ -15,4 +15,5 @@ sub _build_message {
     "You must supply a delegate_to_method which is a method name or a CODE reference";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

@@ -22,4 +22,5 @@ sub _build_message {
     "Enum values must be strings, not ".( defined $self->value ? "'".$self->value."'" : "undef" );
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

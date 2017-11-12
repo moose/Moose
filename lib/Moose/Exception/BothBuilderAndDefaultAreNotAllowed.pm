@@ -15,4 +15,5 @@ sub _build_message {
     "Setting both default and builder is not allowed.";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

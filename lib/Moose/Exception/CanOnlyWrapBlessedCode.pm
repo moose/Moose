@@ -21,4 +21,5 @@ sub _build_message {
     "Can only wrap blessed CODE";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

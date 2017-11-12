@@ -15,4 +15,5 @@ sub _build_message {
     "The metaclass (".$self->class_name.") must be derived from Class::MOP::Class";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

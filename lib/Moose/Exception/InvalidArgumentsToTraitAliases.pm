@@ -28,4 +28,5 @@ sub _build_message {
         . "valid arguments to the 'trait_aliases' option";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

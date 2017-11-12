@@ -21,4 +21,5 @@ sub _build_message {
     "bad accessor/reader/writer/predicate/clearer format, must be a HASH ref";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

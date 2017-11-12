@@ -10,4 +10,5 @@ sub _build_message {
     "I do not understand this option (is => ".$self->params->{is}.") on attribute (".$self->attribute_name.")";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

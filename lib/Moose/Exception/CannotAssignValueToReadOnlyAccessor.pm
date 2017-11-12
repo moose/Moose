@@ -16,4 +16,5 @@ sub _build_message {
     "Cannot assign a value to a read-only accessor";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

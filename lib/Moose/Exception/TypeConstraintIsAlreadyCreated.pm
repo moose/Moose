@@ -22,4 +22,5 @@ sub _build_message {
     return "The type constraint '$type_name' has already been created in $type_package_defined_in and cannot be created again in $package_defined_in";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

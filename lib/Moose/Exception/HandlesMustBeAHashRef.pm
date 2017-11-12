@@ -16,4 +16,5 @@ sub _build_message {
     "The 'handles' option must be a HASH reference, not ".$self->given_handles;
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

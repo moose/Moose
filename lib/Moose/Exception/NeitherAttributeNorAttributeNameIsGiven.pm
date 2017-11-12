@@ -8,4 +8,5 @@ sub _build_message {
     "You need to give attribute or attribute_name or both";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

@@ -28,4 +28,5 @@ sub _build_message {
     "Could not create the '".$self->option_name."' method for " . $self->attribute->name . " because : ".$self->error;
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

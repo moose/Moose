@@ -8,4 +8,5 @@ sub _build_message {
     "can't register an unnamed type constraint";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

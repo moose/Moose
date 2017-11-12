@@ -16,4 +16,5 @@ sub _build_message {
     "The method '".$self->method_name."' was not found in the inheritance hierarchy for ".$self->class_name;
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

@@ -15,4 +15,5 @@ sub _build_message {
     "You must have at least one value to enumerate through";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

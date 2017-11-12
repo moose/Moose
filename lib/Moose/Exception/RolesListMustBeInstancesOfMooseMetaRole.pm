@@ -22,4 +22,5 @@ sub _build_message {
     "The list of roles must be instances of Moose::Meta::Role, not ".$self->role;
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

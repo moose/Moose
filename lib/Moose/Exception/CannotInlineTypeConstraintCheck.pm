@@ -10,4 +10,5 @@ sub _build_message {
     'Cannot inline a type constraint check for ' . $self->type_name;
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

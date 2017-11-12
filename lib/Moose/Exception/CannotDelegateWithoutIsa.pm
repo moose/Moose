@@ -9,4 +9,5 @@ sub _build_message {
     "Cannot delegate methods based on a Regexp without a type constraint (isa)";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

@@ -10,4 +10,5 @@ sub _build_message {
     "You cannot have a weak reference to a coerced value on attribute (".$self->attribute_name.")";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

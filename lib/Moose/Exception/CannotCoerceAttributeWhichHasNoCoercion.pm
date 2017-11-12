@@ -13,4 +13,5 @@ sub _build_message {
     return "You cannot coerce an attribute ($name) unless its type ($type) has a coercion";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

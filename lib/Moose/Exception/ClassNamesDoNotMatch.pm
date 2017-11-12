@@ -21,4 +21,5 @@ sub _build_message {
     "class_name (".$self-> class_name.") does not match class->name (".$self->class->name.")";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

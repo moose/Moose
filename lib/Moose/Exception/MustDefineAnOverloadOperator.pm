@@ -9,4 +9,5 @@ sub _build_message {
     "You must define an overload operator";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

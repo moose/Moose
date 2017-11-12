@@ -11,4 +11,5 @@ sub _build_message {
     "You may rebless only into a subclass of ($instance_class), of which (". $self->class_name .") isn't."
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

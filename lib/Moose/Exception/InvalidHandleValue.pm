@@ -16,4 +16,5 @@ sub _build_message {
     "All values passed to handles must be strings or ARRAY references, not ".$self->handle_value;
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

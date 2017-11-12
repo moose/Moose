@@ -9,4 +9,5 @@ sub _build_message {
     'If you provide a method parameter to the Moose::Meta::Overload constructor it must be a Class::MOP::Method object';
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

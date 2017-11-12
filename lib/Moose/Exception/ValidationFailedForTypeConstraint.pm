@@ -29,4 +29,5 @@ sub _build_message {
         "Attribute ($attribute_name) does not pass the type constraint because: $error";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

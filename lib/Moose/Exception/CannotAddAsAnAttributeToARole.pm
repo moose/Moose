@@ -16,4 +16,5 @@ sub _build_message {
     "Cannot add a ".$self->attribute_class." as an attribute to a role";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

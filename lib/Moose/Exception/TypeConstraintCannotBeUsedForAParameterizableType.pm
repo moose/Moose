@@ -21,4 +21,5 @@ sub _build_message {
         . "$parent_type_name doesn't subtype or coerce from a parameterizable type.";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

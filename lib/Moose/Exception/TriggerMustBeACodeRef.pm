@@ -10,4 +10,5 @@ sub _build_message {
     "Trigger must be a CODE ref on attribute (".$self->attribute_name.")";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

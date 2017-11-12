@@ -10,4 +10,5 @@ sub _build_message {
     "Cannot calculate native type for " . ref $self->instance;
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

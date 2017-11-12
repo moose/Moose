@@ -17,4 +17,5 @@ sub _build_message {
     .$self->required_type." but it's a ".$self->given_type;
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

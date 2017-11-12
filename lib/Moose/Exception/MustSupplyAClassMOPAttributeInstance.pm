@@ -15,4 +15,5 @@ sub _build_message {
     "You must supply an attribute which is a 'Class::MOP::Attribute' instance";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

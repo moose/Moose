@@ -20,4 +20,5 @@ sub _build_message {
     return 'You must pass an even number of attribute options';
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

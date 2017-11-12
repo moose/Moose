@@ -20,4 +20,5 @@ sub _build_message {
     "union called with an array reference and additional arguments";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

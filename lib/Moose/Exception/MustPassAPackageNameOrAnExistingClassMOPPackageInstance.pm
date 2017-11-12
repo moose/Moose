@@ -15,4 +15,5 @@ sub _build_message {
     "You must pass a package name or an existing Class::MOP::Package instance";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

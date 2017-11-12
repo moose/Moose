@@ -15,4 +15,5 @@ sub _build_message {
     "The 'message' parameter must be a coderef";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

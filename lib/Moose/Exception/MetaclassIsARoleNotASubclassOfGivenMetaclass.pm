@@ -22,4 +22,5 @@ sub _build_message {
         ."You cannot make the same thing a role and a class. Remove either Moose or Moose::Role.";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

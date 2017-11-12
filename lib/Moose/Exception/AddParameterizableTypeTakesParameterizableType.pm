@@ -15,4 +15,5 @@ sub _build_message {
     "Type must be a Moose::Meta::TypeConstraint::Parameterizable not ".$self->type_name;
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

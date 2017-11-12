@@ -15,4 +15,5 @@ sub _build_message {
     "has '+attr' is not supported in roles";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

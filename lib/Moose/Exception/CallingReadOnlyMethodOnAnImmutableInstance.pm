@@ -15,4 +15,5 @@ sub _build_message {
     "The '".$self->method_name."' method is read-only when called on an immutable instance";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

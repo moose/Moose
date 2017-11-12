@@ -23,4 +23,5 @@ sub _build_message {
            "$superclass_name ($supermeta_type)";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

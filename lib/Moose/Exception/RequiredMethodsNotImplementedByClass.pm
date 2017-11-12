@@ -27,4 +27,5 @@ sub _build_message {
         . "to be implemented by '$class_name'";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

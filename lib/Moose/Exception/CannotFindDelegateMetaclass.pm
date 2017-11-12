@@ -10,4 +10,5 @@ sub _build_message {
     "Cannot find delegate metaclass for attribute ".$self->attribute->name;
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

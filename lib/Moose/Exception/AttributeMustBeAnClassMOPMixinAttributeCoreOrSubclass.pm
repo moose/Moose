@@ -15,4 +15,5 @@ sub _build_message {
     "Your attribute must be an instance of Class::MOP::Mixin::AttributeCore (or a subclass)";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

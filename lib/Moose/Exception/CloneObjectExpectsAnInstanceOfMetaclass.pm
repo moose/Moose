@@ -16,4 +16,5 @@ sub _build_message {
     "You must pass an instance of the metaclass (" .$self->class_name. "), not (".$self->instance.")";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

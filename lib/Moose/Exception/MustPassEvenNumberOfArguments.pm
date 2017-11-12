@@ -21,4 +21,5 @@ sub _build_message {
     "You must pass an even number of arguments to ".$self->method_name;
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

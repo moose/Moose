@@ -16,4 +16,5 @@ sub _build_message {
     "Unable to canonicalize the 'handles' option with ".$self->handles." because its metaclass is not a Moose::Meta::Role";
 }
 
+__PACKAGE__->meta->make_immutable;
 1;

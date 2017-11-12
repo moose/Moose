@@ -37,4 +37,5 @@ sub _build_message {
     $error.$error2;
 }
 
+__PACKAGE__->meta->make_immutable;
 1;
