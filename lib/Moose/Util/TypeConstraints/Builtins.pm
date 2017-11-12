@@ -1,5 +1,5 @@
 package Moose::Util::TypeConstraints::Builtins;
-our $VERSION = '2.2007';
+our $VERSION = '2.2008';
 
 use strict;
 use warnings;
