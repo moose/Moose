@@ -9,6 +9,17 @@ for, noteworthy changes.
     'required' attributes can be satisfied with a 'default' or 'builder' sub,
     and that 'ro' attributes can be set through the constructor.
 
+  - The Moose::Manual::Types pod has been amended to recommend
+    Params::ValidationCompiler and Moops instead of older modules (which are
+    slow and/or deprecated).
+
+  - other small documentation fixes (thanks to Chris Weyl and Anirvan
+    Chatterjee!)
+
+  [OTHER]
+
+  - some dead code has been removed (thanks, Jens Berthold!)
+
 2.2006   2017-07-12
 
   [BUG FIXES]
