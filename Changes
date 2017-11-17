@@ -3,6 +3,10 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  - fixed empty exception messages under -d (new issue in 2.2007)
+
 2.2007   2017-11-12
 
   [DOCUMENTATION]
