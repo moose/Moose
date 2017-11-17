@@ -91,6 +91,7 @@ sub as_string {
     return $message;
 }
 
+__PACKAGE__->meta->make_immutable;
 1;
 
 # ABSTRACT: Superclass for Moose internal exceptions
