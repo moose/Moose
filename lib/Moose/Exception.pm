@@ -36,7 +36,8 @@ sub _build_trace {
     # be weakening all references in its frames)
     my $skip = 0;
     while (my @c = caller(++$skip)) {
-        last if $c[3] =~ /^(.*)::new$/ && $self->isa($1);
+        last if ($c[3] =~ /^(.*)::new$/ || $c[3] =~ /^\S+ (.*)::new \(defined at /)
+            && $self->isa($1);
     }
     $skip++;
 
