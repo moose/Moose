@@ -101,7 +101,7 @@ for, noteworthy changes.
     same name, this now generates a warning.
 
   - The warning when attribute methods overwrite one another is now much more
-    informative. It includes the type of accessors involve (reader, writer,
+    informative. It includes the type of accessors involved (reader, writer,
     predicate, etc.) as well as the file and line where each accessor was
     defined. Fixes RT #118325.
 
