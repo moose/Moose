@@ -2,7 +2,7 @@ package Moose::Exception;
 our $VERSION = '2.2008';
 
 use Moose;
-use Devel::StackTrace 1.33;
+use Devel::StackTrace 2.03;
 
 has 'trace' => (
     is            => 'ro',
