@@ -1,5 +1,5 @@
 package Moose::Exception::Role::AttributeName;
-our $VERSION = '2.2008';
+our $VERSION = '2.2009';
 
 use Moose::Role;
 

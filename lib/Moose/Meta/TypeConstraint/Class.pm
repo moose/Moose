@@ -1,5 +1,5 @@
 package Moose::Meta::TypeConstraint::Class;
-our $VERSION = '2.2008';
+our $VERSION = '2.2009';
 
 use strict;
 use warnings;
