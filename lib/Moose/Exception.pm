@@ -2,7 +2,7 @@ package Moose::Exception;
 our $VERSION = '2.2008';
 
 use Moose;
-use Devel::StackTrace 1.33;
+use Devel::StackTrace 2.03;
 
 has 'trace' => (
     is            => 'ro',
@@ -36,7 +36,8 @@ sub _build_trace {
     # be weakening all references in its frames)
     my $skip = 0;
     while (my @c = caller(++$skip)) {
-        last if $c[3] =~ /^(.*)::new$/ && $self->isa($1);
+        last if ($c[3] =~ /^(.*)::new$/ || $c[3] =~ /^\S+ (.*)::new \(defined at /)
+            && $self->isa($1);
     }
     $skip++;
 
@@ -91,6 +92,7 @@ sub as_string {
     return $message;
 }
 
+__PACKAGE__->meta->make_immutable;
 1;
 
 # ABSTRACT: Superclass for Moose internal exceptions
