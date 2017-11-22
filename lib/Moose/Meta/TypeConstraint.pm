@@ -6,6 +6,29 @@ use warnings;
 use metaclass;
 
 use overload '0+'     => sub { refaddr(shift) }, # id an object
+             '|'      => sub {
+
+                 ## It's kind of ugly that we need to know about Union Types, but this
+                 ## is needed for syntax compatibility.  Maybe someday we'll all just do
+                 ## Or[Str,Str,Int]
+
+                 my @args = @_[0,1]; ## arg 3 is special,  see the overload docs.
+                 my @tc = grep {blessed $_} map {
+                     blessed $_ ? $_ :
+                     Moose::Util::TypeConstraints::find_or_parse_type_constraint($_)
+                       || __PACKAGE__->_throw_error( "$_ is not a type constraint")
+                 } @args;
+
+                 ( scalar @tc == scalar @args)
+                     || __PACKAGE__->_throw_error(
+                       "one of your type constraints is bad.  Passed: ". join(', ', @args) ." Got: ". join(', ', @tc));
+
+                 ( scalar @tc >= 2 )
+                     || __PACKAGE__->_throw_error("You must pass in at least 2 type names to make a union");
+
+                 my $union = Moose::Meta::TypeConstraint::Union->new(type_constraints=>\@tc);
+                 return Moose::Util::TypeConstraints::register_type_constraint($union);
+             },
              '""'     => sub { shift->name },   # stringify to tc name
              bool     => sub { 1 },
              fallback => 1;
