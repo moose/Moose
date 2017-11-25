@@ -3,6 +3,13 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  - Some hash native trait methods (notable clear and delete) were broken in
+    various ways when the associated attribute's type allowed for coercion of
+    the hash values and coercion was enabled for the hash. Reported by Ralf
+    Bartel. RT #12737.
+
 2.2008   2017-11-21
 
   [BUG FIXES]

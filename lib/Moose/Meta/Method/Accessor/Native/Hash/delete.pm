@@ -10,6 +10,12 @@ with 'Moose::Meta::Method::Accessor::Native::Hash::Writer';
 
 sub _adds_members { 0 }
 
+# There are no new members so we don't need to coerce new values (none exist)
+# and we always want to check the new (empty) hash as a whole.
+sub _inline_coerce_new_values { '' }
+
+sub _check_new_members_only { 0 }
+
 sub _potential_value {
     my $self = shift;
     my ($slot_access) = @_;

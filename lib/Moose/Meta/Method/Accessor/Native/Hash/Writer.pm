@@ -14,10 +14,20 @@ with 'Moose::Meta::Method::Accessor::Native::Writer',
 
 sub _inline_coerce_new_values {
     my $self = shift;
-    $self->Moose::Meta::Method::Accessor::Native::Collection::_inline_coerce_new_values(@_);
+
+    return unless $self->associated_attribute->should_coerce;
+
+    return unless $self->_tc_member_type_can_coerce;
+
+    return <<'EOF';
+if (@_) {
+    my %h = @_;
+    @h{ sort keys %h } = map { $member_coercion->($_) } @h{ sort keys %h };
+}
+EOF
 }
 
-sub _new_values { '@values' }
+sub _new_members { 'values %{ { @_ } }' }
 
 sub _copy_old_value {
     my $self = shift;

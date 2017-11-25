@@ -6,7 +6,7 @@ use warnings;
 
 use Moose::Role;
 
-requires qw( _adds_members );
+requires qw( _adds_members _new_members );
 
 sub _inline_coerce_new_values {
     my $self = shift;

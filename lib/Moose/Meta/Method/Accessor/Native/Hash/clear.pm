@@ -12,7 +12,16 @@ sub _maximum_arguments { 0 }
 
 sub _adds_members { 0 }
 
-sub _potential_value { '{}' }
+# The inner () in this expression is for the benefit of inlining code that
+# might end up looking like "values %{ {} }". This is a syntax error in perl
+# but 'values %{ { () } }' is not.
+sub _potential_value { '{ ( ) }' }
+
+# There are no new members so we don't need to coerce new values (none exist)
+# and we always want to check the new (empty) hash as a whole.
+sub _inline_coerce_new_values { '' }
+
+sub _check_new_members_only { 0 }
 
 sub _inline_optimized_set_new_value {
     my $self = shift;
