@@ -10,6 +10,10 @@ for, noteworthy changes.
     the hash values and coercion was enabled for the hash. Reported by Ralf
     Bartel in RT #12737.
 
+  [TESTS]
+
+  - fixed tests (new in 2.2008) that sometimes fail under Windows.
+
 2.2008   2017-11-21
 
   [BUG FIXES]
