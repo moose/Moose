@@ -1,5 +1,5 @@
 package Moose::Exception::CreateMOPClassTakesArrayRefOfSuperclasses;
-our $VERSION = '2.2009';
+our $VERSION = '2.2010';
 
 use Moose;
 extends 'Moose::Exception';
