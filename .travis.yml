@@ -23,6 +23,9 @@ env:
   global:
     - TEST_PARTITIONS=4
     - RELEASE_TESTING=1
+branches:
+  except:
+    - /^stable\/2\.\d\d$/
 matrix:
   include:
     - perl: "5.20"
