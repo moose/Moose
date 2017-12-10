@@ -36,9 +36,12 @@ matrix:
       env: COVERAGE=1 TEST_PARTITION=3
     - perl: "5.20"
       env: COVERAGE=1 TEST_PARTITION=4
+cache:
+  directories:
+    - $HOME/perl5
 before_install:
   - git clone git://github.com/travis-perl/helpers ~/travis-perl-helpers
-  - source ~/travis-perl-helpers/init
+  - source ~/travis-perl-helpers/init --always-upgrade-modules
   - build-perl
   - perl -V
   - build-dist
