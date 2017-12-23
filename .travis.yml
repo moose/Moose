@@ -6,19 +6,30 @@ addons:
       - aspell-en
 language: perl
 perl:
-    #- dev
-    #- "blead"
-    #- stable
-    - "5.26"
-    - "5.24"
-    - "5.22"
-    - "5.20"
-    - "5.18"
-    - "5.16"
-    - "5.14"
-    - "5.12"
-    - "5.10"
-    - "5.8"
+  - "blead"
+  - "blead-thr"
+  - "dev"
+  - "dev-thr"
+  - "5.26"
+  - "5.26-thr"
+  - "5.24"
+  - "5.24-thr"
+  - "5.22"
+  - "5.22-thr"
+  - "5.20"
+  - "5.20-thr"
+  - "5.18"
+  - "5.18-thr"
+  - "5.16"
+  - "5.16-thr"
+  - "5.14"
+  - "5.14-thr"
+  - "5.12"
+  - "5.12-thr"
+  - "5.10"
+  - "5.10-thr"
+  - "5.8"
+  - "5.8-thr"
 env:
   global:
     - TEST_PARTITIONS=4
@@ -27,6 +38,9 @@ branches:
   except:
     - /^stable\/2\.\d\d$/
 matrix:
+  allow_failures:
+    - perl: blead
+    - perl: blead-thr
   include:
     - perl: "5.20"
       env: COVERAGE=1 TEST_PARTITION=1
