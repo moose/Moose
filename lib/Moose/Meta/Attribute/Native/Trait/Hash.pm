@@ -102,7 +102,10 @@ This method does not accept any arguments.
 
 =head2 elements
 
-Returns the key/value pairs in the hash as a flattened list..
+In list context, this returns the key/value pairs in the hash.
+
+In scalar context, this returns the count of keys plus values.  In other words,
+it's the same as L<keys> times two.
 
 This method does not accept any arguments.
 
