@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [OTHER]
+
+  - A performance improvement with operator overloads has been made by making
+    use of a new Devel::OverloadInfo interface (thanks, ilmari!)
+
 2.2009   2017-11-29
 
   [BUG FIXES]
