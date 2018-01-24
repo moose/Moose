@@ -7,7 +7,7 @@ use metaclass;
 
 use Scalar::Util 'blessed';
 use List::Util 1.33 'all';
-use Devel::OverloadInfo 0.005 'is_overloaded';
+use Devel::OverloadInfo 0.004 'is_overloaded';
 
 use parent 'Moose::Meta::Role::Application';
 

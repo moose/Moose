@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More 0.88;
-use Devel::OverloadInfo 0.005 'is_overloaded';
+use Devel::OverloadInfo 0.004 'is_overloaded';
 
 sub test_overloading_for_package {
     my $package = shift;
