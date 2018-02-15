@@ -33,6 +33,8 @@ perl:
 env:
   global:
     - TEST_PARTITIONS=4
+    - AUTHOR_TESTING=1
+    - AUTOMATED_TESTING=1
     - RELEASE_TESTING=1
 branches:
   except:
