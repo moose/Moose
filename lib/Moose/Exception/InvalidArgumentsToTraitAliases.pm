@@ -1,5 +1,5 @@
 package Moose::Exception::InvalidArgumentsToTraitAliases;
-our $VERSION = '2.2010';
+our $VERSION = '2.2011';
 
 use Moose;
 extends 'Moose::Exception';
