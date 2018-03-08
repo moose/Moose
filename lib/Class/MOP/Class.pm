@@ -946,8 +946,7 @@ sub superclasses {
     my $isa = $self->get_or_add_package_symbol('@ISA');
 
     if (@_) {
-        my @supers = @_;
-        @{$isa} = @supers;
+        @{$isa} = @_;
 
         # NOTE:
         # on 5.8 and below, we need to call
