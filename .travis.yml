@@ -6,8 +6,8 @@ addons:
       - aspell-en
 language: perl
 perl:
-  - "blead"
-  - "blead-thr"
+  - "perl-blead"
+  - "perl-blead-thr"
   - "dev"
   - "dev-thr"
   - "5.26"
@@ -41,8 +41,8 @@ branches:
     - /^stable\/2\.\d\d$/
 matrix:
   allow_failures:
-    - perl: blead
-    - perl: blead-thr
+    - perl: perl-blead
+    - perl: perl-blead-thr
   include:
     - perl: "5.20"
       env: COVERAGE=1 TEST_PARTITION=1
