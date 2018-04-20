@@ -78,10 +78,13 @@ This method does not accept any arguments.
 
 =item * B<elements>
 
-Returns all of the elements of the array as an array (not an array reference).
+In list context, returns all of the elements of the array as a list.
 
-  my @option = $stuff->all_options;
-  print "@options\n";    # prints "foo bar baz boo"
+In scalar context, returns the number of elements in the array.
+
+  my @options = $stuff->all_options;
+  print "@options";    # prints "foo bar baz boo"
+  print scalar $stuff->all_options; # prints 4
 
 This method does not accept any arguments.
 
