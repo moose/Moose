@@ -57,6 +57,8 @@ WriteMakefile(
     %args,
 );
 
-use Devel::PPPort;
-Devel::PPPort::WriteFile();
+# uncomment these lines to generate a new ppport.h locally, e.g. if an update
+# is necessary for new features.
+# use Devel::PPPort;
+# Devel::PPPort::WriteFile();
 system("$^X ppport.h --compat-version=5.008003 --quiet xs/* *.[hc]");
