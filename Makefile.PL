@@ -42,7 +42,7 @@ eval MMHelper::my_package_subs();
 
 my %args = MMHelper::mm_args();
 $args{clean}{FILES} = join(' ', ($args{clean}{FILES} || ()),
-    't/recipes/{a,[c-zA-Z]}*', 't/recipes/basics_[a-fh-zA-Z]*',
+    (grep !/basics_genome_overloadingsubtypesandcoercion\.t\z/, glob('t/recipes/*')),
     'xs/*.c', 'xs/*.o',
 );
 
