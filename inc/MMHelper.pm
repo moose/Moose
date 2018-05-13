@@ -52,6 +52,23 @@ package MY;
 
 use Config;
 
+# These two are necessary to keep bmake happy
+sub xs_c {
+    my $self = shift;
+    my $ret = $self->SUPER::xs_c(@_);
+    $ret =~ s/\$\*\.xs/\$</g;
+    $ret =~ s/\$\*\.c\b/\$@/g;
+    return $ret;
+}
+
+sub c_o {
+    my $self = shift;
+    my $ret = $self->SUPER::c_o(@_);
+    $ret =~ s/\$\*\.c\b/\$</g;
+    $ret =~ s/\$\*\$\(OBJ_EXT\)/\$@/g;
+    return $ret;
+}
+
 sub const_cccmd {
     my $ret = shift->SUPER::const_cccmd(@_);
     return q{} unless $ret;
