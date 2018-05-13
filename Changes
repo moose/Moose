@@ -8,6 +8,11 @@ for, noteworthy changes.
   - Moose::Manual::Construction now notes that roles can modify the BUILD sub.
     (thanks, E. Choroba!)
 
+  [OTHER]
+
+  - adjustments have been made to the Makefile for 'bmake', so it now works
+    when not run in compatibility mode (Leon Timmermans).
+
 2.2010   2018-02-16
 
   [OTHER]
