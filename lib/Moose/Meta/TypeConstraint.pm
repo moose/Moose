@@ -15,7 +15,7 @@ use Scalar::Util qw(refaddr);
 use Sub::Name qw(subname);
 use Try::Tiny;
 
-use base 'Class::MOP::Object';
+use parent 'Class::MOP::Object';
 
 use Moose::Util 'throw_exception';
 
