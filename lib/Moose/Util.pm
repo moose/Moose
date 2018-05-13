@@ -6,7 +6,6 @@ use warnings;
 
 use Module::Runtime 0.014 'use_package_optimistically', 'module_notional_filename';
 use Data::OptList;
-use Params::Util qw( _STRING );
 use Sub::Exporter;
 use Scalar::Util 'blessed';
 use List::Util 1.33 qw(first any all);
@@ -354,13 +353,9 @@ sub _load_user_class {
 
 # XXX - this should be added to Params::Util
 sub _STRINGLIKE0 ($) {
-    return 1 if _STRING( $_[0] );
-    if ( blessed $_[0] ) {
-        return overload::Method( $_[0], q{""} );
-    }
-
-    return 1 if defined $_[0] && $_[0] eq q{};
-
+    return 0 if !defined $_[0];
+    return 1 if !ref $_[0];
+    return 1 if overload::OverloadedStringify($_[0]);
     return 0;
 }
 
