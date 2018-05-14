@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [DOCUMENTATION]
+
+  - Moose::Manual::Construction now notes that roles can modify the BUILD sub.
+    (thanks, E. Choroba!)
+
 2.2010   2018-02-16
 
   [OTHER]
