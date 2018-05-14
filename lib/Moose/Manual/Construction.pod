@@ -113,7 +113,10 @@ do something with parameters that do not represent object attributes.
 The interaction between multiple C<BUILD> methods in an inheritance hierarchy
 is different from normal Perl methods. B<You should never call C<<
 $self->SUPER::BUILD >>>, nor should you ever apply a method modifier to
-C<BUILD>.
+C<BUILD>. Roles are an exception to this rule, though: it's completely
+acceptable to apply a method modifier to C<BUILD> in a role; you can
+even provide an empty C<BUILD> subroutine in a role so the role is applicable
+even to classes without their own C<BUILD>.
 
 Moose arranges to have all of the C<BUILD> methods in a hierarchy
 called when an object is constructed, I<from parents to
