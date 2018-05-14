@@ -3,6 +3,12 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [BUG FIXES]
+
+  - Various native trait methods would refuse "0" where they expected a
+    string.  They have been fixed to allow all defined, non-reference values,
+    and all objects with string, number, or boolean overloads.
+
 2.2010   2018-02-16
 
   [OTHER]

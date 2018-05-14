@@ -119,6 +119,19 @@ use Test::Moose;
 }
 
 {
+    package OverloadNum;
+    use overload
+        q{0+} => sub { ${ $_[0] } },
+        fallback => 1;
+
+    sub new {
+        my $class = shift;
+        my $str   = shift;
+        return bless \$str, $class;
+    }
+}
+
+{
     subtest( 'simple case', sub { run_tests(build_class) } );
     subtest(
         'lazy default attr',
@@ -624,8 +637,23 @@ sub run_tests {
         );
 
         is(
+            $obj->join(0), '1020304',
+            'join returns expected result when joining with 0 as number'
+        );
+
+        is(
+            $obj->join("0"), '1020304',
+            'join returns expected result when joining with 0 as string'
+        );
+
+        is(
             $obj->join( OverloadStr->new(q{}) ), '1234',
-            'join returns expected result when joining with empty string'
+            'join returns expected result when joining with object with string overload'
+        );
+
+        is(
+            $obj->join( OverloadNum->new(0) ), '1020304',
+            'join returns expected result when joining with object with numify overload'
         );
 
         like( exception { $obj->join }, qr/Cannot call join without at least 1 argument/, 'throws an error when passing no arguments to join' );
