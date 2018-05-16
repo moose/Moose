@@ -1,5 +1,5 @@
 package Moose::Meta::Method::Accessor::Native::Code::execute_method;
-our $VERSION = '2.2011';
+our $VERSION = '2.2012';
 
 use strict;
 use warnings;

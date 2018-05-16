@@ -1,5 +1,5 @@
 package Class::MOP::Method::Inlined;
-our $VERSION = '2.2011';
+our $VERSION = '2.2012';
 
 use strict;
 use warnings;
