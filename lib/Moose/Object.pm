@@ -78,7 +78,10 @@ sub DEMOLISHALL {
 
     foreach my $class (@isa) {
         no strict 'refs';
-        my $demolish = *{"${class}::DEMOLISH"}{CODE};
+        my $demolish = do {
+            no warnings 'once';
+            *{"${class}::DEMOLISH"}{CODE};
+        };
         $self->$demolish($in_global_destruction)
             if defined $demolish;
     }
