@@ -78,6 +78,8 @@ sub DEMOLISHALL {
 
     foreach my $class (@isa) {
         no strict 'refs';
+        # If a child module implements DEMOLISH and its parent does not
+        # then the access below can be the only reference to that parent's sub
         my $demolish = do {
             no warnings 'once';
             *{"${class}::DEMOLISH"}{CODE};

@@ -2,14 +2,8 @@ use strict;
 use warnings;
 
 use lib 't/lib';
-use Test::More tests => 1;
-
-my @warnings;
-BEGIN {
-    $SIG{__WARN__} = sub { push @warnings, @_ };
-}
+use Test::More tests => 2; # Test::Warnings re-tests had_no_warnings implicitly
+use Test::Requires qw(Test::Warnings);
 
 use Demolition::OnceRemoved;
-
-is scalar @warnings, 0, "No warnings"
- or diag explain \@warnings;
+Test::Warnings::had_no_warnings("No DEMOLISH warnings");
