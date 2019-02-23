@@ -44,6 +44,7 @@ matrix:
   allow_failures:
     - perl: blead
     - perl: blead-thr
+  fast_finish: 1
   include:
     - perl: "5.20"
       env: COVERAGE=1 TEST_PARTITION=1
