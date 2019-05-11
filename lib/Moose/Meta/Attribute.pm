@@ -1011,8 +1011,31 @@ sub accessor_metaclass { 'Moose::Meta::Method::Accessor' }
 
 sub install_accessors {
     my $self = shift;
+
+    my @mods;
+
+    foreach my $method_meta ( @{ $self->associated_methods } ) {
+        my $wrapped = $self->associated_class->find_method_by_name($method_meta->name);
+
+        next if (!defined($wrapped) || !$wrapped->isa('Class::MOP::Method::Wrapped'));
+
+        push @mods, map {
+            my $type = $_;
+            map +[ $wrapped->name, $type, $_ ], $wrapped->${\"${type}_modifiers"};
+        } ( qw(after before around) );
+    }
+
     $self->SUPER::install_accessors(@_);
     $self->install_delegation if $self->has_handles;
+
+    foreach my $mod ( @mods ) {
+        my ($name, $type, $modifier) = @{$mod};
+
+        my $func = "add_${type}_method_modifier";
+
+        $self->associated_class->$func($name, $modifier);
+    }
+
     return;
 }
 
