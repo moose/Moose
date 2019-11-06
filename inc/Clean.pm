@@ -5,6 +5,7 @@ with 'Dist::Zilla::Role::BeforeBuild',
     'Dist::Zilla::Role::AfterBuild';
 use Path::Tiny;
 use File::pushd 'pushd';
+use File::Spec;
 use Config;
 
 sub before_build { shift->_clean('.') }
@@ -36,12 +37,13 @@ sub _clean {
 
         my $make = $Config{make} || 'make';
 
+        my $devnull = File::Spec->devnull;
         $self->log("Running $make distclean in $build_dir to clear out build cruft");
         my $pid = fork;
         unless ($pid) {
-            close(STDIN);
-            close(STDOUT);
-            close(STDERR);
+            open STDIN, '<', $devnull;
+            open STDOUT, '>', $devnull;
+            open STDERR, '>', $devnull;
             { exec("$^X Makefile.PL && $make distclean") }
             die "couldn't exec: $!";
         }
