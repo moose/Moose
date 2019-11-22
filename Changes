@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [TESTS]
+
+  - adjust test of missing package to accomodate new diagnostic message in
+    perl 5.31.6 (RT#130929)
+
 2.2011   2018-05-16
 
   [BUG FIXES]
