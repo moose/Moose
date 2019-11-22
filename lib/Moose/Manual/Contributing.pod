@@ -343,11 +343,8 @@ defend your change.
     git checkout stable/X.YY
 
     # do final changelogging, etc
-    vim dist.ini # increment version number
     git commit
     dzil release # or dzil release --trial for trial releases
-    git commit # to add the actual release date
-    git branch stable/X.YY # only for non-trial major releases
 
 =head3 Release How-To
 
