@@ -1,5 +1,5 @@
 package Moose::Exception::DoesRequiresRoleName;
-our $VERSION = '2.2012';
+our $VERSION = '2.2013';
 
 use Moose;
 extends 'Moose::Exception';
