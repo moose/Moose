@@ -7,8 +7,8 @@ use File::Find::Rule;
 use Getopt::Long;
 use Test::Inline;
 
-use lib 'inc';
-use MyInline;
+use lib '.';
+use inc::MyInline;
 
 my $quiet;
 GetOptions( 'quiet' => \$quiet );

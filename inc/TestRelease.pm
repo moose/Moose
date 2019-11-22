@@ -1,4 +1,4 @@
-package TestRelease;
+package inc::TestRelease;
 
 use Moose;
 

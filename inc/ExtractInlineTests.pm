@@ -1,11 +1,11 @@
-package ExtractInlineTests;
+package inc::ExtractInlineTests;
 
 use Moose;
 
 with 'Dist::Zilla::Role::FileGatherer';
 
 use File::Find::Rule;
-use MyInline;  # contains My::Extract
+use inc::MyInline;  # contains My::Extract
 use Test::Inline;
 
 sub gather_files {
