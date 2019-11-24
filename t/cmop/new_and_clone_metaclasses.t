@@ -6,7 +6,8 @@ use Test::Fatal;
 
 use Class::MOP;
 
-use lib 't/cmop/lib';
+use FindBin qw( $Bin );
+use lib "$Bin/../../t/cmop/lib";
 
 # make sure the Class::MOP::Class->meta does the right thing
 

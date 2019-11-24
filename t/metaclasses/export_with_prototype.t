@@ -1,4 +1,6 @@
-use lib "t/lib";
+use FindBin qw( $Bin );
+use lib "$Bin/../../t/lib";
+
 package MyExporter::User;
 use MyExporter;
 

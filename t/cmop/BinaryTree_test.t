@@ -6,7 +6,8 @@ use Test::Fatal;
 
 use Class::Load qw( is_class_loaded load_class );
 
-use lib 't/cmop/lib';
+use FindBin qw( $Bin );
+use lib "$Bin/../../t/cmop/lib";
 
 ## ----------------------------------------------------------------------------
 ## These are all tests which are derived from the Tree::Binary test suite

@@ -5,7 +5,8 @@ use Test::More;
 
 use Class::Load qw(is_class_loaded);
 
-use lib 't/cmop/lib';
+use FindBin qw( $Bin );
+use lib "$Bin/../../t/cmop/lib";
 
 {
     package Foo;

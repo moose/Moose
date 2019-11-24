@@ -5,7 +5,8 @@ use Test::More;
 
 use Scalar::Util 'reftype';
 
-use lib 't/cmop/lib';
+use FindBin qw( $Bin );
+use lib "$Bin/../../t/cmop/lib";
 require InsideOutClass;
 
 {

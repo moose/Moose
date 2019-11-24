@@ -2,7 +2,8 @@ use strict;
 use warnings;
 
 use Test::More;
-use lib 't/lib';
+use FindBin qw( $Bin );
+use lib "$Bin/../../t/lib";
 
 BEGIN {
     package MyExporterRole;

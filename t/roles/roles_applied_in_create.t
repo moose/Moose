@@ -6,7 +6,8 @@ use Test::Fatal;
 use Moose::Meta::Class;
 use Moose::Util;
 
-use lib 't/lib';
+use FindBin qw( $Bin );
+use lib "$Bin/../../t/lib";
 
 
 # Note that this test passed (pre svn #5543) if we inlined the role

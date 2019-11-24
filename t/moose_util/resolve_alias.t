@@ -5,7 +5,8 @@ use Test::More;
 
 use Moose::Util qw( resolve_metaclass_alias resolve_metatrait_alias );
 
-use lib 't/lib';
+use FindBin qw( $Bin );
+use lib "$Bin/../../t/lib";
 
 # Doing each test twice is intended to make sure that the caching
 # doesn't break name resolution. It doesn't actually test that

@@ -6,7 +6,8 @@ use Test::Requires 'Algorithm::C3'; # skip all if not installed
 
 use Class::MOP;
 
-use lib 't/cmop/lib';
+use FindBin qw( $Bin );
+use lib "$Bin/../../t/cmop/lib";
 use C3MethodDispatchOrder;
 
 {

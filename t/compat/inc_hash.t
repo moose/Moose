@@ -1,7 +1,8 @@
 use strict;
 use warnings;
 use Test::More;
-use lib 't/lib';
+use FindBin qw( $Bin );
+use lib "$Bin/../../t/lib";
 
 use Moose ();
 use Module::Runtime 'module_notional_filename';

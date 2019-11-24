@@ -5,7 +5,8 @@ use Test::More;
 use Test::Fatal;
 use Moose ();
 
-use lib 't/lib';
+use FindBin qw( $Bin );
+use lib "$Bin/../../t/lib";
 
 {
     package t::bugs::Bar;

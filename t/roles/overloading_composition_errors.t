@@ -5,7 +5,8 @@ use Test::More 0.88;
 use Test::Fatal;
 use if $ENV{AUTHOR_TESTING}, 'Test::Warnings';
 
-use lib 't/lib';
+use FindBin qw( $Bin );
+use lib "$Bin/../../t/lib";
 
 {
     package Role::HasFallback;

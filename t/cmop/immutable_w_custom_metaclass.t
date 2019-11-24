@@ -7,7 +7,8 @@ use Scalar::Util;
 
 use Class::MOP;
 
-use lib 't/cmop/lib';
+use FindBin qw( $Bin );
+use lib "$Bin/../../t/cmop/lib";
 
 {
 

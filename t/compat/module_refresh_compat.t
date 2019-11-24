@@ -1,7 +1,8 @@
 use strict;
 use warnings;
 
-use lib 't/lib';
+use FindBin qw( $Bin );
+use lib "$Bin/../../t/lib";
 
 use Test::More;
 use Test::Fatal;

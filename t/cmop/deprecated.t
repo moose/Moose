@@ -4,7 +4,8 @@ use warnings;
 use Test::More;
 use Class::MOP;
 
-use lib 't/cmop/lib';
+use FindBin qw( $Bin );
+use lib "$Bin/../../t/cmop/lib";
 
 {
     my $warnings;
