@@ -508,7 +508,7 @@ is($car->stop, 'Engine::stop', '... got the right value from ->stop');
 
     unlike(
         $e,
-        qr{Moose(?:/|::)},
+        qr{Moose(?:/(?!t)|::)},
         'stack trace from inside delegated-to method does not include Moose when delegation is inlined'
     );
     my $file = __FILE__;
