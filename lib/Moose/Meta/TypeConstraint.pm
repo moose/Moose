@@ -234,18 +234,7 @@ sub equals {
     my $other = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
     return if not $other;
 
-    return 1 if $self == $other;
-
-    return unless $self->constraint == $other->constraint;
-
-    if ( $self->has_parent ) {
-        return unless $other->has_parent;
-        return unless $self->parent->equals( $other->parent );
-    } else {
-        return if $other->has_parent;
-    }
-
-    return;
+    return $self == $other;
 }
 
 sub is_a_type_of {
