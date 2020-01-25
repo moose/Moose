@@ -125,7 +125,7 @@ Finally, we introduce the C<required> attribute option.
 
 In the C<Address> class we define two subtypes. The first uses the
 L<Locale::US> module to check the validity of a state. It accepts
-either a state abbreviation of full name.
+either a state abbreviation or full name.
 
 A state will be passed in as a string, so we make our C<USState> type
 a subtype of Moose's builtin C<Str> type. This is done using the C<as>
