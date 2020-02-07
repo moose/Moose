@@ -67,19 +67,19 @@ sub new {
     $args{_inline_var_name} = $var_name;
     $args{inline_environment} = { '%' . $var_name => \%values };
 
-    $args{message} = sub {
-        sprintf(
-            'Value "%s" did not pass type constraint. "%s" requires that the value is equal to %s.',
-            $_[0],
-            $args{name},
-            Moose::Util::_english_list_or( map B::perlstring($_), @{ $args{values} } ),
-        )
-    };
-
     my $self = $class->SUPER::new(\%args);
 
     $self->compile_type_constraint()
         unless $self->_has_compiled_type_constraint;
+
+    $self->message( sub {
+        my $value = shift;
+        sprintf(
+            '%s. Value must be equal to %s.',
+            $self->_default_message->( $value ),
+            Moose::Util::_english_list_or( map B::perlstring($_), @{ $self->values } ),
+        )
+    } );
 
     return $self;
 }
