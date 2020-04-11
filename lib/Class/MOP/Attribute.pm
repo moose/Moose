@@ -995,9 +995,9 @@ attribute.
 
 =item B<< $attr->install_accessors >>
 
-This method generates and installs code the attributes various
-accessors. It is typically called from the L<Class::MOP::Class>
-C<add_attribute> method.
+This method generates and installs code for the attribute's accessors.
+It is typically called from the L<Class::MOP::Class> C<add_attribute>
+method.
 
 =item B<< $attr->remove_accessors >>
 
