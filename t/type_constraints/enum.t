@@ -82,6 +82,6 @@ like( exception {
 }, qr/enum called with an array reference and additional arguments\. Did you mean to parenthesize the enum call's parameters\?/ );
 
 my $enum_msg_test = Moose::Meta::TypeConstraint::Enum->new(name => 'EnumMessageTest', values => \@valid_languages);
-like( $enum_msg_test->get_message($invalid_languages[0]), qr/^Validation failed for 'EnumMessageTest' with value $invalid_languages[0]\. Value must be equal to/ );
+is $enum_msg_test->get_message($invalid_languages[0]), qq[Validation failed for 'EnumMessageTest' with value $invalid_languages[0]. Value must be equal to "PASM", "PIR", "Perl 5", or "Perl 6".];
 
 done_testing;
