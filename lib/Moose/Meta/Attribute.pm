@@ -241,6 +241,7 @@ sub clone {
     my ( %new_params, @non_init );
 
     my @possible_attrs = Class::MOP::class_of($self)->get_all_attributes;
+    my %attr_by_name = map { $_->name => $_ } @possible_attrs;
     foreach my $attr ( grep { $_->has_value($self) } @possible_attrs ) {
         if ($attr->has_init_arg) {
             $new_params{$attr->init_arg} = $attr->get_value($self);
@@ -249,8 +250,19 @@ sub clone {
         }
     }
 
+    ### TODO: can't say default => 'foo' and clear_default => 1
+    ### TODO: can't say clear_brush if brush isn't a valid attribute name
+    ### TODO: test that clear_attribute_name if attribute_name isn't set
+    ### does nothing.
     for my $param_name (keys %params) {
-        $new_params{$param_name} = $params{$param_name};
+        if ($param_name =~ /^ clear_ (.+) /x) {
+            my $cleared_attr_name = $1;
+            if ($attr_by_name{$cleared_attr_name}) {
+                delete $new_params{$cleared_attr_name};
+            }
+        } else {
+            $new_params{$param_name} = $params{$param_name};
+        }
     }
 
     my $name = delete $new_params{name};

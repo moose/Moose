@@ -114,6 +114,15 @@ use Test::Fatal;
     ::like( ::exception {
         has '+does_not_exist' => (isa => 'Str');
     }, qr/in Bar/, '... cannot extend a non-existing attribute' );
+
+    package Foo::VagueBar;
+    use Moose;
+
+    extends 'Foo';
+
+    ::is( ::exception {
+        has '+bar' => (clear_default => 1);
+    }, undef, 'Can clear a previous default');
 }
 
 my $foo = Foo->new;
@@ -190,6 +199,12 @@ is($bar->baz, undef, '... got the right undef default value');
     my $code_ref = sub { 1 };
     isnt( exception { $bar->baz($code_ref) }, undef, '... Bar::baz does not accept a code ref' );
 }
+
+my $foo_vaguebar = Foo::VagueBar->new;
+isa_ok($foo_vaguebar, 'Foo::VagueBar');
+isa_ok($foo_vaguebar, 'Foo');
+ok(!$foo_vaguebar->meta->find_attribute_by_name('bar')->has_value($foo_vaguebar),
+    'An attribute whose definition gets rid of a default value does not have a value');
 
 # check some meta-stuff
 
