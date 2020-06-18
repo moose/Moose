@@ -238,13 +238,20 @@ sub clone {
 
     my $class = delete $params{metaclass} || ref $self;
 
-    my ( @init, @non_init );
+    my ( %new_params, @non_init );
 
-    foreach my $attr ( grep { $_->has_value($self) } Class::MOP::class_of($self)->get_all_attributes ) {
-        push @{ $attr->has_init_arg ? \@init : \@non_init }, $attr;
+    my @possible_attrs = Class::MOP::class_of($self)->get_all_attributes;
+    foreach my $attr ( grep { $_->has_value($self) } @possible_attrs ) {
+        if ($attr->has_init_arg) {
+            $new_params{$attr->init_arg} = $attr->get_value($self);
+        } else {
+            push @non_init, $attr;
+        }
     }
 
-    my %new_params = ( ( map { $_->init_arg => $_->get_value($self) } @init ), %params );
+    for my $param_name (keys %params) {
+        $new_params{$param_name} = $params{$param_name};
+    }
 
     my $name = delete $new_params{name};
 
