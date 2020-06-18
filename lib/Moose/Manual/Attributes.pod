@@ -575,6 +575,35 @@ As a consequence, any method modifiers defined on the attribute's accessors in
 an ancestor class will effectively be ignored, because the new accessors live
 in the child class and do not see the modifiers from the parent class.
 
+=head2 Clearing Aspects
+
+Sometimes, you may decide that you don't want to override an aspect of the
+original attribute with a new value; rather, you want there to be I<no value>.
+(For instance, the default would normally have been a value that is no longer
+valid; but undef or the empty string aren't valid either.) In situations like
+this, prepend the attribute name with C<clear_>: e.g.
+
+ person Person::Archaic;
+ 
+ use Moose;
+ 
+ has 'gender' => (
+     is      => 'ro',
+     isa     => 'Gender',
+     default => 'Male',
+ );
+ 
+ package Person::Modern;
+ 
+ use Moose;
+ extends 'Person::Archaic';
+ 
+ has '+gender' => (
+     is            => 'rw',
+     clear_default => 1,
+     required      => 1,
+ );
+
 =head1 MULTIPLE ATTRIBUTE SHORTCUTS
 
 If you have a number of attributes that differ only by name, you can declare
