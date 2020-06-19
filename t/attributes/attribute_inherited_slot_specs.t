@@ -115,6 +115,10 @@ use Test::Fatal;
         has '+does_not_exist' => (isa => 'Str');
     }, qr/in Bar/, '... cannot extend a non-existing attribute' );
 
+    ::is( ::exception {
+        has '+baz' => (clear_default => 1),
+    }, undef, 'Can trivially clear an already-cleared attribute');
+
     package Foo::VagueBar;
     use Moose;
 

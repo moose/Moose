@@ -250,8 +250,6 @@ sub clone {
         }
     }
 
-    ### TODO: test that clear_attribute_name if attribute_name isn't set
-    ### does nothing.
     for my $param_name (keys %params) {
         if ($param_name =~ /^ clear_ (.+) /x) {
             my $cleared_attr_name = $1;
