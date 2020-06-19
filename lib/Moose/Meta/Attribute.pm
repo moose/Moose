@@ -251,7 +251,6 @@ sub clone {
     }
 
     ### TODO: can't say default => 'foo' and clear_default => 1
-    ### TODO: can't say clear_brush if brush isn't a valid attribute name
     ### TODO: test that clear_attribute_name if attribute_name isn't set
     ### does nothing.
     for my $param_name (keys %params) {
@@ -259,6 +258,10 @@ sub clone {
             my $cleared_attr_name = $1;
             if ($attr_by_name{$cleared_attr_name}) {
                 delete $new_params{$cleared_attr_name};
+            } else {
+                throw_exception( InvalidClearedAttribute => attribute_name => $cleared_attr_name,
+                                                            params         => \%params
+                               );
             }
         } else {
             $new_params{$param_name} = $params{$param_name};
