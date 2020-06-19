@@ -254,7 +254,7 @@ sub clone {
         if ($param_name =~ /^ clear_ (.+) /x) {
             my $cleared_attr_name = $1;
             if ($attr_by_name{$cleared_attr_name}) {
-                if ($params{$cleared_attr_name}) {
+                if (exists $params{$cleared_attr_name}) {
                     throw_exception( BothAttributeAndClearAttributeAreNotAllowed => attribute_name => $cleared_attr_name,
                                                                                     params => \%params
                                    );
