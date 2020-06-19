@@ -121,8 +121,12 @@ use Test::Fatal;
     extends 'Foo';
 
     ::like( ::exception {
-        has '+bar' => (clear_brush => 'I live in Texas, I just do this')
+        has '+bar' => (clear_brush => 'I live in Texas, I just do this');
     }, qr/You said clear_brush but/, 'Cannot clear a non-existent attribute');
+    ::like( ::exception {
+        has '+bar' => (clear_default => 1, default => 'Something reasonable');
+    }, qr/You said both to clear_default and also to set a value for default/,
+       'Must be consistent: default value or no default value?');
     ::is( ::exception {
         has '+bar' => (clear_default => 1);
     }, undef, 'Can clear a previous default');
