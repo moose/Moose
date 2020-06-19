@@ -597,7 +597,7 @@ this, prepend the attribute name with C<clear_>: e.g.
  
  use Moose;
  extends 'Person::Archaic';
- 
+
  has '+gender' => (
      is            => 'rw',
      clear_default => 1,
