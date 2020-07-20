@@ -5,10 +5,7 @@ addons:
       - aspell-en
 language: perl
 perl:
-  - "blead"
-  - "blead-thr"
-  - "dev"
-  - "dev-thr"
+  - "5.32-thr"
   - "5.30"
   - "5.30-thr"
   - "5.28"
@@ -33,6 +30,10 @@ perl:
   - "5.10-thr"
   - "5.8"
   - "5.8-thr"
+  - "blead"
+  - "blead-thr"
+  - "dev"
+  - "dev-thr"
 env:
   global:
     - TEST_PARTITIONS=4
