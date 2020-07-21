@@ -8,7 +8,7 @@ Moose::Manual::Contributing - How to get involved in Moose
 
 =head1 VERSION
 
-version 2.2012
+version 2.2013
 
 =for comment CONTRIBUTING.pod is generated from lib/Moose/Manual/Contributing.pod
 
@@ -350,11 +350,8 @@ defend your change.
     git checkout stable/X.YY
 
     # do final changelogging, etc
-    vim dist.ini # increment version number
     git commit
     dzil release # or dzil release --trial for trial releases
-    git commit # to add the actual release date
-    git branch stable/X.YY # only for non-trial major releases
 
 =head3 Release How-To
 
