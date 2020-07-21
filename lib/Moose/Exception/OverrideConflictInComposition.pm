@@ -1,5 +1,5 @@
 package Moose::Exception::OverrideConflictInComposition;
-our $VERSION = '2.2013';
+our $VERSION = '2.2014';
 
 use Moose;
 extends 'Moose::Exception';
