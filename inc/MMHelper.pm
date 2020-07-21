@@ -1,4 +1,4 @@
-package MMHelper;
+package inc::MMHelper;
 
 use strict;
 use warnings;

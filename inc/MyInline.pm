@@ -1,4 +1,4 @@
-package MyInline;
+package inc::MyInline;
 
 use strict;
 use warnings;

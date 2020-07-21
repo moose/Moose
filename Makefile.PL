@@ -35,12 +35,12 @@ BEGIN {
 
 system( $^X, 'author/extract-inline-tests', '--quiet' );
 
-use lib 'inc';
-use MMHelper;
+use lib '.';
+use inc::MMHelper;
 
-eval MMHelper::my_package_subs();
+eval inc::MMHelper::my_package_subs();
 
-my %args = MMHelper::mm_args();
+my %args = inc::MMHelper::mm_args();
 $args{clean}{FILES} = join(' ', ($args{clean}{FILES} || ()),
     (grep !/basics_genome_overloadingsubtypesandcoercion\.t\z/, glob('t/recipes/*')),
     'xs/*.c', 'xs/*.o',
@@ -50,7 +50,7 @@ WriteMakefile(
     NAME => 'Moose',
     VERSION_FROM => 'lib/Moose.pm',
     test => { TESTS => 't/*.t t/*/*.t' },
-    CCFLAGS => MMHelper::ccflags_static('dev'),
+    CCFLAGS => inc::MMHelper::ccflags_static('dev'),
     INSTALLMAN1DIR => 'none',
     INSTALLMAN3DIR => 'none',
     NORECURS => 1,

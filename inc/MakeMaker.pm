@@ -1,10 +1,8 @@
-package MakeMaker;
+package inc::MakeMaker;
 
 use Moose;
 
-use lib 'inc';
-
-use MMHelper;
+use inc::MMHelper;
 
 extends 'Dist::Zilla::Plugin::MakeMaker::Awesome';
 
@@ -28,10 +26,10 @@ ASSERT_COMPILER
 
 
     # TODO: splice this in using 'around _build_WriteMakefile_args'
-    my $ccflags = MMHelper::ccflags_dyn();
+    my $ccflags = inc::MMHelper::ccflags_dyn();
     $tmpl =~ s/^(WriteMakefile\()/\$WriteMakefileArgs{CCFLAGS} = $ccflags;\n\n$1/m;
 
-    return $tmpl . "\n\n" . MMHelper::my_package_subs();
+    return $tmpl . "\n\n" . inc::MMHelper::my_package_subs();
 };
 
 override _build_WriteMakefile_args => sub {
@@ -41,7 +39,7 @@ override _build_WriteMakefile_args => sub {
 
     return {
         %{$args},
-        MMHelper::mm_args(),
+        inc::MMHelper::mm_args(),
     };
 };
 
