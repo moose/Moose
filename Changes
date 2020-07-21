@@ -8,6 +8,10 @@ for, noteworthy changes.
   - improved some documentation wording in Moose and Class::MOP::Class
     (PR#162; thanks Tom Hukins!)
 
+  [OTHER]
+
+  - updated bundled ExtUtils::HasCompiler, for msys2 support (RT#133022)
+
 2.2012   2019-11-22
 
   [TESTS]
