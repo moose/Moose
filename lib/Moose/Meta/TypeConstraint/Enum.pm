@@ -72,6 +72,15 @@ sub new {
     $self->compile_type_constraint()
         unless $self->_has_compiled_type_constraint;
 
+    $self->message( sub {
+        my $value = shift;
+        sprintf(
+            '%s. Value must be equal to %s.',
+            $self->_default_message->( $value ),
+            Moose::Util::_english_list_or( map B::perlstring($_), @{ $self->values } ),
+        )
+    } );
+
     return $self;
 }
 
