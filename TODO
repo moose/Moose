@@ -81,12 +81,6 @@ method by that name, so it'll depend on the previous fix going in (so "has foo
 There's no actual reason for this not to work, and it gets asked often enough
 that we really should just do it at some point.
 
-### use Sub::Identify instead of doing our own thing with `get_code_info`
-
-No idea why we stopped using Sub::Identify in the past, but there's no reason
-not to do this. We have a bug fix in our version (the `isGV_with_GP` thing), so
-this should be submitted to Sub::Identify first.
-
 ## Needs Thought
 
 These are things we think are good ideas, but they need more fleshing out.

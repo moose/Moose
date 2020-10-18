@@ -8,7 +8,6 @@ use Class::MOP::Overload;
 
 use Devel::OverloadInfo 0.005 'overload_info', 'overload_op_info';
 use Scalar::Util 'blessed';
-use Sub::Identify 'sub_name', 'stash_name';
 
 use overload ();
 
@@ -66,11 +65,12 @@ sub add_overloaded_operator {
         $overload = Class::MOP::Overload->new(%p);
     }
     elsif ( !blessed $overload) {
+        my ($coderef_package, $coderef_name) = Class::MOP::get_code_info($overload);
         $overload = Class::MOP::Overload->new(
             operator        => $op,
             coderef         => $overload,
-            coderef_name    => sub_name($overload),
-            coderef_package => stash_name($overload),
+            coderef_name    => $coderef_name,
+            coderef_package => $coderef_package,
             %p,
         );
     }
