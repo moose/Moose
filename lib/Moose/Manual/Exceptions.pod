@@ -65,7 +65,7 @@ L<Moose::Exception::ExtendsMissingArgs>.
         else {
             warn "$e\n";
         }
-    }
+    };
 
 =head2 Example of catching ValidationFailedForTypeConstraint
 
@@ -132,7 +132,7 @@ L<Moose::Exception::ExtendsMissingArgs>.
             else {
                 warn "$e\n";
             }
-        }
+        };
     }
 
 =head2 Example of catching AttributeIsRequired
