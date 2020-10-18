@@ -18,10 +18,6 @@
 
 #define MOP_CALL_BOOT(name)  mop_call_xs(aTHX_ name, cv, mark);
 
-#ifndef XSPROTO
-#define XSPROTO(name) XS_EXTERNAL(name)
-#endif
-
 #ifndef CvISXSUB
 #define CvISXSUB(cv)  (CvXSUB(cv) ? TRUE : FALSE)
 #endif

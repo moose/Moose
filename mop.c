@@ -10,7 +10,7 @@ mop_call_xs (pTHX_ XSPROTO(subaddr), CV *cv, SV **mark)
     PUTBACK;
 }
 
-#if PERL_VERSION >= 10
+#if PERL_VERSION_GE(5,10,0)
 UV
 mop_check_package_cache_flag (pTHX_ HV *stash)
 {
@@ -252,11 +252,8 @@ mop_prehash_keys ()
 
 XS_EXTERNAL(mop_xs_simple_reader)
 {
-#ifdef dVAR
-    dVAR; dXSARGS;
-#else
+    dVAR;
     dXSARGS;
-#endif
     register HE *he;
     mop_prehashed_key_t key = (mop_prehashed_key_t)CvXSUBANY(cv).any_i32;
     SV *self;
