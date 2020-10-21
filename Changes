@@ -3,6 +3,21 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [ENHANCEMENTS]
+
+  - Include details about expected values when Enum type checks fail (#174;
+    thanks sherrardb)
+
+  [DOCUMENTATION]
+
+  - fix misleading missing semicolon in exceptions example (#170; thanks
+    Perlover)
+
+  [OTHER]
+
+  - allow internal packages to be indexed by PAUSE. This avoids their
+    permissions being captured (possibly unintentionally) by others.
+
 2.2013   2020-07-21
 
   [DOCUMENTATION]
