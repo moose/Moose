@@ -97,12 +97,12 @@ $mi_foo->set_slot_value( $i_foo, "moosen", $ref );
 $mi_foo->weaken_slot_value( $i_foo, "moosen" );
 
 ok( isweak($i_foo->{moosen}), '... white box test of weaken' );
-is( $mi_foo->get_slot_value( $i_foo, "moosen" ), $ref, "weak value is fetchable" );
+ok( ($mi_foo->get_slot_value( $i_foo, "moosen" ) || 0) == $ref, "weak value is fetchable" );
 ok( !isweak($mi_foo->get_slot_value( $i_foo, "moosen" )), "return value not weak" );
 
 undef $ref;
 
-is( $mi_foo->get_slot_value( $i_foo, "moosen" ), undef, "weak value destroyed" );
+ok( !defined $mi_foo->get_slot_value( $i_foo, "moosen" ), "weak value destroyed" );
 
 $ref = [];
 
