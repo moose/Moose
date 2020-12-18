@@ -1100,7 +1100,7 @@ can contribute.
 There are only a few people with the rights to release a new version
 of Moose. The Moose Cabal are the people to go to with questions regarding
 the wider purview of Moose. They help maintain not just the code
-but the community as well. See the list below under C<AUTHORS>.
+but the community as well. See the list below under L</AUTHORS>.
 
 =head1 CONTRIBUTORS
 
