@@ -17,6 +17,8 @@ for, noteworthy changes.
 
   - allow internal packages to be indexed by PAUSE. This avoids their
     permissions being captured (possibly unintentionally) by others.
+  - Sub::Identify prerequisite removed, in favour of already-existing local
+    code.
 
 2.2013   2020-07-21
 
