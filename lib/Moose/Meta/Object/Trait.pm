@@ -1,5 +1,5 @@
 package Moose::Meta::Object::Trait;
-our $VERSION = '2.2014';
+our $VERSION = '2.2015';
 
 use Scalar::Util qw(blessed);
 

@@ -1,5 +1,5 @@
 package Moose::Meta::Method::Accessor::Native::Hash::delete;
-our $VERSION = '2.2014';
+our $VERSION = '2.2015';
 
 use strict;
 use warnings;

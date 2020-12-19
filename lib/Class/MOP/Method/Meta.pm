@@ -1,5 +1,5 @@
 package Class::MOP::Method::Meta;
-our $VERSION = '2.2014';
+our $VERSION = '2.2015';
 
 use strict;
 use warnings;

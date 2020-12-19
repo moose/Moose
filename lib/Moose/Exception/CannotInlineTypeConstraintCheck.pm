@@ -1,5 +1,5 @@
 package Moose::Exception::CannotInlineTypeConstraintCheck;
-our $VERSION = '2.2014';
+our $VERSION = '2.2015';
 
 use Moose;
 extends 'Moose::Exception';
