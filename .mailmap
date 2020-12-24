@@ -1,6 +1,7 @@
 # https://www.kernel.org/pub/software/scm/git/docs/git-shortlog.html#_mapping_authors
 Ash Berlin <ash@cpan.org> <ash_github@firemirror.com>
-Brad Bowman <bsb@strategicdata.com.au> <github@bereft.net>
+Brad Bowman <bowmanbs@cpan.org> <github@bereft.net>
+Brad Bowman <bowmanbs@cpan.org> <bsb@strategicdata.com.au>
 Chris Prather <chris@prather.org> <cprather@hdpublishing.com>
 Christian Hansen <chansen@cpan.org> chansen <chansen@cpan.org>
 Cory Watson <github@onemogin.com> Cory G Watson <gphat@onemogin.com>
@@ -25,7 +26,8 @@ Shawn M Moore <sartak@cpan.org> <sartak@gmail.com>
 Shawn M Moore <sartak@cpan.org> <code@sartak.org>
 Stevan Little <stevan.little@iinteractive.com> <stevan@localhost.(none)>
 Stevan Little <stevan.little@iinteractive.com> <stevan@Macintosh.local>
-Todd Hepler <thepler@employees.org> <thepler@genome.wustl.edu>
+Todd Hepler <thepler@cpan.org> <thepler@genome.wustl.edu>
+Todd Hepler <thepler@cpan.org> <thepler@employees.org>
 Tomas Doran <bobtfish@bobtfish.net> Tomas Doran (t0m) <t0m@state51.co.uk>
 Tomas Doran <bobtfish@bobtfish.net> Tomas Doran (t0m <t0m@state51.co.uk>
 Tomas Doran <bobtfish@bobtfish.net> t0m <bobtfish@bobtfish.net>
@@ -56,3 +58,4 @@ Moritz Onken <moritz@cpan.org> <onken@houseofdesign.de>
 <jhannah@cpan.org> <jay@jays.net>
 <vanstyn@cpan.org> <vanstyn@intellitree.com>
 <exodist@cpan.org> <chad.granum@dreamhost.com>
+Paul Driver <frodwith@cpan.org> <frodwith@gmail.com>
