@@ -3,150 +3,165 @@ use warnings;
 
 use Test::More;
 use Test::Fatal;
-use Test::Requires qw(IO::String IO::File); # skip all if not installed
 
 {
-    package Email::Moose;
+  package Moose::Test::StringThing;
+
+  sub new {
+    my ($class, $string) = @_;
+    return bless { string => $string }, $class;
+  }
+
+  sub string_val { $_[0]{string} }
+}
+
+{
+  package Moose::Test::RefThing;
+
+  sub new {
+    my ($class, $ref) = @_;
+    return bless { ref => $ref }, $class;
+  }
+
+  sub string_val { ${ $_[0]{ref} } }
+}
+
+{
+    package Moose::Test::Thing;
     use Moose;
     use Moose::Util::TypeConstraints;
 
-    use IO::String;
-
     our $VERSION = '0.01';
 
-    # create subtype for IO::String
+    # create subtype for Moose::Test::StringThing
 
-    subtype 'IO::String'
+    subtype 'Moose::Test::StringThing'
         => as 'Object'
-        => where { $_->isa('IO::String') };
+        => where { $_->isa('Moose::Test::StringThing') };
 
-    coerce 'IO::String'
+    coerce 'Moose::Test::StringThing'
         => from 'Str'
-            => via { IO::String->new($_) },
-        => from 'ScalarRef',
-            => via { IO::String->new($_) };
+            => via { Moose::Test::StringThing->new($_) };
 
-    # create subtype for IO::File
+    # create subtype for Moose::Test::RefThing
 
-    subtype 'IO::File'
+    subtype 'Moose::Test::RefThing'
         => as 'Object'
-        => where { $_->isa('IO::File') };
+        => where { $_->isa('Moose::Test::RefThing') };
 
-    coerce 'IO::File'
-        => from 'FileHandle'
-            => via { bless $_, 'IO::File' };
+    coerce 'Moose::Test::RefThing'
+        => from 'ScalarRef',
+            => via { Moose::Test::RefThing->new($_) },
+        => from 'HashRef',
+            => via { Moose::Test::RefThing->new(\$_->{a_string}) };
 
     # create the alias
 
-    subtype 'IO::StringOrFile' => as 'IO::String | IO::File';
+    subtype 'Moose::Test::StringOrRef' => as 'Moose::Test::StringThing | Moose::Test::RefThing';
 
     # attributes
 
-    has 'raw_body' => (
+    has 'string_or_ref' => (
         is      => 'rw',
-        isa     => 'IO::StringOrFile',
+        isa     => 'Moose::Test::StringOrRef',
         coerce  => 1,
-        default => sub { IO::String->new() },
+        default => sub { Moose::Test::StringThing->new() },
     );
 
     sub as_string {
         my ($self) = @_;
-        my $fh = $self->raw_body();
-        return do { local $/; <$fh> };
+        $self->string_or_ref->string_val;
     }
 }
 
 {
-    my $email = Email::Moose->new;
-    isa_ok($email, 'Email::Moose');
+    my $thing = Moose::Test::Thing->new;
+    isa_ok($thing, 'Moose::Test::Thing');
 
-    isa_ok($email->raw_body, 'IO::String');
+    isa_ok($thing->string_or_ref, 'Moose::Test::StringThing');
 
-    is($email->as_string, undef, '... got correct empty string');
+    is($thing->as_string, undef, '... got correct empty string');
 }
 
 {
-    my $email = Email::Moose->new(raw_body => '... this is my body ...');
-    isa_ok($email, 'Email::Moose');
+    my $thing = Moose::Test::Thing->new(string_or_ref => '... this is my body ...');
+    isa_ok($thing, 'Moose::Test::Thing');
 
-    isa_ok($email->raw_body, 'IO::String');
+    isa_ok($thing->string_or_ref, 'Moose::Test::StringThing');
 
-    is($email->as_string, '... this is my body ...', '... got correct string');
+    is($thing->as_string, '... this is my body ...', '... got correct string');
 
     is( exception {
-        $email->raw_body('... this is the next body ...');
+        $thing->string_or_ref('... this is the next body ...');
     }, undef, '... this will coerce correctly' );
 
-    isa_ok($email->raw_body, 'IO::String');
+    isa_ok($thing->string_or_ref, 'Moose::Test::StringThing');
 
-    is($email->as_string, '... this is the next body ...', '... got correct string');
+    is($thing->as_string, '... this is the next body ...', '... got correct string');
 }
 
 {
     my $str = '... this is my body (ref) ...';
 
-    my $email = Email::Moose->new(raw_body => \$str);
-    isa_ok($email, 'Email::Moose');
+    my $thing = Moose::Test::Thing->new(string_or_ref => \$str);
+    isa_ok($thing, 'Moose::Test::Thing');
 
-    isa_ok($email->raw_body, 'IO::String');
+    isa_ok($thing->string_or_ref, 'Moose::Test::RefThing');
 
-    is($email->as_string, $str, '... got correct string');
+    is($thing->as_string, $str, '... got correct string');
 
     my $str2 = '... this is the next body (ref) ...';
 
     is( exception {
-        $email->raw_body(\$str2);
+        $thing->string_or_ref(\$str2);
     }, undef, '... this will coerce correctly' );
 
-    isa_ok($email->raw_body, 'IO::String');
+    isa_ok($thing->string_or_ref, 'Moose::Test::RefThing');
 
-    is($email->as_string, $str2, '... got correct string');
+    is($thing->as_string, $str2, '... got correct string');
 }
 
 {
-    my $io_str = IO::String->new('... this is my body (IO::String) ...');
+    my $io_str = Moose::Test::StringThing->new('... this is my body (Moose::Test::StringThing) ...');
 
-    my $email = Email::Moose->new(raw_body => $io_str);
-    isa_ok($email, 'Email::Moose');
+    my $thing = Moose::Test::Thing->new(string_or_ref => $io_str);
+    isa_ok($thing, 'Moose::Test::Thing');
 
-    isa_ok($email->raw_body, 'IO::String');
-    is($email->raw_body, $io_str, '... and it is the one we expected');
+    isa_ok($thing->string_or_ref, 'Moose::Test::StringThing');
+    is($thing->string_or_ref, $io_str, '... and it is the one we expected');
 
-    is($email->as_string, '... this is my body (IO::String) ...', '... got correct string');
+    is($thing->as_string, '... this is my body (Moose::Test::StringThing) ...', '... got correct string');
 
-    my $io_str2 = IO::String->new('... this is the next body (IO::String) ...');
+    my $io_str2 = Moose::Test::StringThing->new('... this is the next body (Moose::Test::StringThing) ...');
 
     is( exception {
-        $email->raw_body($io_str2);
+        $thing->string_or_ref($io_str2);
     }, undef, '... this will coerce correctly' );
 
-    isa_ok($email->raw_body, 'IO::String');
-    is($email->raw_body, $io_str2, '... and it is the one we expected');
+    isa_ok($thing->string_or_ref, 'Moose::Test::StringThing');
+    is($thing->string_or_ref, $io_str2, '... and it is the one we expected');
 
-    is($email->as_string, '... this is the next body (IO::String) ...', '... got correct string');
+    is($thing->as_string, '... this is the next body (Moose::Test::StringThing) ...', '... got correct string');
 }
 
 {
-    my $fh;
+    my $hashref = { a_string => "This is a string." };
 
-    open($fh, '<', $0) || die "Could not open $0";
+    my $thing = Moose::Test::Thing->new(string_or_ref => $hashref);
+    isa_ok($thing, 'Moose::Test::Thing');
 
-    my $email = Email::Moose->new(raw_body => $fh);
-    isa_ok($email, 'Email::Moose');
-
-    isa_ok($email->raw_body, 'IO::File');
-
-    close($fh);
+    isa_ok($thing->string_or_ref, 'Moose::Test::RefThing');
+    is($thing->as_string, "This is a string.");
 }
 
 {
-    my $fh = IO::File->new($0);
+    my $fh = Moose::Test::RefThing->new($0);
 
-    my $email = Email::Moose->new(raw_body => $fh);
-    isa_ok($email, 'Email::Moose');
+    my $thing = Moose::Test::Thing->new(string_or_ref => $fh);
+    isa_ok($thing, 'Moose::Test::Thing');
 
-    isa_ok($email->raw_body, 'IO::File');
-    is($email->raw_body, $fh, '... and it is the one we expected');
+    isa_ok($thing->string_or_ref, 'Moose::Test::RefThing');
+    is($thing->string_or_ref, $fh, '... and it is the one we expected');
 }
 
 {
