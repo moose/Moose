@@ -8,6 +8,10 @@ for, noteworthy changes.
   - a test has been rewritten so as to remove IO::String from the prerequisite
     list (#179, thanks Ricardo Signes!)
 
+  [OTHER]
+
+  - optional prereq on List::SomeUtils has been replaced with List::Util 1.56.
+
 2.2014   2020-12-19
 
   [ENHANCEMENTS]

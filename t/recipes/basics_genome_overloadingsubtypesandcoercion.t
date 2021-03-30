@@ -2,7 +2,6 @@ use strict;
 use warnings;
 
 use Test::More;
-use Test::Requires 'List::SomeUtils';
 
 # TODO: use inc::ExtractInlineTests and inc::MyInline to inline this test into the pod,
 # so we do not need special handling for it in the build.
@@ -43,12 +42,12 @@ use Test::Requires 'List::SomeUtils';
         );
     }
 
-    use List::SomeUtils qw( zip );
+    use List::Util 1.56 qw( mesh );
 
     coerce 'Human::EyeColor'
         => from 'ArrayRef'
         => via { my @genes = qw( bey2_1 bey2_2 gey_1 gey_2 );
-                 return Human::EyeColor->new( zip( @genes, @{$_} ) ); };
+                 return Human::EyeColor->new( mesh( \@genes, $_ ) ); };
 
     has 'eye_color' => (
         is       => 'ro',
