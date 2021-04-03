@@ -115,6 +115,7 @@ sub _inline_check_member_constraint {
                                                 'class_name              => $class_name,'.
                                                 'value                   => $new_val,'.
                                                 'new_member              => 1',
+                                                '$new_val'
                 ) . ';',
             '}',
         '}',
