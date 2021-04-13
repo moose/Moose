@@ -1,5 +1,5 @@
 package Moose::Exception::BuilderMethodNotSupportedForAttribute;
-our $VERSION = '2.2016';
+our $VERSION = '2.2101';
 
 use Moose;
 extends 'Moose::Exception';
