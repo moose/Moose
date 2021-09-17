@@ -243,19 +243,27 @@ sub find_or_create_type_constraint {
 
 sub find_or_create_isa_type_constraint {
     my ($type_constraint_name, $options) = @_;
-    find_or_parse_type_constraint($type_constraint_name)
-        || create_class_type_constraint($type_constraint_name, $options);
+    find_or_parse_type_constraint(
+        $type_constraint_name,
+        { creator => sub { create_class_type_constraint(shift, $options) } },
+    );
 }
 
 sub find_or_create_does_type_constraint {
     my ($type_constraint_name, $options) = @_;
-    find_or_parse_type_constraint($type_constraint_name)
-        || create_role_type_constraint($type_constraint_name, $options);
+    find_or_parse_type_constraint(
+        $type_constraint_name,
+        { creator => sub { create_role_type_constraint(shift, $options) } },
+    );
 }
 
 sub find_or_parse_type_constraint {
-    my $type_constraint_name = normalize_type_constraint_name(shift);
+    my ($tc, $options) = @_;
+    $options //= {};
     my $constraint;
+
+    my $type_constraint_name = normalize_type_constraint_name($tc);
+    my $creator = $options->{creator};
 
     if ( $constraint = find_type_constraint($type_constraint_name) ) {
         return $constraint;
@@ -268,7 +276,8 @@ sub find_or_parse_type_constraint {
             = create_parameterized_type_constraint($type_constraint_name);
     }
     else {
-        return;
+        return unless $creator;
+        return $creator->($type_constraint_name);
     }
 
     $REGISTRY->add_type_constraint($constraint);
@@ -1315,14 +1324,21 @@ L<Moose::Meta::TypeConstraint::Enum> object for that enum name.
 Given a duck type name this function will create a new
 L<Moose::Meta::TypeConstraint::DuckType> object for that enum name.
 
-=head3 find_or_parse_type_constraint($type_name)
+=head3 find_or_parse_type_constraint($type_name, ?$options)
 
 Given a type name, this first attempts to find a matching constraint
 in the global registry.
 
 If the type name is a union or parameterized type, it will create a
-new object of the appropriate, but if given a "regular" type that does
-not yet exist, it simply returns false.
+new object of the appropriate type. By default, if given a "regular"
+type that does not yet exist, it simply returns false. When given a
+function via C<creator> options it will pass the type name to
+that function and attempt to create it instead:
+
+  find_or_parse_type_constraint(
+      $type_constraint_name,
+      { creator => sub { create_class_type_constraint(shift, $opt) } },
+  );
 
 When given a union or parameterized type, the member or base type must
 already exist.
@@ -1334,9 +1350,8 @@ global registry.
 
 =head3 find_or_create_does_type_constraint($type_name)
 
-These functions will first call C<find_or_parse_type_constraint>. If
-that function does not return a type, a new type object will
-be created.
+These functions will call C<find_or_parse_type_constraint> with the
+C<creator> option so that a new type object will be created if necessary.
 
 The C<isa> variant will use C<create_class_type_constraint> and the
 C<does> variant will use C<create_role_type_constraint>.
