@@ -80,7 +80,9 @@ sub create_named_type_constraint_union {
 sub _create_type_constraint_union {
     my ( $tcs, $options ) = @_;
     $options //= {};
+
     my $name = $options->{name};
+    my $creator = $options->{creator};
 
     my @type_constraint_names;
 
@@ -95,7 +97,7 @@ sub _create_type_constraint_union {
         || throw_exception("UnionTakesAtleastTwoTypeNames");
 
     my @type_constraints = map {
-        find_or_parse_type_constraint($_)
+        find_or_parse_type_constraint($_, $creator ? { creator => $creator } : ())
             || throw_exception( CouldNotLocateTypeConstraintForUnion => type_name => $_ );
     } @type_constraint_names;
 
@@ -269,7 +271,10 @@ sub find_or_parse_type_constraint {
         return $constraint;
     }
     elsif ( _detect_type_constraint_union($type_constraint_name) ) {
-        $constraint = create_type_constraint_union($type_constraint_name);
+        $constraint = _create_type_constraint_union(
+            [ $type_constraint_name ],
+            $creator ? { creator => $creator } : ()
+        );
     }
     elsif ( _detect_parameterized_type_constraint($type_constraint_name) ) {
         $constraint
