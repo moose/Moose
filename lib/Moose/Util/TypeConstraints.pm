@@ -74,21 +74,21 @@ sub create_type_constraint_union {
 
 sub create_named_type_constraint_union {
     my $name = shift;
-    _create_type_constraint_union($name, \@_);
+    _create_type_constraint_union(\@_, { name => $name });
 }
 
 sub _create_type_constraint_union {
-    my $name;
-    $name = shift if @_ > 1;
-    my @tcs = @{ shift() };
+    my ( $tcs, $options ) = @_;
+    $options //= {};
+    my $name = $options->{name};
 
     my @type_constraint_names;
 
-    if ( scalar @tcs == 1 && _detect_type_constraint_union( $tcs[0] ) ) {
-        @type_constraint_names = _parse_type_constraint_union( $tcs[0] );
+    if ( scalar @$tcs == 1 && _detect_type_constraint_union( $tcs->[0] ) ) {
+        @type_constraint_names = _parse_type_constraint_union( $tcs->[0] );
     }
     else {
-        @type_constraint_names = @tcs;
+        @type_constraint_names = @$tcs;
     }
 
     ( scalar @type_constraint_names >= 2 )
