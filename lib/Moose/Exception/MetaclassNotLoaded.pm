@@ -1,5 +1,5 @@
 package Moose::Exception::MetaclassNotLoaded;
-our $VERSION = '2.2101';
+our $VERSION = '2.2201';
 
 use Moose;
 extends 'Moose::Exception';

@@ -1,5 +1,5 @@
 package Moose::Exception::CreateTakesHashRefOfMethods;
-our $VERSION = '2.2101';
+our $VERSION = '2.2201';
 
 use Moose;
 extends 'Moose::Exception';

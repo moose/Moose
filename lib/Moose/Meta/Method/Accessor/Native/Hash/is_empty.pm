@@ -1,5 +1,5 @@
 package Moose::Meta::Method::Accessor::Native::Hash::is_empty;
-our $VERSION = '2.2101';
+our $VERSION = '2.2201';
 
 use strict;
 use warnings;

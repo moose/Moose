@@ -1,5 +1,5 @@
 package Moose::Meta::Method::Destructor;
-our $VERSION = '2.2101';
+our $VERSION = '2.2201';
 
 use strict;
 use warnings;

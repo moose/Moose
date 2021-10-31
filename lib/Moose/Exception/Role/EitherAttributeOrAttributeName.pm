@@ -1,5 +1,5 @@
 package Moose::Exception::Role::EitherAttributeOrAttributeName;
-our $VERSION = '2.2101';
+our $VERSION = '2.2201';
 
 use Moose::Util 'throw_exception';
 use Moose::Role;
