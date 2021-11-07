@@ -1809,7 +1809,7 @@ heuristics (aka guessing).
 
 Methods defined outside the package with a fully qualified name (C<sub
 Package::name { ... }>) will be included. Similarly, methods named with a
-fully qualified name using L<Sub::Name> or L<Sub::Util> are also included.
+fully qualified name using L<Sub::Util> are also included.
 
 However, we attempt to ignore imported functions.
 
