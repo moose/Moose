@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package Moose::Meta::Attribute;
-our $VERSION = '2.2201';
+our $VERSION = '2.2202';
 
 use B ();
 use Scalar::Util 'blessed';

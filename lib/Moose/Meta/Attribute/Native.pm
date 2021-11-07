@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package Moose::Meta::Attribute::Native;
-our $VERSION = '2.2201';
+our $VERSION = '2.2202';
 
 use Module::Runtime 'require_module';
 
