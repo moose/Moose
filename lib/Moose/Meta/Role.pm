@@ -873,7 +873,7 @@ L<Moose::Meta::Role::Method>.
 =head3 $metarole->find_method_by_name($name)
 
 These methods are all identical to the methods of the same name in
-L<Class::MOP::Package>
+L<Class::MOP::Class>
 
 =head2 Attributes
 
