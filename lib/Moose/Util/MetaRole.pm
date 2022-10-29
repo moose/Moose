@@ -187,7 +187,7 @@ It accepts the following parameters:
 
 =item * for => $name
 
-This specifies the class or for which to alter the meta classes. This can be a
+This specifies the class for which to alter the meta classes. This can be a
 package name, or an appropriate meta-object (a L<Moose::Meta::Class> or
 L<Moose::Meta::Role>).
 
