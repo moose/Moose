@@ -1,8 +1,9 @@
 use strict;
 use warnings;
+
+use Test::Needs 'Moo', 'Test::Warnings';
 use Test::More;
 
-use Test::Requires 'Moo', 'Test::Warnings';
 use Test::Warnings qw( warnings :no_end_test );
 
 {

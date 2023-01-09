@@ -1,9 +1,9 @@
 use strict;
 use warnings;
 
+use Test::Needs 'Test::Output';
 use Test::More;
-
-use Test::Requires 'Test::Output';
+use Test::Output;
 
 my $file = __FILE__;
 

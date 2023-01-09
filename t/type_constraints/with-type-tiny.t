@@ -1,9 +1,9 @@
 use strict;
 use warnings;
+
+use Test::Needs { 'Types::Standard' => 0.021_03 };
 use Test::More;
 use Test::Fatal;
-
-use Test::Requires { 'Types::Standard' => 0.021_03 };
 
 my @array_delegations = qw(
     accessor

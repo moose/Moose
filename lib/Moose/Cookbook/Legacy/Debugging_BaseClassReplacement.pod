@@ -58,7 +58,8 @@ See the L<Moose::Exporter> docs for more details on its API.
 
 =begin testing-SETUP
 
-use Test::Requires 'Test::Output';
+use Test::Needs 'Test::Output';
+use Test::Output;
 
 =end testing-SETUP
 

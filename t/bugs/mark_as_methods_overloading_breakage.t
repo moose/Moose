@@ -1,11 +1,11 @@
 use strict;
 use warnings;
 
-use Test::More;
-use Test::Fatal;
-use Test::Requires {
+use Test::Needs {
     'MooseX::MarkAsMethods' => 0,
 };
+use Test::More;
+use Test::Fatal;
 
 {
     package Role2;

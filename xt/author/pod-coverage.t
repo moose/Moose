@@ -4,9 +4,11 @@ use warnings;
 
 use Test::More;
 
-use Test::Requires {
+use Test::Needs {
     'Test::Pod::Coverage' => '1.04',    # skip all if not installed
 };
+
+use Test::Pod::Coverage;
 
 # This is a stripped down version of all_pod_coverage_ok which lets us
 # vary the trustme parameter per module.

@@ -1,10 +1,10 @@
 use strict;
 use warnings;
 
-use Test::More;
-use Test::Requires {
+use Test::Needs {
     'SUPER' => 1.10, # skip all if not installed
 };
+use Test::More;
 
 =pod
 

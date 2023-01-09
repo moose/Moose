@@ -3,7 +3,7 @@ use warnings;
 
 use Test::More;
 
-use Test::Requires {
+use Test::Needs {
     'DBM::Deep' => '1.0003', # skip all if not installed
     'DateTime::Format::MySQL' => '0',
 };

@@ -1,8 +1,9 @@
 use strict;
 use warnings;
 
-use Test::Requires 'Test::Output';
+use Test::Needs 'Test::Output';
 use Test::More;
+use Test::Output;
 
 {
     package Parent;
