@@ -1,9 +1,10 @@
 use strict;
 use warnings;
 
+use Test::Needs 'Test::Memory::Cycle';
 use Test::More;
 use Test::Fatal;
-use Test::Requires 'Test::Memory::Cycle';
+use Test::Memory::Cycle;
 
 BEGIN {
     plan skip_all => 'Leak tests fail under Devel::Cover' if $INC{'Devel/Cover.pm'};

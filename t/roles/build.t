@@ -1,8 +1,9 @@
 use strict;
 use warnings;
 
+use Test::Needs 'Test::Output';  # skip all if not installed
 use Test::More;
-use Test::Requires 'Test::Output';  # skip all if not installed
+use Test::Output;
 
 # this test script ensures that my idiom of:
 # role: sub BUILD, after BUILD

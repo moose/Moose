@@ -1,11 +1,11 @@
 use strict;
 use warnings;
 
+use Test::Needs 'Test::Output';
 use Test::Fatal;
 use Test::More;
 use Test::Moose qw( with_immutable );
-
-use Test::Requires 'Test::Output';
+use Test::Output;
 
 {
     package Baz;

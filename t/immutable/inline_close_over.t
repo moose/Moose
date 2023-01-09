@@ -1,11 +1,11 @@
 use strict;
 use warnings;
-
-use Test::More;
-use Test::Requires {
+use Test::Needs {
   'Data::Visitor' => '0.26',
   'PadWalker'     => undef,
 };
+
+use Test::More;
 
 use Class::Load 'load_class';
 use Try::Tiny;

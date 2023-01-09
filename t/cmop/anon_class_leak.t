@@ -1,8 +1,9 @@
 use strict;
 use warnings;
 
+use Test::Needs 'Test::LeakTrace';   # skip all if not installed
 use Test::More;
-use Test::Requires 'Test::LeakTrace';   # skip all if not installed
+use Test::LeakTrace;
 
 BEGIN {
     plan skip_all => 'Leak tests fail under Devel::Cover' if $INC{'Devel/Cover.pm'};

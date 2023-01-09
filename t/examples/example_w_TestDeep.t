@@ -13,7 +13,7 @@ but it is not completely horrid either.
 
 =cut
 
-use Test::Requires 'Test::Deep';    # skip all if not installed
+use Test::Needs 'Test::Deep';    # skip all if not installed
 use Test::Fatal;
 
 {

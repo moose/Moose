@@ -1,20 +1,15 @@
 use strict;
 use warnings;
 
-use Test::Fatal;
-use Test::Moose qw( with_immutable );
-use Test::More 0.96;
-
-BEGIN {
-    plan skip_all => 'These tests requires Specio, which requires perl 5.010'
-        unless "$]" >= 5.010;
-}
-
-use Test::Requires {
+use Test::Needs {
+    'perl' => '5.010',
     'Specio::Declare'           => '0.10',
     'Specio::Library::Builtins' => '0.10',
 };
 
+use Test::Fatal;
+use Test::Moose qw( with_immutable );
+use Test::More 0.96;
 
 my @array_delegations = qw(
     accessor

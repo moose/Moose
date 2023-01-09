@@ -3,13 +3,12 @@ use warnings;
 
 use lib 't/lib';
 
+use Test::Needs 'Module::Refresh';   # skip all if not installed
 use Test::More;
 use Test::Fatal;
 
 use File::Spec;
 use File::Temp 'tempdir';
-
-use Test::Requires 'Module::Refresh';   # skip all if not installed
 
 =pod
 

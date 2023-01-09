@@ -1,8 +1,8 @@
 use strict;
 use warnings;
 
+use Test::Needs 'Algorithm::C3'; # skip all if not installed
 use Test::More;
-use Test::Requires 'Algorithm::C3'; # skip all if not installed
 
 use Class::MOP;
 

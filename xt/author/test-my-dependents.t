@@ -28,7 +28,7 @@ EOF
         unless $ENV{MOOSE_TEST_MD};
 }
 
-use Test::Requires {
+use Test::Needs {
     'Archive::Zip' => 0,    # or else .zip dists won't be able to be installed
     'Test::DependentModules' => '0.13',
     'MetaCPAN::API'          => '0.33',
