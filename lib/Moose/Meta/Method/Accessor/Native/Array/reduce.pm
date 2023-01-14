@@ -1,5 +1,5 @@
 package Moose::Meta::Method::Accessor::Native::Array::reduce;
-our $VERSION = '2.2202';
+our $VERSION = '2.2203';
 
 use strict;
 use warnings;

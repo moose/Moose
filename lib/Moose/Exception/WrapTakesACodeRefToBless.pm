@@ -1,5 +1,5 @@
 package Moose::Exception::WrapTakesACodeRefToBless;
-our $VERSION = '2.2202';
+our $VERSION = '2.2203';
 
 use Moose;
 extends 'Moose::Exception';
