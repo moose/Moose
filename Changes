@@ -3,6 +3,10 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [TESTS]
+
+  - switched from Test::Requires to Test::Needs. (#181, Graham Knop)
+
 2.2201   2021-11-07
 
   [OTHER]
