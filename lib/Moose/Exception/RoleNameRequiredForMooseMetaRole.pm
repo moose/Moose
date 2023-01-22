@@ -1,5 +1,5 @@
 package Moose::Exception::RoleNameRequiredForMooseMetaRole;
-our $VERSION = '2.2203';
+our $VERSION = '2.2204';
 
 use Moose;
 extends 'Moose::Exception';
