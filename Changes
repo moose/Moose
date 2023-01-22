@@ -3,6 +3,10 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [TESTS]
+
+  - increased the required version of Test::Needs (#182, Graham Knop)
+
 2.2202   2023-01-14
 
   [TESTS]
