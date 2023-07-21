@@ -198,8 +198,10 @@ is_deeply(
     '... got the right method list for Foo'
 );
 
-my @universal_methods = qw/isa can VERSION/;
-push @universal_methods, 'DOES' if "$]" >= 5.010;
+my @universal_methods = grep {
+    no strict 'refs';
+    !/::$/ && defined &{"UNIVERSAL::$_"}
+} keys %UNIVERSAL::;
 
 is_deeply(
     [
