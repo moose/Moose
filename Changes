@@ -3,6 +3,10 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [TESTS]
+
+  - fix error in test in 2.2204 release.
+
 2.2204   2023-07-23
 
   [TESTS]
