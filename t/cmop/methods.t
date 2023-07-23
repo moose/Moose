@@ -198,7 +198,7 @@ is_deeply(
     '... got the right method list for Foo'
 );
 
-my @universal_methods = grep {
+my @universal_methods = grep {;
     no strict 'refs';
     !/::$/ && defined &{"UNIVERSAL::$_"}
 } keys %UNIVERSAL::;
