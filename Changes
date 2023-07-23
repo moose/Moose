@@ -3,6 +3,10 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [TESTS]
+
+  - fix parsing error in test in 2.2205 release.
+
 2.2205   2023-07-23
 
   [TESTS]
