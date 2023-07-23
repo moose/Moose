@@ -1,5 +1,5 @@
 package Moose::Meta::Mixin::AttributeCore;
-our $VERSION = '2.2204';
+our $VERSION = '2.2205';
 
 use strict;
 use warnings;

@@ -1,5 +1,5 @@
 package Moose::Meta::Role::Method::Required;
-our $VERSION = '2.2204';
+our $VERSION = '2.2205';
 
 use strict;
 use warnings;
