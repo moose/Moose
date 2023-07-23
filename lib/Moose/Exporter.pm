@@ -1,5 +1,5 @@
 package Moose::Exporter;
-our $VERSION = '2.2206';
+our $VERSION = '2.2207';
 
 use strict;
 use warnings;
