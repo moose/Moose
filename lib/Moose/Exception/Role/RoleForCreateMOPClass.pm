@@ -1,5 +1,5 @@
 package Moose::Exception::Role::RoleForCreateMOPClass;
-our $VERSION = '2.2205';
+our $VERSION = '2.2206';
 
 use Moose::Role;
 with 'Moose::Exception::Role::ParamsHash';
