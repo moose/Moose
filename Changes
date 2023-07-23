@@ -3,6 +3,13 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [TESTS]
+
+  - adjust the expected list of UNIVERSAL methods, to account for changes in
+    perl 5.39.1 (some things, like the import method, could end up existing
+    based on the perl version or based on a prerequite loading UNIVERSAL.pm).
+    (#183, Graham Knop)
+
 2.2203   2023-01-22
 
   [TESTS]
