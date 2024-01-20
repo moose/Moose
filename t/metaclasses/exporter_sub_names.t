@@ -1,7 +1,6 @@
 use strict;
 use warnings;
 
-use Test::CleanNamespaces;
 use Test::More;
 
 {
@@ -9,16 +8,10 @@ use Test::More;
     use Moose::Role;
 }
 
-$::HAS_NC_AC = 0;
-
 {
     package Foo;
     use Moose ();
     use Moose::Exporter;
-    {
-        local $@;
-        eval 'use namespace::autoclean; $::HAS_NC_AC = 1';
-    }
 
     Moose::Exporter->setup_import_methods(
         also            => 'Moose',
@@ -33,12 +26,7 @@ $::HAS_NC_AC = 0;
         ::is( $package, __PACKAGE__, "$name sub is in Foo package" );
         ::is( $sub_name, $name, "$name sub has that name, not __ANON__" );
     }
-}
 
-if ($::HAS_NC_AC) {
-    $INC{'Foo.pm'} = 1;
-    namespaces_clean('Foo');
 }
 
 done_testing();
-
