@@ -232,19 +232,7 @@ sub equals {
     my ( $self, $type_or_name ) = @_;
 
     my $other = Moose::Util::TypeConstraints::find_type_constraint($type_or_name);
-    return if not $other;
-
-    return 1 if $self == $other;
-
-    return unless $self->constraint == $other->constraint;
-
-    if ( $self->has_parent ) {
-        return unless $other->has_parent;
-        return unless $self->parent->equals( $other->parent );
-    } else {
-        return if $other->has_parent;
-    }
-
+    return 1 if ($other && $self == $other);
     return;
 }
 
