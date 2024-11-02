@@ -16,6 +16,8 @@ use Try::Tiny;
 use Moose::Util 'throw_exception';
 
 use constant {
+    _HINTS_IMPLICIT_LOCAL => "$]" >= 5.008004,
+
     # goto &UNIVERSAL::VERSION usually works on 5.8, but fails on some ARM
     # machines.  Seems to always work on 5.10 though.
     _CAN_GOTO_VERSION => "$]" >= 5.010000,
@@ -483,8 +485,10 @@ sub _make_import_sub {
         # to do anything special to make it affect that file
         # rather than this one (which is already compiled)
 
-        strict->import;
-        warnings->import;
+        if (!__PACKAGE__->skip_strict($exporting_package)) {
+            strict->import;
+            warnings->import;
+        }
 
         my $did_init_meta;
         for my $c ( grep { $_->can('init_meta') } $class, @{$exports_from} ) {
@@ -742,6 +746,19 @@ sub _remove_keywords {
             delete ${ $package . '::' }{$name};
         }
     }
+}
+
+sub skip_strict {
+    shift;
+    my $package = shift;
+    my $key = join '/', __PACKAGE__, 'skip_strict', $package;
+    if (@_) {
+        my $value = shift;
+        $^H |= 0x20000
+            unless _HINTS_IMPLICIT_LOCAL;
+        $^H{$key} = $value;
+    }
+    $^H{$key};
 }
 
 sub _make_version_sub {

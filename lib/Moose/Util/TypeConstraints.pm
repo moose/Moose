@@ -46,6 +46,12 @@ Moose::Exporter->setup_import_methods(
             register_type_constraint
             match_on_type )
     ],
+    version_callback => sub {
+        my ($package, $version) = @_;
+        if ($version >= 3) {
+            Moose::Exporter->skip_strict($package, 1);
+        }
+    },
 );
 
 ## --------------------------------------------------------
