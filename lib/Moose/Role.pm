@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 package Moose::Role;
-our $VERSION = '2.2208';
+our $VERSION = '3.0000';
 
 use Scalar::Util ();
 use Carp ();
@@ -100,6 +100,12 @@ Moose::Exporter->setup_import_methods(
         'Carp::confess',
         'Scalar::Util::blessed',
     ],
+    version_callback => sub {
+        my ($package, $version) = @_;
+        if ($version >= 3) {
+            Moose::Exporter->skip_strict($package, 1);
+        }
+    },
 );
 
 sub init_meta {

@@ -1,5 +1,5 @@
 package Moose::Exporter;
-our $VERSION = '2.2208';
+our $VERSION = '3.0000';
 
 use strict;
 use warnings;
@@ -8,11 +8,20 @@ use Class::Load qw(is_class_loaded);
 use Class::MOP;
 use List::Util 1.45 qw( uniq );
 use Moose::Util::MetaRole;
-use Scalar::Util 1.40 qw(reftype);
+use Scalar::Util 1.40 qw(reftype refaddr);
 use Sub::Exporter 0.980;
 use Sub::Util 1.40 qw(set_subname);
+use Try::Tiny;
 
 use Moose::Util 'throw_exception';
+
+use constant {
+    _HINTS_IMPLICIT_LOCAL => "$]" >= 5.008004,
+
+    # goto &UNIVERSAL::VERSION usually works on 5.8, but fails on some ARM
+    # machines.  Seems to always work on 5.10 though.
+    _CAN_GOTO_VERSION => "$]" >= 5.010000,
+};
 
 my %EXPORT_SPEC;
 
@@ -23,7 +32,7 @@ sub setup_import_methods {
 
     $class->build_import_methods(
         %args,
-        install => [qw(import unimport init_meta)]
+        install => [qw(import unimport init_meta VERSION)]
     );
 }
 
@@ -81,6 +90,12 @@ sub build_import_methods {
         $meta_lookup,
     );
 
+    $methods{VERSION} = $class->_make_version_sub(
+        $exporting_package,
+        \%args,
+        $meta_lookup,
+    );
+
     my $package = Class::MOP::Package->initialize($exporting_package);
     for my $to_install ( @{ $args{install} || [] } ) {
         my $symbol = '&' . $to_install;
@@ -95,7 +110,7 @@ sub build_import_methods {
         );
     }
 
-    return ( $methods{import}, $methods{unimport}, $methods{init_meta} );
+    return ( $methods{import}, $methods{unimport}, $methods{init_meta}, $methods{VERSION} );
 }
 
 sub _make_exporter {
@@ -470,8 +485,10 @@ sub _make_import_sub {
         # to do anything special to make it affect that file
         # rather than this one (which is already compiled)
 
-        strict->import;
-        warnings->import;
+        if (!__PACKAGE__->skip_strict($exporting_package)) {
+            strict->import;
+            warnings->import;
+        }
 
         my $did_init_meta;
         for my $c ( grep { $_->can('init_meta') } $class, @{$exports_from} ) {
@@ -729,6 +746,59 @@ sub _remove_keywords {
             delete ${ $package . '::' }{$name};
         }
     }
+}
+
+sub skip_strict {
+    shift;
+    my $package = shift;
+    my $key = join '/', __PACKAGE__, 'skip_strict', $package;
+    if (@_) {
+        my $value = shift;
+        $^H |= 0x20000
+            unless _HINTS_IMPLICIT_LOCAL;
+        $^H{$key} = $value;
+    }
+    $^H{$key};
+}
+
+sub _make_version_sub {
+    shift;
+    my $exporting_package = shift;
+    my $args              = shift;
+    my $meta_lookup       = shift;
+
+    my $spec = $EXPORT_SPEC{$exporting_package};
+    my $version_cb = $spec->{version_callback}
+        or return undef;
+    my $parent_version = $exporting_package->can('VERSION');
+    my $is_universal = refaddr($parent_version) == refaddr(\&UNIVERSAL::VERSION);
+
+    return sub {
+        my ($class, @args) = @_;
+        my ($caller, $call_file, $call_line) = _get_caller(@_);
+        if ($class eq $exporting_package && defined $args[0] && try { $class->$parent_version(@args); 1} ) {
+            $class->$version_cb(@args);
+        }
+        if (_CAN_GOTO_VERSION || !$is_universal ) {
+            goto &$parent_version;
+        }
+        else {
+            my $return;
+            try {
+                $class->$parent_version(@args);
+            }
+            catch {
+                my $e = $@;
+                die $e
+                    if length ref $e;
+                my $oldloc = sprintf ' at %s line %d.', __FILE__, __LINE__ - 4;
+                my $newloc = sprintf ' at %s line %d.', $call_file, $call_line;
+                $e =~ s{\Q$oldloc\E\n.*}{$newloc\n}s;
+                die $e;
+            };
+            return $return;
+        }
+    };
 }
 
 # maintain this for now for backcompat
