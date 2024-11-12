@@ -1433,8 +1433,8 @@ An attribute which is required must be provided to the constructor. An
 attribute which is required can also have a C<default> or C<builder>,
 which will satisfy its required-ness.
 
-A required attribute must have a C<default>, C<builder> or a
-non-C<undef> C<init_arg>
+If C<init_arg> is C<undef> on a required attribute, it must have a
+C<default> or a C<builder>.
 
 =item * lazy => $bool
 
