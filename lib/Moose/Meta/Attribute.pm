@@ -1359,7 +1359,10 @@ by that parent class.
 
 =head1 INHERITANCE
 
-C<Moose::Meta::Attribute> is a subclass of L<Class::MOP::Attribute>.
+C<Moose::Meta::Attribute> is a subclass of L<Class::MOP::Attribute> and
+inherits these options:
+C<init_arg> C<builder> C<default> C<initializer> C<accessor> C<reader>
+C<writer> C<predicate> C<clearer> C<definition_context>
 
 =head1 METHODS
 
