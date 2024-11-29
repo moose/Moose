@@ -5,9 +5,28 @@ use Moose;
 extends 'Moose::Exception';
 with 'Moose::Exception::Role::Class';
 
+# An indiscriminate `use` without an import list somehow makes
+# type_constraint_message a hash memory address
+use Moose::Util::TypeConstraints qw(
+    duck_type
+
+    coerce
+        from
+        via
+
+    subtype
+        as
+    );
+subtype '_MooseImmediateStr' => as 'Str';
+subtype '_MooseDucktypeStr'  => as duck_type([qw< ("" >]);
+coerce '_MooseImmediateStr',
+    from '_MooseDucktypeStr',
+    via { "$_" };
+
 has 'type_constraint_message' => (
     is       => 'ro',
-    isa      => 'Str',
+    isa      => '_MooseImmediateStr',
+    coerce   => 1,
     required => 1
 );
 
