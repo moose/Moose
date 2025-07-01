@@ -1,5 +1,5 @@
 package Moose::Exception::MethodExpectsFewerArgs;
-our $VERSION = '2.2208';
+our $VERSION = '2.4000';
 
 use Moose;
 extends 'Moose::Exception';

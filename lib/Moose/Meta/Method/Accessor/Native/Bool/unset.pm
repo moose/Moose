@@ -1,5 +1,5 @@
 package Moose::Meta::Method::Accessor::Native::Bool::unset;
-our $VERSION = '2.2208';
+our $VERSION = '2.4000';
 
 use strict;
 use warnings;
