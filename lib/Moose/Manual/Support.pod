@@ -32,9 +32,14 @@ will be removed.
 In some cases, it is not possible to deprecate a behavior. In this case, the
 behavior will simply be changed in a major release.
 
-=head1 RELEASE SCHEDULE
+=head1 RELEASE SCHEDULE AND TYPES
 
-Moose is on a system of quarterly major releases, with minor releases as
+Moose has no set release schedule.
+
+If contentious, a trial release will be made first, with some amount of delay
+before making a stable release.
+
+Minor releases are made as
 needed between major releases. A minor release is defined as one that makes
 every attempt to preserve backwards compatibility. Currently this means that we
 did not introduce any new dependency conflicts, and that we did not make any
@@ -45,16 +50,6 @@ can add new ones). A minor release can include new features and bug fixes.
 Major releases may be backwards incompatible. Moose prioritizes
 correctness over backwards compatibility or performance; see the L<DEPRECATION
 POLICY> to understand how backwards incompatible changes are announced.
-
-Major releases are scheduled to happen during fixed release windows. If the
-window is missed, then there will not be a major release until the next
-release window. The release windows are one month long, and occur during the
-months of January, April, July, and October.
-
-Before a major release, a series of development releases will be made so that
-users can test the upcoming major release before it is distributed to CPAN. It
-is in the best interests of everyone involved if these releases are tested as
-widely as possible.
 
 =head1 DEPRECATION POLICY
 
@@ -85,6 +80,15 @@ C<xt/author/test-my-dependents.t>.
 
 =head1 VERSION NUMBERS
 
+=head2 Current version numbering scheme
+
+Given the slowed pace of development, Moose version numbers have reverted to a
+simple monotonic increasing scheme.  Larger changes may be indicated by a bump
+of a more significant digit, for example a move from version 2.5008 to 2.6000
+would indicate a larger change than moving from 2.5008 to 2.5009.
+
+=head2 Prior to version 2.4000
+
 Moose version numbers consist of three parts, in the form X.YYZZ. The X is the
 "special magic number" that only gets changed for really big changes. Think of
 this as being like the "5" in Perl 5.12.1.
@@ -97,6 +101,8 @@ version is released.
 Semantically, this means that any two releases which share a major version
 should be API-compatible with each other. In other words, 2.0200, 2.0201, and
 2.0274 are all API-compatible.
+
+=head2 Prior to version 2.0
 
 Prior to version 2.0, Moose version numbers were monotonically incrementing
 two decimal values (0.01, 0.02, ... 1.11, 1.12, etc.).

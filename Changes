@@ -8,6 +8,11 @@ for, noteworthy changes.
   - clarified some wording regarding the interactions between attribute
     configuration options "init_arg" and "required". (Christian Walde, #187)
 
+  [OTHER]
+
+  - the release schedule and numbering scheme has changed; see
+    Moose::Manual::Support
+
 2.2207   2024-01-21
 
   [TESTS]
