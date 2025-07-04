@@ -1,5 +1,5 @@
 package Moose::Exception::OverloadConflictInSummation;
-our $VERSION = '2.4000';
+our $VERSION = '2.4001';
 
 use Moose;
 extends 'Moose::Exception';
