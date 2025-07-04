@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [DOCUMENTATION]
+
+  - clarified some wording regarding the interactions between attribute
+    configuration options "init_arg" and "required". (Christian Walde, #187)
+
 2.2207   2024-01-21
 
   [TESTS]
