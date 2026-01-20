@@ -114,6 +114,32 @@ use Test::Fatal;
     ::like( ::exception {
         has '+does_not_exist' => (isa => 'Str');
     }, qr/in Bar/, '... cannot extend a non-existing attribute' );
+
+    ::is( ::exception {
+        has '+baz' => (clear_default => 1),
+    }, undef, 'Can trivially clear an already-cleared attribute');
+
+    package Foo::VagueBar;
+    use Moose;
+
+    extends 'Foo';
+
+    ::like( ::exception {
+        has '+bar' => (clear_brush => 'I live in Texas, I just do this');
+    }, qr/You said clear_brush but/, 'Cannot clear a non-existent attribute');
+    my $re_make_up_your_mind
+        = qr/You said both to clear_default and also to set a value for default/;
+    ::like( ::exception {
+        has '+bar' => (clear_default => 1, default => 'Something reasonable');
+    }, $re_make_up_your_mind,
+       'Must be consistent: default value or no default value?');
+   ::like( ::exception {
+       has '+bar' => (clear_default => 1, default => 0);
+   }, $re_make_up_your_mind,
+      '...including when the new default value is false');
+    ::is( ::exception {
+        has '+bar' => (clear_default => 1);
+    }, undef, 'Can clear a previous default');
 }
 
 my $foo = Foo->new;
@@ -190,6 +216,12 @@ is($bar->baz, undef, '... got the right undef default value');
     my $code_ref = sub { 1 };
     isnt( exception { $bar->baz($code_ref) }, undef, '... Bar::baz does not accept a code ref' );
 }
+
+my $foo_vaguebar = Foo::VagueBar->new;
+isa_ok($foo_vaguebar, 'Foo::VagueBar');
+isa_ok($foo_vaguebar, 'Foo');
+ok(!$foo_vaguebar->meta->find_attribute_by_name('bar')->has_value($foo_vaguebar),
+    'An attribute whose definition gets rid of a default value does not have a value');
 
 # check some meta-stuff
 
