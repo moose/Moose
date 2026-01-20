@@ -749,12 +749,13 @@ sub _inline_get_old_value_for_trigger {
 
 sub _inline_weaken_value {
     my $self = shift;
-    my ($instance, $value) = @_;
+    my ($instance, $value, $strong) = @_;
 
     return unless $self->is_weak_ref;
 
     my $mi = $self->associated_class->get_meta_instance;
     return (
+        $strong ? "$strong = $value;" : (),
         $mi->inline_weaken_slot_value($instance, $self->name),
             'if ref ' . $value . ';',
     );
@@ -820,10 +821,10 @@ sub _weaken_value {
 
 sub get_value {
     my ($self, $instance, $for_trigger) = @_;
+    my $value;
 
     if ($self->is_lazy) {
         unless ($self->has_value($instance)) {
-            my $value;
             if ($self->has_default) {
                 $value = $self->default($instance);
             } elsif ( $self->has_builder ) {
@@ -891,16 +892,18 @@ sub _inline_check_lazy {
 
     my $slot_exists = $self->_inline_instance_has($instance);
 
+    my $strong = $self->is_weak_ref ? '$strong_copy' : '';
     return (
+        ($strong ? "my $strong;" : ''),
         'if (!' . $slot_exists . ') {',
-            $self->_inline_init_from_default($instance, '$default', $tc, $coercion, $message, 'lazy'),
+            $self->_inline_init_from_default($instance, '$default', $tc, $coercion, $message, 'lazy', $strong || ()),
         '}',
     );
 }
 
 sub _inline_init_from_default {
     my $self = shift;
-    my ($instance, $default, $tc, $coercion, $message, $for_lazy) = @_;
+    my ($instance, $default, $tc, $coercion, $message, $for_lazy, $strong) = @_;
 
     if (!($self->has_default || $self->has_builder)) {
         throw_exception( LazyAttributeNeedsADefault => attribute => $self );
@@ -916,7 +919,7 @@ sub _inline_init_from_default {
                $self->_inline_check_constraint($default, $tc, $message, $for_lazy))
             : (),
         $self->_inline_init_slot($instance, $default),
-        $self->_inline_weaken_value($instance, $default),
+        $self->_inline_weaken_value($instance, $default, $strong),
     );
 }
 
