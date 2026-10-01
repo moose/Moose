@@ -1,5 +1,5 @@
 package Moose::Exception::PackageNameAndNameParamsNotGivenToWrap;
-our $VERSION = '2.4001';
+our $VERSION = '2.4002';
 
 use Moose;
 extends 'Moose::Exception';
