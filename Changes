@@ -3,6 +3,11 @@ for, noteworthy changes.
 
 {{$NEXT}}
 
+  [TESTS]
+
+  - adapted a test to changes in perl 5.45.4 regarding the line number
+    reported for particular errors (Richard Leach, #188)
+
 2.4000   2025-07-04
 
   [DOCUMENTATION]
