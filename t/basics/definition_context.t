@@ -9,6 +9,16 @@ use Class::MOP::Class;
 use Moose::Meta::Class;
 use Moose::Meta::Attribute;
 
+# Detect the line number reporting behaviour of this version of perl
+our $use_block_end;
+BEGIN {
+    sub X { my (undef, undef, $line) = caller;
+                $use_block_end++ if ($line != shift); }
+    X __LINE__, # $use_block_end = 0
+    sub { }     # $use_block_end = 1
+};
+
+
 my %tests = (
     'Class::MOP::Class superclasses attribute' => {
         attribute => Class::MOP::Class->meta->find_attribute_by_name('superclasses'),
@@ -17,7 +27,7 @@ my %tests = (
 
         # This is obviously pretty fragile, so let's not test the line for
         # more than one attribute.
-        line => 308,
+        line => ($use_block_end ? 308 : 298),
     },
     'Moose::Meta::Class roles attribute' => {
         attribute => Moose::Meta::Class->meta->find_attribute_by_name('roles'),
